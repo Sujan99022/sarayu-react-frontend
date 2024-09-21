@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
+import AOS from "aos";
+import "aos/dist/aos.css";
+import "./App.css";
+import { jwtDecode } from "jwt-decode";
+import "react-toastify/dist/ReactToastify.css";
+import RoutersDom from "./routers/RoutersDom";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "./redux/slices/UserSlice";
+import WarningModel from "./common/WarningModel";
+import Loading from "./common/Loading";
+import { ToastContainer } from "react-toastify";
+
+const App = () => {
+  const [userLocal, setUserLocal] = useState({});
+  const { logoutToggle } = useSelector((state) => state.userSlice);
+  const { loading } = useSelector((state) => state.UniversalLoader);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    try {
+      const jwtUser = jwtDecode(jwt);
+      if (Date.now() >= jwtUser.exp * 1000) {
+        localStorage.removeItem("token");
+        window.location.reload();
+      } else {
+        setUserLocal(jwtUser);
+        dispatch(setUser(jwtUser));
+      }
+    } catch (error) {}
+  }, []);
+  useEffect(() => {
+    AOS.init();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ToastContainer autoClose={1500} />
+      {loading && <Loading />}
+      {logoutToggle && <WarningModel />}
+      <RoutersDom />
     </div>
   );
-}
-
+};
 export default App;
