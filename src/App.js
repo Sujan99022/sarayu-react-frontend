@@ -12,6 +12,11 @@ import { setUser } from "./redux/slices/UserSlice";
 import WarningModel from "./common/WarningModel";
 import Loading from "./common/Loading";
 import { ToastContainer } from "react-toastify";
+import setAuthToken from "./setAuthToken";
+
+if (localStorage.getItem("token")) {
+  setAuthToken(localStorage.getItem("token"));
+}
 
 const App = () => {
   const [userLocal, setUserLocal] = useState({});
