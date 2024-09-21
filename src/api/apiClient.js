@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://sarayu-node-backend.onrender.com/api/v1",
+  baseURL: "http://localhost:5000/api/v1",
 });
 
 export default apiClient;
 
 //local : http://localhost:5000/api/v1
-//render.com https://sarayu-node-backend.onrender.com
+//render.com https://sarayu-node-backend.onrender.com/api/v1
