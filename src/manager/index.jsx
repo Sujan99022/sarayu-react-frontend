@@ -11,15 +11,20 @@ import apiClient from "../api/apiClient";
 import { IoSearch } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
 import { RiDashboard2Line } from "react-icons/ri";
-import { ImOffice } from "react-icons/im";
-import { FaUser } from "react-icons/fa";
+import { IoKey } from "react-icons/io5";
+import { MdLogout } from "react-icons/md";
+import { HiInformationCircle } from "react-icons/hi";
+import { IoClose } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
 import "./style.css";
 import { handleWarningModel } from "../redux/slices/UserSlice";
 
 const Manager = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [loggedInUser, setLoggedInUser] = useState({});
-  const [showMenu, setShowMenu] = useState(false);
+  const [showUserDetails, setShowUserDetails] = useState(false);
   const [activeNavBtn, setActiveNavBtn] = useState("home");
   const dispatch = useDispatch();
 
@@ -61,57 +66,46 @@ const Manager = () => {
             <p>Logout</p>
           </div>
           <div className="manager_navbar_nav_mobile_view_open_btn">
-            <IoMdMenu
-              onClick={() => setShowMenu(true)}
+            <HiInformationCircle
+              onClick={() => setShowUserDetails(true)}
               style={{ cursor: "pointer" }}
-              size={"25px"}
+              size={"24px"}
             />
           </div>
         </nav>
-        <section
-          className={`manager_navbar_nav_mobile_view_links ${
-            showMenu && "manager_navbar_nav_mobile_view_links_show"
-          }`}
-        >
-          <div>
-            <div>
-              <section>
-                <span>
-                  <MdOutlineKeyboardDoubleArrowRight
-                    size={"20px"}
-                    style={{ cursor: "pointer" }}
-                    className="close_mobile_menu_icon"
-                    onClick={() => setShowMenu(false)}
-                  />
-                </span>
-                <span>
-                  {/* <img
-                    src="https://sarayuinfotech.in/images/sarayu/Logo/sarayu-comp-icon.png"
-                    alt="sarayu logo"
-                  /> */}
-                  SARAYU
-                </span>
-              </section>
-              <footer
-                className="manager_navbar_nav_mobile_view_links_footer"
-                onClick={() => dispatch(handleWarningModel())}
-              >
-                <div className="manager_navbar_nav_mobile_view_links_footer_side_line"></div>
-                <div className="manager_navbar_nav_mobile_view_links_footer_details">
-                  <div>
-                    {loggedInUser?.name} <IoExitOutline />
-                  </div>
-                  <div>{loggedInUser?.email}</div>
-                </div>
-              </footer>
-              <div className="manager_navbar_nav_mobile_view_links_container">
-                <p>Dashboard</p>
-                <p>Contact Us</p>
+      </div>
+      <section className="user_section_body_container">
+        {showUserDetails && (
+          <div className="user_details_card_container">
+            <div
+              data-aos="fade-out"
+              data-aos-duration="300"
+              data-aos-once="true"
+            >
+              <div>
+                <FaRegUser /> {loggedInUser?.name}
               </div>
+              <div>
+                <MdEmail /> {loggedInUser?.email}
+              </div>
+              <div>
+                <FaPhoneAlt />
+                {loggedInUser?.phonenumber
+                  ? loggedInUser?.phonenumber
+                  : "+xx xxxxxxxxxx"}
+              </div>
+              <hr />
+              <div>{loggedInUser?.company?.name}</div>
+              <div>{loggedInUser?.company?.email}</div>
+              <div>{loggedInUser?.company?.address}</div>
+              <hr />
+              <button>
+                <IoClose onClick={() => setShowUserDetails(false)} />
+              </button>
             </div>
           </div>
-        </section>
-      </div>
+        )}
+      </section>
       <div className="footer_navigationbar_mobile_view">
         <div
           className={
@@ -145,16 +139,11 @@ const Manager = () => {
             `footer_navigationbar_mobile_view_active`
           }
         >
-          <ImOffice onClick={() => setActiveNavBtn("office")} />
-          {activeNavBtn === "office" && <span>Office</span>}
+          <IoKey onClick={() => setActiveNavBtn("office")} />
+          {activeNavBtn === "office" && <span>Password</span>}
         </div>
-        <div
-          className={
-            activeNavBtn === "user" && `footer_navigationbar_mobile_view_active`
-          }
-        >
-          <FaUser onClick={() => setActiveNavBtn("user")} />
-          {activeNavBtn === "user" && <span>User</span>}
+        <div>
+          <MdLogout onClick={() => dispatch(handleWarningModel())} />
         </div>
       </div>
     </div>

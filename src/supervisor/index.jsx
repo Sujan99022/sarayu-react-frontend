@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { setLoading } from "../redux/slices/UniversalLoader";
-import { IoCloseSharp } from "react-icons/io5";
-import { IoExitOutline } from "react-icons/io5";
-import { IoMdMenu } from "react-icons/io";
+import { HiInformationCircle } from "react-icons/hi";
+import { IoClose } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
+import { IoSearch } from "react-icons/io5";
+import { FaHome } from "react-icons/fa";
+import { RiDashboard2Line } from "react-icons/ri";
+import { IoKey } from "react-icons/io5";
+import { MdLogout } from "react-icons/md";
 import { setUserDetails } from "../redux/slices/UserDetailsSlice";
 import apiClient from "../api/apiClient";
 import "./style.css";
@@ -14,7 +20,8 @@ import { handleWarningModel } from "../redux/slices/UserSlice";
 const Supervisor = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [loggedInUser, setLoggedInUser] = useState({});
-  const [showMenu, setShowMenu] = useState(false);
+  const [showUserDetails, setShowUserDetails] = useState(false);
+  const [activeNavBtn, setActiveNavBtn] = useState("home");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,7 +44,7 @@ const Supervisor = () => {
   };
 
   return (
-    <>
+    <div className="manager_dashboard_main_container">
       <div className="manager_navbar_container">
         <nav className="manager_navbar_nav">
           <div>
@@ -48,62 +55,95 @@ const Supervisor = () => {
             </p>
           </div>
           <div className="manager_navbar_nav_desktop_view_links">
-            <p className="manager_navbar_nav_desktop_view_links_active">Dashboard</p>
+            <p className="manager_navbar_nav_desktop_view_links_active">
+              Dashboard
+            </p>
             <p>Contact Us</p>
             <p>Logout</p>
           </div>
           <div className="manager_navbar_nav_mobile_view_open_btn">
-            <IoMdMenu
-              onClick={() => setShowMenu(true)}
+            <HiInformationCircle
+              onClick={() => setShowUserDetails(true)}
               style={{ cursor: "pointer" }}
-              size={"25px"}
+              size={"24px"}
             />
           </div>
         </nav>
-        <section
-          className={`manager_navbar_nav_mobile_view_links ${
-            showMenu && "manager_navbar_nav_mobile_view_links_show"
-          }`}
-        >
-          <div>
-            <div>
-              <section>
-                <span>
-                  <img
-                    src="https://sarayuinfotech.in/images/sarayu/Logo/sarayu-comp-icon.png"
-                    alt="sarayu logo"
-                  />
-                </span>
-                <span>
-                  <IoCloseSharp
-                    size={"30px"}
-                    style={{ cursor: "pointer" }}
-                    className="mb-2"
-                    onClick={() => setShowMenu(false)}
-                  />
-                </span>
-              </section>
-              <div className="manager_navbar_nav_mobile_view_links_container">
-                <p>Dashboard</p>
-                <p>Contact Us</p>
-              </div>
-              <footer
-                className="manager_navbar_nav_mobile_view_links_footer"
-                onClick={() => dispatch(handleWarningModel())}
+        <section className="user_section_body_container user_supervisor_section_body_container">
+          {showUserDetails && (
+            <div className="user_details_card_container">
+              <div
+                data-aos="fade-out"
+                data-aos-duration="300"
+                data-aos-once="true"
               >
-                <div className="manager_navbar_nav_mobile_view_links_footer_side_line"></div>
-                <div className="manager_navbar_nav_mobile_view_links_footer_details">
-                  <div>
-                    {loggedInUser?.name} <IoExitOutline />
-                  </div>
-                  <div>{loggedInUser?.email}</div>
+                <div>
+                  <FaRegUser /> {loggedInUser?.name}
                 </div>
-              </footer>
+                <div>
+                  <MdEmail /> {loggedInUser?.email}
+                </div>
+                <div>
+                  <FaPhoneAlt />
+                  {loggedInUser?.phonenumber
+                    ? loggedInUser?.phonenumber
+                    : "+xx xxxxxxxxxx"}
+                </div>
+                <hr />
+                <div>{loggedInUser?.company?.name}</div>
+                <div>{loggedInUser?.company?.email}</div>
+                <div>{loggedInUser?.company?.address}</div>
+                <hr />
+                <button>
+                  <IoClose onClick={() => setShowUserDetails(false)} />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </section>
+        <div className="footer_navigationbar_mobile_view">
+          <div
+            className={
+              activeNavBtn === "home" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <FaHome onClick={() => setActiveNavBtn("home")} />
+            {activeNavBtn === "home" && <span>Home</span>}
+          </div>
+          <div
+            className={
+              activeNavBtn === "graph" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <RiDashboard2Line onClick={() => setActiveNavBtn("graph")} />
+            {activeNavBtn === "graph" && <span>Graph</span>}
+          </div>
+          <div
+            className={
+              activeNavBtn === "search" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <IoSearch onClick={() => setActiveNavBtn("search")} />
+            {activeNavBtn === "search" && <span>Search</span>}
+          </div>
+          <div
+            className={
+              activeNavBtn === "office" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <IoKey onClick={() => setActiveNavBtn("office")} />
+            {activeNavBtn === "office" && <span>Password</span>}
+          </div>
+          <div>
+            <MdLogout onClick={() => dispatch(handleWarningModel())} />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
