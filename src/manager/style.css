@@ -51,11 +51,12 @@
 .user_details_card_container {
     display: flex;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 12vh;
+    height: 100vh;
+    background: black;
 }
 .user_details_card_container > div {
     width: 80vw;
-    min-height: 40px;
     color: #7e8590;
     background-color: rgba(36, 40, 50, 1);
     background-image: linear-gradient(139deg, rgba(36, 40, 50, 1) 0%, rgba(36, 40, 50, 1) 0%, rgba(37, 28, 40, 1) 100%);
@@ -110,8 +111,8 @@
     justify-content: space-around;
     border-top-right-radius: 50px;
     border-top-left-radius: 50px;
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
+    /* border-bottom-left-radius: 50px; */
+    /* border-bottom-right-radius: 50px; */
 }
 .footer_navigationbar_mobile_view > div {
     width: 30px;

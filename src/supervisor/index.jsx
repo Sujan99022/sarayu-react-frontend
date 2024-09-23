@@ -12,22 +12,30 @@ import { FaHome } from "react-icons/fa";
 import { RiDashboard2Line } from "react-icons/ri";
 import { IoKey } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
+import GraphPNG from "../utils/graph.png";
 import { setUserDetails } from "../redux/slices/UserDetailsSlice";
 import apiClient from "../api/apiClient";
 import "./style.css";
 import { handleWarningModel } from "../redux/slices/UserSlice";
+import TestChart from "./graphs/TestChart";
+import TradeViewGraph from "./graphs/tradeViewGraph/TradeViewGraph";
 
 const Supervisor = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [loggedInUser, setLoggedInUser] = useState({});
+  const [operatorsList, setOperatorsList] = useState([]);
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [activeNavBtn, setActiveNavBtn] = useState("home");
+  const [closeNote, setCloseNote] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (user.id) {
       fetchUserDetails();
     }
+  }, []);
+  useEffect(() => {
+    fetchAllOperators();
   }, []);
 
   const fetchUserDetails = async () => {
@@ -39,6 +47,19 @@ const Supervisor = () => {
       dispatch(setLoading(false));
     } catch (error) {
       toast.error("Something went wrong!");
+      dispatch(setLoading(false));
+    }
+  };
+
+  const fetchAllOperators = async () => {
+    try {
+      dispatch(setLoading(true));
+      const res = await apiClient.get(
+        `/auth/supervisor/getalloperators/${user?.id}`
+      );
+      dispatch(setOperatorsList(res?.data?.data));
+      dispatch(setLoading(false));
+    } catch (error) {
       dispatch(setLoading(false));
     }
   };
@@ -70,6 +91,7 @@ const Supervisor = () => {
           </div>
         </nav>
         <section className="user_section_body_container user_supervisor_section_body_container">
+          {/* user details model start */}
           {showUserDetails && (
             <div className="user_details_card_container">
               <div
@@ -100,6 +122,65 @@ const Supervisor = () => {
               </div>
             </div>
           )}
+          {/* user details model ends */}
+          {closeNote && activeNavBtn === "home" && (
+            <section
+              className="supervisor_note_model_container"
+              data-aos="fade-out"
+              data-aos-duration="500"
+              data-aos-once="true"
+            >
+              <div>
+                <p>
+                  Note : Lorem ipsum dolor sit amet consectetur adipisicing
+                  elit. Placeat, neque.
+                </p>
+                <span className="note_close_icon">
+                  <IoClose onClick={() => setCloseNote(false)} />
+                </span>
+              </div>
+            </section>
+          )}
+          {/* users under supervisor dispaly starts here */}
+          {activeNavBtn === "home" && (
+            <div className="supervisor_display_all_operators_container">
+              <p className="text-a">Operators({operatorsList.length})</p>
+              {operatorsList &&
+                operatorsList?.map((item, index) => {
+                  return (
+                    <div
+                      key={item._id}
+                      data-aos="fade-up"
+                      data-aos-duration={100 + index * 50}
+                      data-aos-once="true"
+                    >
+                      <div>
+                        {index + 1}.{" "}
+                        {item.email.length <= 30
+                          ? item.email
+                          : item.email.slice(0, 30) + "..."}
+                      </div>
+                      <div>
+                        <img src={GraphPNG} alt="graph png" />
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+          {/* users under supervisor dispaly ends here */}
+          {/* supervisor graph container starts here */}
+          {activeNavBtn === "graph" && (
+            <div
+              data-aos="fade-out"
+              data-aos-duration="1000"
+              data-aos-once="true"
+            >
+              {/* <TestChart /> */}
+              <TradeViewGraph />
+            </div>
+          )}
+          {/* supervisor graph container ends here */}
         </section>
         <div className="footer_navigationbar_mobile_view">
           <div
