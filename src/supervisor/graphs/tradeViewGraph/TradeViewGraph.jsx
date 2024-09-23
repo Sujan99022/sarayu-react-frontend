@@ -7,24 +7,26 @@ const TradeViewGraph = () => {
   const [initialData, setInitialData] = useState([]);
 
   useEffect(() => {
-    // setInterval(() => {
-    // }, 1000);
-    fetchGraphData();
-  });
+    const intervalId = setInterval(() => {
+      fetchGraphData();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const fetchGraphData = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/random-value");
-      setInitialData([...initialData, res.data]);
+      setInitialData((prevData) => [...prevData, res.data]);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(initialData);
+
   useEffect(() => {
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
-      height: 690,
+      height: 600,
       layout: {
         background: { color: "#222" },
         textColor: "#DDD",
@@ -110,20 +112,27 @@ const TradeViewGraph = () => {
       }
     };
 
-    // Create a line series
-    const lineSeries = chart.addLineSeries({
+    const areaSeries = chart.addAreaSeries({
+      topColor: "rgba(0, 150, 136, 0.5)",
+      bottomColor: "rgba(0, 150, 136, 0.0)",
+      lineColor: "rgb(0, 150, 136)",
       lineWidth: 2,
-      color: "green", // Initial color
     });
 
-    // Prepare data for the line series with color transition logic
-    const coloredData = initialData.map((point, index) => {
-      const color = point.value >= 13 ? "red" : "green";
-      return { ...point, color };
+    areaSeries.setData(initialData);
+
+    const lineSeries = chart.addLineSeries({
+      color: "red",
+      lineWidth: 2,
+      style: LineStyle.Solid,
     });
 
-    // Set the data for the line series
-    lineSeries.setData(coloredData);
+    const lineData = initialData.map((dataPoint) => ({
+      time: dataPoint.time,
+      value: 14,
+    }));
+
+    lineSeries.setData(lineData);
 
     const handleResize = () => {
       chart.applyOptions({ width: chartContainerRef.current.clientWidth });
@@ -135,7 +144,7 @@ const TradeViewGraph = () => {
       chart.remove();
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [initialData]);
 
   return <div ref={chartContainerRef} style={{ width: "100%" }}></div>;
 };
