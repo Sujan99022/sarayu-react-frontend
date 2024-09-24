@@ -9,9 +9,10 @@ import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
-import { RiDashboard2Line } from "react-icons/ri";
 import { IoKey } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
+import { VscGraphLine } from "react-icons/vsc";
 import GraphPNG from "../utils/graph.png";
 import { setUserDetails } from "../redux/slices/UserDetailsSlice";
 import apiClient from "../api/apiClient";
@@ -27,6 +28,12 @@ const Supervisor = () => {
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [activeNavBtn, setActiveNavBtn] = useState("home");
   const [closeNote, setCloseNote] = useState(true);
+  const [passwordData, setPasswordData] = useState({
+    email: user?.email,
+    activePassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -60,6 +67,40 @@ const Supervisor = () => {
       dispatch(setOperatorsList(res?.data?.data));
       dispatch(setLoading(false));
     } catch (error) {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleChangePasswordInput = (e) => {
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+  };
+
+  const handleChangePassword = async () => {
+    if (!passwordData.activePassword) {
+      toast.warning("Please enter your current password");
+      return;
+    }
+    if (!passwordData.newPassword) {
+      toast.warning("Please enter your new password");
+      return;
+    }
+    if (!passwordData.confirmPassword) {
+      toast.warning("Confirm your new password");
+      return;
+    }
+    if (passwordData.confirmPassword !== passwordData.newPassword) {
+      toast.error("Passwords don't match!");
+      return;
+    }
+    const { confirmPassword, ...dataToSend } = passwordData;
+
+    dispatch(setLoading(true));
+    try {
+      await apiClient.post(`/auth/reset-password`, dataToSend);
+      toast.success("Password changed successfully!");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "An error occurred");
+    } finally {
       dispatch(setLoading(false));
     }
   };
@@ -123,7 +164,7 @@ const Supervisor = () => {
             </div>
           )}
           {/* user details model ends */}
-          {closeNote && activeNavBtn === "home" && (
+          {closeNote && activeNavBtn === "operators" && (
             <section
               className="supervisor_note_model_container"
               data-aos="fade-out"
@@ -142,7 +183,7 @@ const Supervisor = () => {
             </section>
           )}
           {/* users under supervisor dispaly starts here */}
-          {activeNavBtn === "home" && (
+          {activeNavBtn === "operators" && (
             <div className="supervisor_display_all_operators_container">
               <p className="text-a">Operators({operatorsList.length})</p>
               {operatorsList &&
@@ -155,12 +196,23 @@ const Supervisor = () => {
                       data-aos-once="true"
                     >
                       <div>
-                        {index + 1}.{" "}
-                        {item.email.length <= 30
-                          ? item.email
-                          : item.email.slice(0, 30) + "..."}
+                        <table>
+                          <tr>
+                            <td rowSpan={2} className="px-3">
+                              {index + 1}.
+                            </td>
+                            <td>{item.name}</td>
+                          </tr>
+                          <tr>
+                            <td>
+                              {item.email.length <= 30
+                                ? item.email
+                                : item.email.slice(0, 30) + "..."}
+                            </td>
+                          </tr>
+                        </table>
                       </div>
-                      <div>
+                      <div onClick={() => setActiveNavBtn("graph")}>
                         <img src={GraphPNG} alt="graph png" />
                       </div>
                     </div>
@@ -181,6 +233,51 @@ const Supervisor = () => {
             </div>
           )}
           {/* supervisor graph container ends here */}
+          {/* supervisor change password starts here */}
+          {activeNavBtn === "password" && (
+            <div className="supervisor_change_password_section">
+              <p className="text-center">Change Password</p>
+              <section>
+                <div>
+                  <label htmlFor="oldpassword">Enter active password</label>
+                  <input
+                    type="password"
+                    id="oldpassword"
+                    name="activePassword"
+                    onChange={handleChangePasswordInput}
+                    value={passwordData.activePassword}
+                    placeholder="Enter password here..."
+                  />
+                </div>
+                <div>
+                  <label htmlFor="newpassword">Enter new password</label>
+                  <input
+                    type="password"
+                    id="newpassword"
+                    name="newPassword"
+                    onChange={handleChangePasswordInput}
+                    value={passwordData.newPassword}
+                    placeholder="Enter password here..."
+                  />
+                </div>
+                <div>
+                  <label htmlFor="confirmpassword">Confirm new password</label>
+                  <input
+                    type="password"
+                    id="confirmpassword"
+                    name="confirmPassword"
+                    onChange={handleChangePasswordInput}
+                    value={passwordData.confirmPassword}
+                    placeholder="Enter password here..."
+                  />
+                </div>
+                <div>
+                  <button onClick={handleChangePassword}>Change</button>
+                </div>
+              </section>
+            </div>
+          )}
+          {/* supervisor change password ends here */}
         </section>
         <div className="footer_navigationbar_mobile_view">
           <div
@@ -194,30 +291,30 @@ const Supervisor = () => {
           </div>
           <div
             className={
+              activeNavBtn === "operators" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <FaUsers onClick={() => setActiveNavBtn("operators")} />
+            {activeNavBtn === "operators" && <span>Operators</span>}
+          </div>
+          <div
+            className={
               activeNavBtn === "graph" &&
               `footer_navigationbar_mobile_view_active`
             }
           >
-            <RiDashboard2Line onClick={() => setActiveNavBtn("graph")} />
+            <VscGraphLine onClick={() => setActiveNavBtn("graph")} />
             {activeNavBtn === "graph" && <span>Graph</span>}
           </div>
           <div
             className={
-              activeNavBtn === "search" &&
+              activeNavBtn === "password" &&
               `footer_navigationbar_mobile_view_active`
             }
           >
-            <IoSearch onClick={() => setActiveNavBtn("search")} />
-            {activeNavBtn === "search" && <span>Search</span>}
-          </div>
-          <div
-            className={
-              activeNavBtn === "office" &&
-              `footer_navigationbar_mobile_view_active`
-            }
-          >
-            <IoKey onClick={() => setActiveNavBtn("office")} />
-            {activeNavBtn === "office" && <span>Password</span>}
+            <IoKey onClick={() => setActiveNavBtn("password")} />
+            {activeNavBtn === "password" && <span>Password</span>}
           </div>
           <div>
             <MdLogout onClick={() => dispatch(handleWarningModel())} />

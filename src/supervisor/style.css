@@ -68,3 +68,56 @@
     width: 30px;
     height: 30px;
 }
+
+/* change password section starts here */
+.supervisor_change_password_section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+}
+.supervisor_change_password_section > p:first-child {
+    color: rgb(218, 218, 218);
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+.supervisor_change_password_section > section {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.supervisor_change_password_section > section > div > input {
+    width: 100%;
+    height: 45px;
+    border-radius: 50px;
+    padding: 0 20px;
+    background: rgb(26, 27, 26);
+    color: white;
+    border: none;
+    box-shadow: 0 0 2px rgb(139, 139, 139);
+    border: 1px solid black;
+}
+.supervisor_change_password_section > section > div > input:focus {
+    outline: none;
+    border: 1px solid rgb(109, 109, 109);
+}
+.supervisor_change_password_section > section > div > label {
+    color: rgb(225, 225, 225);
+    padding-left: 15px;
+}
+.supervisor_change_password_section > section > div:last-child {
+    display: flex;
+    justify-content: center;
+}
+.supervisor_change_password_section > section > div:last-child > button {
+    width: 60%;
+    padding: 10px 5px;
+    border-radius: 50px;
+    background: rgb(26, 27, 26);
+    color: white;
+    border: none;
+    background: rgba(0, 128, 0, 0.823);
+}
+/* change password section ends here */

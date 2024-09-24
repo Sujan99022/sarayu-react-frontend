@@ -5,6 +5,7 @@ import axios from "axios";
 const TradeViewGraph = () => {
   const chartContainerRef = useRef(null);
   const [initialData, setInitialData] = useState([]);
+  let count = 0;
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -15,18 +16,26 @@ const TradeViewGraph = () => {
   }, []);
 
   const fetchGraphData = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/random-value");
-      setInitialData((prevData) => [...prevData, res.data]);
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const res = await axios.get("http://localhost:5000/api/mqtt/messages");
+    //   const timestamp = new Date(res.data.message.timestamp).getTime() / 1000;
+    //   setInitialData((prevData) => [
+    //     ...prevData,
+    //     {
+    //       value: parseFloat(res.data.message.message),
+    //       time: Math.floor(timestamp + count),
+    //     },
+    //   ]);
+    //   count++;
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   useEffect(() => {
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
-      height: 600,
+      height: 780,
       layout: {
         background: { color: "#222" },
         textColor: "#DDD",

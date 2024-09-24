@@ -2,6 +2,10 @@
     background: black;
     min-height: 100vh;
     position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 .manager_navbar_nav {
     display: flex;
