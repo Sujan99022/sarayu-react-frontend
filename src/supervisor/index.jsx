@@ -20,6 +20,7 @@ import "./style.css";
 import { handleWarningModel } from "../redux/slices/UserSlice";
 import TestChart from "./graphs/TestChart";
 import TradeViewGraph from "./graphs/tradeViewGraph/TradeViewGraph";
+import Speedometer from "./graphs/speedometer/Speedometer";
 
 const Supervisor = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -229,7 +230,10 @@ const Supervisor = () => {
               data-aos-once="true"
             >
               {/* <TestChart /> */}
-              <TradeViewGraph />
+              <div className="center_the_graph_container">
+                <TradeViewGraph user={user} />
+              </div>
+              {/* <Speedometer user={user} /> */}
             </div>
           )}
           {/* supervisor graph container ends here */}

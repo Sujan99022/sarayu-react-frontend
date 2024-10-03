@@ -68,6 +68,12 @@
     width: 30px;
     height: 30px;
 }
+.center_the_graph_container {
+    display: flex;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+}
 
 /* change password section starts here */
 .supervisor_change_password_section {

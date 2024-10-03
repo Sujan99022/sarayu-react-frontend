@@ -1,161 +1,143 @@
-import React, { useRef, useEffect, useState } from "react";
-import { createChart, LineStyle, TickMarkType } from "lightweight-charts";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { createChart } from "lightweight-charts";
+import apiClient from "../../../api/apiClient"; // Ensure you have your API client set up
+import { getTime, parseISO } from "date-fns"; // Assuming you're using date-fns for timestamp parsing
 
-const TradeViewGraph = () => {
+const RealtimeChart = ({ user }) => {
   const chartContainerRef = useRef(null);
-  const [initialData, setInitialData] = useState([]);
-  let count = 0;
+  const seriesRef = useRef(null);
+  const [userData, setUserData] = useState([]); // State to hold user data as an array
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchGraphData();
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const fetchGraphData = async () => {
-    // try {
-    //   const res = await axios.get("http://localhost:5000/api/mqtt/messages");
-    //   const timestamp = new Date(res.data.message.timestamp).getTime() / 1000;
-    //   setInitialData((prevData) => [
-    //     ...prevData,
-    //     {
-    //       value: parseFloat(res.data.message.message),
-    //       time: Math.floor(timestamp + count),
-    //     },
-    //   ]);
-    //   count++;
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-
-  useEffect(() => {
-    const chart = createChart(chartContainerRef.current, {
-      width: chartContainerRef.current.clientWidth,
-      height: 780,
+    const chartOptions = {
       layout: {
-        background: { color: "#222" },
-        textColor: "#DDD",
+        textColor: "white",
+        background: { type: "solid", color: "black" },
       },
       grid: {
-        vertLines: { color: "#444" },
-        horzLines: { color: "#444" },
-      },
-      crosshair: {
-        vertLine: {
-          width: 5,
-          style: LineStyle.Solid,
-          color: "#C3BCDB44",
-          labelBackgroundColor: "#9B7DFF",
+        vertLines: {
+          color: "rgba(255, 255, 255, 0.2)",
         },
-        horzLine: {
-          color: "#9B7DFF",
-          labelBackgroundColor: "#9B7DFF",
+        horzLines: {
+          color: "rgba(255, 255, 255, 0.2)",
         },
       },
-      localization: {
-        locale: "en-BD",
-        timeFormatter: (time) => {
-          const date = new Date(time * 1000);
-          return new Intl.DateTimeFormat(navigator.language, {
-            hour: "numeric",
-            minute: "numeric",
-            month: "short",
-            day: "numeric",
-            year: "2-digit",
-          }).format(date);
-        },
+      height: window.innerHeight * 0.7, // Set height to 70% of the viewport height
+      crossHairMarker: {
+        visible: true,
       },
-    });
-
-    chart.priceScale("right").applyOptions({
-      borderColor: "#71649C",
-      visible: false,
-    });
-
-    chart.priceScale("left").applyOptions({
-      borderColor: "#71649C",
-      visible: true,
-    });
-
-    chart.timeScale().applyOptions({
-      borderColor: "#71649C",
-      timeVisible: true,
-      rightOffset: 20,
-      barSpacing: 15,
-      minBarSpacing: 5,
-      fixLeftEdge: true,
-    });
-
-    chart.timeScale().options.tickMarkFormatter = (
-      time,
-      tickMarkType,
-      locale
-    ) => {
-      const date = new Date(time * 1000);
-      switch (tickMarkType) {
-        case TickMarkType.Year:
-          return date.getFullYear();
-        case TickMarkType.Month:
-          return new Intl.DateTimeFormat(locale, { month: "short" }).format(
-            date
-          );
-        case TickMarkType.DayOfMonth:
-          return date.getDate();
-        case TickMarkType.Time:
-          return new Intl.DateTimeFormat(locale, {
-            hour: "numeric",
-            minute: "numeric",
-          }).format(date);
-        case TickMarkType.TimeWithSeconds:
-          return new Intl.DateTimeFormat(locale, {
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-          }).format(date);
-        default:
-          return "";
-      }
+      timeScale: {
+        timeVisible: true, // Ensures timestamps are visible
+        secondsVisible: true, // Shows seconds on the x-axis if needed
+      },
     };
 
+    const chart = createChart(chartContainerRef.current, chartOptions);
+    seriesRef.current = chart.addLineSeries({
+      color: "green",
+      lineWidth: 2,
+      crossHairMarkerVisible: true,
+    });
+
+    // Create a shadow effect using area series
     const areaSeries = chart.addAreaSeries({
-      topColor: "rgba(0, 150, 136, 0.5)",
-      bottomColor: "rgba(0, 150, 136, 0.0)",
-      lineColor: "rgb(0, 150, 136)",
-      lineWidth: 2,
+      topColor: "rgba(0, 128, 0, 0.3)",
+      bottomColor: "rgba(0, 128, 0, 0)",
+      lineColor: "transparent",
     });
 
-    areaSeries.setData(initialData);
-
-    const lineSeries = chart.addLineSeries({
-      color: "red",
-      lineWidth: 2,
-      style: LineStyle.Solid,
-    });
-
-    const lineData = initialData.map((dataPoint) => ({
-      time: dataPoint.time,
-      value: 14,
-    }));
-
-    lineSeries.setData(lineData);
-
-    const handleResize = () => {
-      chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-    };
-
-    window.addEventListener("resize", handleResize);
+    const intervalId = setInterval(() => {
+      fetchGraphData(chart, areaSeries);
+    }, 1000);
 
     return () => {
+      clearInterval(intervalId);
       chart.remove();
-      window.removeEventListener("resize", handleResize);
     };
-  }, [initialData]);
+  }, [user.email]); // Add user.email to the dependency array to fetch new data when email changes
 
-  return <div ref={chartContainerRef} style={{ width: "100%" }}></div>;
+  const fetchGraphData = async (chart, areaSeries) => {
+    try {
+      const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
+      const timestamp = getTime(parseISO(res.data.message.timestamp)) / 1000; // Ensure timestamp is in seconds
+
+      // Debugging output
+      console.log("Fetched Data:", res.data);
+
+      setUserData((prevData) => {
+        // Create a new data point
+        const newDataPoint = {
+          value: parseFloat(res.data.message.message),
+          time: Math.floor(timestamp), // Ensure time is correctly set
+        };
+
+        // Avoid duplicate timestamps
+        const updatedData = prevData.filter(
+          (dataPoint) => dataPoint.time !== newDataPoint.time
+        );
+
+        // Add the new data point
+        updatedData.push(newDataPoint);
+
+        // Keep only the last 100 values
+        if (updatedData.length > 100) {
+          updatedData.shift();
+        }
+
+        // Sort the data by time
+        updatedData.sort((a, b) => a.time - b.time);
+
+        // Debugging output
+        console.log("Updated Data:", updatedData);
+
+        // Update the chart with the new data
+        seriesRef.current.setData(updatedData);
+        areaSeries.setData(updatedData);
+
+        return updatedData; // Store updated data in state
+      });
+    } catch (error) {
+      console.error("Error fetching graph data:", error);
+    }
+  };
+
+  const handleScrollToRealTime = () => {
+    if (seriesRef.current) {
+      seriesRef.current.chart.timeScale().scrollToRealTime();
+    }
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row", // Change direction to row
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <div
+        style={{
+          width: "50px", // Width for the left axis
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* Simulate y-axis labels here if needed */}
+        <span>Y-Axis</span>
+      </div>
+      <div
+        ref={chartContainerRef}
+        style={{
+          flex: 1,
+          height: "100vh",
+          position: "relative", // Position relative to overlay
+        }}
+      />
+    </div>
+  );
 };
 
-export default TradeViewGraph;
+export default RealtimeChart;
