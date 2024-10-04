@@ -74,7 +74,29 @@
     align-items: center;
     justify-content: center;
 }
-
+/* responsive graph code starts here */
+.center_the_graph_container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.trade_lightweight_graph_container {
+    width: 100%;
+}
+.tradeview_graph {
+    height: 70vh;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+@media (max-width: 800px) {
+    .trade_lightweight_graph_container {
+        width: 100%;
+    }
+}
+/* responsive graph code ends here */
 /* change password section starts here */
 .supervisor_change_password_section {
     display: flex;
@@ -127,3 +149,12 @@
     background: rgba(0, 128, 0, 0.823);
 }
 /* change password section ends here */
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    z-index: 1000;
+}

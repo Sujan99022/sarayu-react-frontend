@@ -233,7 +233,12 @@ const Supervisor = () => {
               <div className="center_the_graph_container">
                 <TradeViewGraph user={user} />
               </div>
-              {/* <Speedometer user={user} /> */}
+              <div
+                className="center_the_graph_container"
+                style={{ height: "50vh" }}
+              >
+                <Speedometer user={user} />
+              </div>
             </div>
           )}
           {/* supervisor graph container ends here */}

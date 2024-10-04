@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import apiClient from "../../../api/apiClient";
+import GaugeComponent from "react-gauge-component";
 import "./style.css";
 
 const Speedometer = ({ user }) => {
-  const [graphData, setGraphData] = useState([]);
+  const [currentSpeed, setCurrentSpeed] = useState(0);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -16,58 +17,69 @@ const Speedometer = ({ user }) => {
     try {
       const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
       let floatRes = parseFloat(res.data.message.message);
-
-      setGraphData((prevGraphData) => {
-        const updatedData = [...prevGraphData, floatRes];
-        if (updatedData.length > 100) {
-          updatedData.shift();
-        }
-        return updatedData;
-      });
+      setCurrentSpeed(floatRes);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  const currentSpeed =
-    graphData.length > 0 ? graphData[graphData.length - 1] : 0;
-
-  // Calculate angle for current speed (0-1000 mapped to 0-180 degrees)
-  const getArrowClass = () => {
-    const angle = (currentSpeed / 1000) * 180; // Mapping speed to 180 degrees
-    return `arrow-wrapper speed-${Math.round(angle)}`;
-  };
-
-  const getScaleClass = (scale) => {
-    // Scale represents increments of 50 (0-1000 over 20 steps)
-    const isActive = currentSpeed >= scale * 50; // Highlight active scales based on speed
-    return `speedometer-scale speedometer-scale-${scale} ${
-      isActive ? "active" : ""
-    }`;
-  };
-
-  console.log(graphData);
+  // Define the min and max values for the gauge
+  const minSpeed = 0;
+  const maxSpeed = 110; // Adjust if the range of the values is not between 0 and 100
 
   return (
     <div className="speedometer-container">
       <div className="speedometer-text">
         <div className="static">Value</div>
         <div className="dynamic">
-          <span className="km">{currentSpeed}</span>
-          <span className="unit"></span>
+          <span
+            className={`km ${
+              currentSpeed > 50 ? "gauge_text_red" : "gauge_text_green"
+            }`}
+          >
+            {currentSpeed.toFixed(2)} {/* Show up to 2 decimal places */}
+          </span>
+          <span className="unit"> unit</span>
         </div>
       </div>
-      <div className="center-point"></div>
-      <div className="speedometer-center-hide"></div>
-      <div className="speedometer-bottom-hide"></div>
-      <div className="arrow-container">
-        <div className={getArrowClass()}>
-          <div className="arrow"></div>
-        </div>
-      </div>
-      {[...Array(20)].map((_, i) => (
-        <div key={i} className={getScaleClass(i)}></div>
-      ))}
+
+      {/* GaugeComponent with custom height and width */}
+      <GaugeComponent
+        value={currentSpeed} // Ensure this is a float
+        minValue={minSpeed}
+        maxValue={maxSpeed}
+        type="radial"
+        width={300}
+        height={300}
+        labels={{
+          tickLabels: {
+            type: "inner",
+            ticks: [
+              { value: 20 },
+              { value: 30 },
+              { value: 40 },
+              { value: 50 },
+              { value: maxSpeed },
+            ],
+          },
+        }}
+        arc={{
+          colorArray: ["#5BE12C", "#EA4228"],
+          subArcs: [
+            { limit: 20 },
+            { limit: 30 },
+            { limit: 40 },
+            { limit: 50 },
+            { limit: maxSpeed },
+          ],
+          padding: 0.02,
+          width: 0.3,
+        }}
+        pointer={{
+          elastic: true,
+          animationDelay: 0,
+        }}
+      />
     </div>
   );
 };

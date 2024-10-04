@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
 import apiClient from "../../../api/apiClient";
-import { parse, format } from "date-fns";
+import { parse } from "date-fns";
 
 const RealtimeChart = ({ user }) => {
   const chartContainerRef = useRef(null);
@@ -22,7 +22,7 @@ const RealtimeChart = ({ user }) => {
           color: "rgba(255, 255, 255, 0.2)",
         },
       },
-      height: window.innerHeight * 0.7, // Set height to 70% of the viewport height
+      height: 600, // Set height to 200px
       crossHairMarker: {
         visible: true,
       },
@@ -103,27 +103,18 @@ const RealtimeChart = ({ user }) => {
 
   return (
     <div
+      className="trade_lightweight_graph_container"
       style={{
         display: "flex",
         flexDirection: "row",
-        width: "100%",
-        height: "100%",
       }}
     >
+      <div></div>
       <div
-        style={{
-          width: "50px",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      ></div>
-      <div
+        className="tradeview_graph"
         ref={chartContainerRef}
         style={{
           flex: 1,
-          height: "100vh",
           position: "relative",
         }}
       />
