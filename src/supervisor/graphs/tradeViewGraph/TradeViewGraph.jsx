@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
-import apiClient from "../../../api/apiClient"; // Ensure you have your API client set up
-import { getTime, parseISO } from "date-fns"; // Assuming you're using date-fns for timestamp parsing
+import apiClient from "../../../api/apiClient";
+import { parse, format } from "date-fns";
 
 const RealtimeChart = ({ user }) => {
   const chartContainerRef = useRef(null);
   const seriesRef = useRef(null);
-  const [userData, setUserData] = useState([]); // State to hold user data as an array
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     const chartOptions = {
@@ -39,7 +39,6 @@ const RealtimeChart = ({ user }) => {
       crossHairMarkerVisible: true,
     });
 
-    // Create a shadow effect using area series
     const areaSeries = chart.addAreaSeries({
       topColor: "rgba(0, 128, 0, 0.3)",
       bottomColor: "rgba(0, 128, 0, 0)",
@@ -48,62 +47,57 @@ const RealtimeChart = ({ user }) => {
 
     const intervalId = setInterval(() => {
       fetchGraphData(chart, areaSeries);
-    }, 1000);
+    }, 2000);
 
     return () => {
       clearInterval(intervalId);
       chart.remove();
     };
-  }, [user.email]); // Add user.email to the dependency array to fetch new data when email changes
+  }, [user.email]);
 
   const fetchGraphData = async (chart, areaSeries) => {
     try {
       const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
-      const timestamp = getTime(parseISO(res.data.message.timestamp)) / 1000; // Ensure timestamp is in seconds
+      const { timestamp, message } = res.data.message;
 
-      // Debugging output
-      console.log("Fetched Data:", res.data);
+      // Parse the timestamp in the format 'YYYY-MM-DD HH:mm:ss'
+      const date = parse(timestamp, "yyyy-MM-dd HH:mm:ss", new Date());
+
+      // Get timezone offset in minutes for Bengaluru (UTC+5:30)
+      const timezoneOffset = 330; // Bengaluru is UTC+5:30 (5.5 hours = 330 minutes)
+      const offsetMilliseconds = timezoneOffset * 60 * 1000;
+
+      // Adjust the timestamp by adding the offset
+      const adjustedTime = Math.floor(
+        (date.getTime() + offsetMilliseconds) / 1000
+      ); // Convert to seconds
 
       setUserData((prevData) => {
-        // Create a new data point
         const newDataPoint = {
-          value: parseFloat(res.data.message.message),
-          time: Math.floor(timestamp), // Ensure time is correctly set
+          value: parseFloat(message),
+          time: adjustedTime, // Pass the adjusted time to lightweight-charts
         };
 
-        // Avoid duplicate timestamps
         const updatedData = prevData.filter(
           (dataPoint) => dataPoint.time !== newDataPoint.time
         );
 
-        // Add the new data point
         updatedData.push(newDataPoint);
 
-        // Keep only the last 100 values
         if (updatedData.length > 100) {
           updatedData.shift();
         }
 
-        // Sort the data by time
         updatedData.sort((a, b) => a.time - b.time);
-
-        // Debugging output
-        console.log("Updated Data:", updatedData);
 
         // Update the chart with the new data
         seriesRef.current.setData(updatedData);
         areaSeries.setData(updatedData);
 
-        return updatedData; // Store updated data in state
+        return updatedData;
       });
     } catch (error) {
       console.error("Error fetching graph data:", error);
-    }
-  };
-
-  const handleScrollToRealTime = () => {
-    if (seriesRef.current) {
-      seriesRef.current.chart.timeScale().scrollToRealTime();
     }
   };
 
@@ -111,29 +105,26 @@ const RealtimeChart = ({ user }) => {
     <div
       style={{
         display: "flex",
-        flexDirection: "row", // Change direction to row
+        flexDirection: "row",
         width: "100%",
         height: "100%",
       }}
     >
       <div
         style={{
-          width: "50px", // Width for the left axis
+          width: "50px",
           color: "white",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
-      >
-        {/* Simulate y-axis labels here if needed */}
-        <span>Y-Axis</span>
-      </div>
+      ></div>
       <div
         ref={chartContainerRef}
         style={{
           flex: 1,
           height: "100vh",
-          position: "relative", // Position relative to overlay
+          position: "relative",
         }}
       />
     </div>
