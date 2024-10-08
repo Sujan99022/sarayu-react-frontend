@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap");
+.graph_digital_meter_main_container {
+    width: 100vw;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.graph_digital_meter_second_container {
+    width: 200px;
+    height: 300px;
+    border: 2px solid rgba(255, 255, 255, 0.661);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    padding: 0 20px;
+    border-radius: 5px;
+    position: relative;
+}
+.graph_digital_meter_second_container > header {
+    height: 10%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+}
+.graph_digital_meter_second_container > header > div {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.graph_digital_meter_second_container > header > div:nth-child(1) {
+    background: #ff605c;
+}
+.graph_digital_meter_second_container > header > div:nth-child(2) {
+    background: #ffbd44;
+}
+.graph_digital_meter_second_container > header > div:nth-child(3) {
+    background: #00ca4e;
+}
+.graph_digital_meter_second_container > p {
+    margin: 0;
+    font-size: 50px;
+    font-weight: bold;
+    font-family: "Orbitron", sans-serif;
+    transform: translateY(-50%);
+}
+.graph_digital_meter_second_container > div {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border: 2px solid gray;
+}
+.graph_digital_meter_second_container > div > section:first-child {
+    height: 20px;
+    display: flex;
+    display: flex;
+    justify-content: space-between;
+}
+.graph_digital_meter_second_container > div > section:first-child > span {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+}
+.graph_digital_meter_second_container > div > section:first-child > span {
+    background: black;
+    color: white;
+}
+.active_digital_meter_active_today_yestarday {
+    background: white !important;
+    color: black !important;
+}
+.graph_digital_meter_second_container > div > section:last-child > div {
+    padding: 10px;
+}
+.graph_digital_meter_second_container > div > section:last-child > div > p {
+    margin: 0;
+    font-size: 14px;
+}
+.digital_meter_display_text_color_green {
+    color: green;
+}
+.digital_meter_display_text_color_lightgreen {
+    color: rgb(107, 174, 0);
+}
+.digital_meter_display_text_color_yellow {
+    color: yellow;
+}
+.digital_meter_display_text_color_orange {
+    color: orange;
+}
+.digital_meter_display_text_color_orange {
+    color: red;
+}

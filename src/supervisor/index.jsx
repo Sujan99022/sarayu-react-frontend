@@ -21,6 +21,7 @@ import { handleWarningModel } from "../redux/slices/UserSlice";
 import TestChart from "./graphs/TestChart";
 import TradeViewGraph from "./graphs/tradeViewGraph/TradeViewGraph";
 import Speedometer from "./graphs/speedometer/Speedometer";
+import DigitalMeter from "./graphs/digitalmeter/DigitalMeter";
 
 const Supervisor = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -97,7 +98,7 @@ const Supervisor = () => {
 
     dispatch(setLoading(true));
     try {
-      await apiClient.post(`/auth/reset-password`, dataToSend);
+      await apiClient.post(`/auth/supervisor/reset-password`, dataToSend);
       toast.success("Password changed successfully!");
     } catch (error) {
       toast.error(error?.response?.data?.message || "An error occurred");
@@ -238,6 +239,9 @@ const Supervisor = () => {
                 style={{ height: "50vh" }}
               >
                 <Speedometer user={user} />
+              </div>
+              <div className="center_the_graph_container">
+                <DigitalMeter user={user} />
               </div>
             </div>
           )}

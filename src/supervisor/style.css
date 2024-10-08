@@ -80,6 +80,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-x: hidden;
 }
 .trade_lightweight_graph_container {
     width: 100%;
@@ -149,12 +150,3 @@
     background: rgba(0, 128, 0, 0.823);
 }
 /* change password section ends here */
-.tooltip {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    pointer-events: none;
-    z-index: 1000;
-}

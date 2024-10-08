@@ -38,26 +38,26 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="sidebar_buttons_container">
-          <SidebarBtn
+          {/* <SidebarBtn
             path="/dashboard/live"
             icon={<IoLocationSharp />}
             title="Live"
-          />
+          /> */}
           <SidebarBtn
             path="/dashboard/dashboard"
             icon={<MdSpaceDashboard />}
             title="Dashboard"
           />
-          <SidebarBtn
+          {/* <SidebarBtn
             path="/dashboard/devices"
             icon={<MdDevices />}
             title="Devices"
-          />
-          <SidebarBtn
+          /> */}
+          {/* <SidebarBtn
             path="/dashboard/reports"
             icon={<BiSolidReport />}
             title="Reports"
-          />
+          /> */}
           <SidebarBtn
             path="/dashboard/users"
             icon={<FaUsersCog />}

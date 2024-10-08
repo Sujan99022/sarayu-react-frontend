@@ -4,6 +4,7 @@ import MailinboxSlice from "./slices/MailiboxSlice";
 import UniversalLoader from "./slices/UniversalLoader";
 import UserDetailsSlice from "./slices/UserDetailsSlice";
 import MESSlice from "./slices/ManagerEmployeeSupervisorListSlice";
+import digitalMeterSlice from "./slices/DigitalMeterSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     UniversalLoader: UniversalLoader,
     UserDetailsSlice: UserDetailsSlice,
     MESSlice: MESSlice,
+    digitalMeterSlice: digitalMeterSlice,
   },
 });
 

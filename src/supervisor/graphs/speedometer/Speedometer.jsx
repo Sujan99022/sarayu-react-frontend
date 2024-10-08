@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import apiClient from "../../../api/apiClient";
 import GaugeComponent from "react-gauge-component";
 import "./style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { updateSpeed } from "../../../redux/slices/DigitalMeterSlice";
 
 const Speedometer = ({ user }) => {
-  const [currentSpeed, setCurrentSpeed] = useState(0);
-
+  const { currentSpeed } = useSelector((state) => state.digitalMeterSlice);
+  const dispatch = useDispatch();
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchGraphData();
-    }, 2000);
+    }, 1000);
     return () => clearInterval(intervalId);
   }, [user.email]);
 
@@ -17,7 +19,7 @@ const Speedometer = ({ user }) => {
     try {
       const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
       let floatRes = parseFloat(res.data.message.message);
-      setCurrentSpeed(floatRes);
+      dispatch(updateSpeed(floatRes));
     } catch (error) {
       console.error(error);
     }
@@ -30,14 +32,14 @@ const Speedometer = ({ user }) => {
   return (
     <div className="speedometer-container">
       <div className="speedometer-text">
-        <div className="static">Value</div>
+        <div className="static">Current Value</div>
         <div className="dynamic">
           <span
             className={`km ${
               currentSpeed > 50 ? "gauge_text_red" : "gauge_text_green"
             }`}
           >
-            {currentSpeed.toFixed(2)} {/* Show up to 2 decimal places */}
+            {currentSpeed.toFixed(2)}
           </span>
           <span className="unit"> unit</span>
         </div>
@@ -45,7 +47,7 @@ const Speedometer = ({ user }) => {
 
       {/* GaugeComponent with custom height and width */}
       <GaugeComponent
-        value={currentSpeed} // Ensure this is a float
+        value={currentSpeed}
         minValue={minSpeed}
         maxValue={maxSpeed}
         type="radial"

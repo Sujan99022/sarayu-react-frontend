@@ -1,0 +1,117 @@
+.tradeview_graph_theme_cahnge {
+    position: absolute;
+    top: -4px;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    z-index: 999999;
+    justify-content: space-between;
+}
+/* ligh mode dark mode starts here */
+.tradingviewgraph_theme_btn-container {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.tradingviewgraph_theme_btn-container i {
+    display: inline-block;
+    position: relative;
+    top: -9px;
+}
+
+label {
+    font-size: 13px;
+    color: #424242;
+    font-weight: 500;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch {
+    display: inline-block;
+    margin: 0px;
+    position: relative;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch > label.tradingviewgraph_theme_btn-color-mode-switch-inner {
+    margin: 0px;
+    width: 140px;
+    height: 30px;
+    background: #e0e0e0;
+    border-radius: 26px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch > label.tradingviewgraph_theme_btn-color-mode-switch-inner:before {
+    content: attr(data-on);
+    position: absolute;
+    font-size: 12px;
+    font-weight: 500;
+    top: 7px;
+    right: 20px;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch > label.tradingviewgraph_theme_btn-color-mode-switch-inner:after {
+    content: attr(data-off);
+    width: 70px;
+    height: 87%;
+    background: #fff;
+    border-radius: 26px;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0px 0px 6px -2px #111;
+    padding: 5px 0px;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch input[type="checkbox"] {
+    cursor: pointer;
+    width: 50px;
+    height: 25px;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    margin: 0px;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch
+    input[type="checkbox"]:checked
+    + label.tradingviewgraph_theme_btn-color-mode-switch-inner {
+    background: #151515;
+    color: #fff;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch
+    input[type="checkbox"]:checked
+    + label.tradingviewgraph_theme_btn-color-mode-switch-inner:after {
+    content: attr(data-on);
+    left: 68px;
+    background: #3c3c3c;
+}
+
+.tradingviewgraph_theme_btn-color-mode-switch
+    input[type="checkbox"]:checked
+    + label.tradingviewgraph_theme_btn-color-mode-switch-inner:before {
+    content: attr(data-off);
+    right: auto;
+    left: 20px;
+}
+
+/* light mode dark mode ends here */
+.tradeview_graph_theme_cahnge > div {
+    padding: 5px;
+}
+.tradeview_graph_theme_cahnge > div:last-child > select {
+    width: 100px;
+    border-radius: 50px;
+    text-align: center;
+    background: gray;
+    color: white;
+    cursor: pointer;
+}
