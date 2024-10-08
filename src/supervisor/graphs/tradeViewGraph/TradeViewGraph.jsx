@@ -20,7 +20,6 @@ const RealtimeChart = ({ user }) => {
   }, [theme, lineWidth]);
 
   useEffect(() => {
-    // Removed the code that retrieves userData from localStorage
     const chartOptions = {
       layout: {
         textColor: theme ? "black" : "white",
@@ -65,7 +64,7 @@ const RealtimeChart = ({ user }) => {
       const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
       const { timestamp, message } = res.data.message;
       const date = parse(timestamp, "yyyy-MM-dd HH:mm:ss", new Date());
-      const timezoneOffset = 330;
+      const timezoneOffset = 330; // Offset for IST
       const offsetMilliseconds = timezoneOffset * 60 * 1000;
 
       const adjustedTime = Math.floor(
@@ -77,14 +76,19 @@ const RealtimeChart = ({ user }) => {
           value: parseFloat(message),
           time: adjustedTime,
         };
-        const updatedData = prevData.filter(
-          (dataPoint) => dataPoint.time !== newDataPoint.time
-        );
-        updatedData.push(newDataPoint);
-        if (updatedData.length > 100) {
-          updatedData.shift();
+
+        // Ensure timestamps are unique by checking the last data point's time
+        const lastDataPoint = prevData[prevData.length - 1];
+        if (lastDataPoint && lastDataPoint.time >= newDataPoint.time) {
+          // Increment the time slightly to ensure uniqueness
+          newDataPoint.time = lastDataPoint.time + 1; // Add 1 second for uniqueness
         }
+
+        const updatedData = [...prevData, newDataPoint];
+
+        // Sort data by time
         updatedData.sort((a, b) => a.time - b.time);
+
         const colorizedData = updatedData.map((point, index, arr) => {
           const color = point.value > 50 ? "red" : "green";
           const nextValue = arr[index + 1]?.value;
@@ -94,7 +98,7 @@ const RealtimeChart = ({ user }) => {
           };
         });
 
-        // Removed the localStorage.setItem part for userData_
+        // Pass sorted data to the chart
         seriesRef.current.setData(colorizedData);
 
         return updatedData;
