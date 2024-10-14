@@ -4,13 +4,12 @@
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
-  box-sizing: border-box;
   scroll-behavior: smooth;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(160, 227, 3) black;
+  scrollbar-color: rgb(160, 227, 3) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -18,7 +17,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: black;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {

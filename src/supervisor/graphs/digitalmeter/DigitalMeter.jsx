@@ -24,7 +24,12 @@ const DigitalMeter = () => {
   }, [currentSpeed]);
 
   return (
-    <div className="graph_digital_meter_main_container">
+    <div
+      className="graph_digital_meter_main_container"
+      data-aos="fade-out"
+      data-aos-duration={1000}
+      data-aos-once="true"
+    >
       <div className="graph_digital_meter_second_container">
         <header>
           <div></div>

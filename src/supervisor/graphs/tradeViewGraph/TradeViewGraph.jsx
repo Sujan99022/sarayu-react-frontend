@@ -13,11 +13,25 @@ const RealtimeChart = ({ user }) => {
   const [userData, setUserData] = useState([]);
   const [theme, setTheme] = useState(oldTheme || false);
   const [lineWidth, setLineWidth] = useState(oldLineWidth || 2);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme));
     localStorage.setItem("lineWidth", JSON.stringify(lineWidth));
   }, [theme, lineWidth]);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      setViewportHeight(window.innerHeight);
+    };
+
+    // Update height on window resize
+    window.addEventListener("resize", updateHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+    };
+  }, []);
 
   useEffect(() => {
     const chartOptions = {
@@ -33,7 +47,7 @@ const RealtimeChart = ({ user }) => {
           color: theme ? "gray" : "rgba(255, 255, 255, 0.2)",
         },
       },
-      height: 600,
+      height: viewportHeight * 0.8, // 80% of the viewport height
       crossHairMarker: {
         visible: true,
       },
@@ -49,6 +63,15 @@ const RealtimeChart = ({ user }) => {
       lineWidth: parseInt(lineWidth),
     });
 
+    // Adding the horizontal yellow line at value 50
+    seriesRef.current.createPriceLine({
+      price: 50,
+      color: "yellow",
+      lineWidth: 2,
+      lineStyle: 2, // Dashed line
+      axisLabelVisible: true,
+    });
+
     const intervalId = setInterval(() => {
       fetchGraphData();
     }, 1000);
@@ -57,14 +80,14 @@ const RealtimeChart = ({ user }) => {
       clearInterval(intervalId);
       chart.remove();
     };
-  }, [user.email, theme, lineWidth]);
+  }, [user.email, theme, lineWidth, viewportHeight]);
 
   const fetchGraphData = async () => {
     try {
       const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
       const { timestamp, message } = res.data.message;
       const date = parse(timestamp, "yyyy-MM-dd HH:mm:ss", new Date());
-      const timezoneOffset = 330; // Offset for IST
+      const timezoneOffset = 330;
       const offsetMilliseconds = timezoneOffset * 60 * 1000;
 
       const adjustedTime = Math.floor(
@@ -77,16 +100,12 @@ const RealtimeChart = ({ user }) => {
           time: adjustedTime,
         };
 
-        // Ensure timestamps are unique by checking the last data point's time
         const lastDataPoint = prevData[prevData.length - 1];
         if (lastDataPoint && lastDataPoint.time >= newDataPoint.time) {
-          // Increment the time slightly to ensure uniqueness
           newDataPoint.time = lastDataPoint.time + 1; // Add 1 second for uniqueness
         }
 
         const updatedData = [...prevData, newDataPoint];
-
-        // Sort data by time
         updatedData.sort((a, b) => a.time - b.time);
 
         const colorizedData = updatedData.map((point, index, arr) => {
@@ -98,7 +117,6 @@ const RealtimeChart = ({ user }) => {
           };
         });
 
-        // Pass sorted data to the chart
         seriesRef.current.setData(colorizedData);
 
         return updatedData;

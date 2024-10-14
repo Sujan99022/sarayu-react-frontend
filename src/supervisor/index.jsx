@@ -22,6 +22,7 @@ import TestChart from "./graphs/TestChart";
 import TradeViewGraph from "./graphs/tradeViewGraph/TradeViewGraph";
 import Speedometer from "./graphs/speedometer/Speedometer";
 import DigitalMeter from "./graphs/digitalmeter/DigitalMeter";
+import { IoSpeedometerSharp } from "react-icons/io5";
 
 const Supervisor = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -119,11 +120,54 @@ const Supervisor = () => {
             </p>
           </div>
           <div className="manager_navbar_nav_desktop_view_links">
-            <p className="manager_navbar_nav_desktop_view_links_active">
-              Dashboard
+            <p
+              className={
+                activeNavBtn === "home" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("home")}
+            >
+              <FaHome /> Home
             </p>
-            <p>Contact Us</p>
-            <p>Logout</p>
+            <p
+              className={
+                activeNavBtn === "operators" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("operators")}
+            >
+              <FaUsers /> Operators
+            </p>
+            <p
+              className={
+                activeNavBtn === "graph" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("graph")}
+            >
+              <VscGraphLine /> Graph
+            </p>
+            <p
+              className={
+                activeNavBtn === "digitalmeter" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("digitalmeter")}
+            >
+              <IoSpeedometerSharp /> Digital
+            </p>
+            <p
+              className={
+                activeNavBtn === "password" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("password")}
+            >
+              <IoKey /> Change Password
+            </p>
+            <p onClick={() => dispatch(handleWarningModel())}>
+              <MdLogout /> Logout
+            </p>
           </div>
           <div className="manager_navbar_nav_mobile_view_open_btn">
             <HiInformationCircle
@@ -230,22 +274,41 @@ const Supervisor = () => {
               data-aos-duration="1000"
               data-aos-once="true"
             >
-              {/* <TestChart /> */}
               <div className="center_the_graph_container">
                 <TradeViewGraph user={user} />
-              </div>
-              <div
-                className="center_the_graph_container"
-                style={{ height: "50vh" }}
-              >
-                <Speedometer user={user} />
-              </div>
-              <div className="center_the_graph_container">
-                <DigitalMeter user={user} />
               </div>
             </div>
           )}
           {/* supervisor graph container ends here */}
+          {/* supervisor digital graph starts here */}
+          {activeNavBtn === "digitalmeter" && (
+            <div className="digital_meter_data_view_container">
+              <div>
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <Speedometer user={user} />
+                <DigitalMeter user={user} />
+              </div>
+            </div>
+          )}
+          {/* supervisor digital graph ends here */}
           {/* supervisor change password starts here */}
           {activeNavBtn === "password" && (
             <div className="supervisor_change_password_section">
@@ -319,6 +382,18 @@ const Supervisor = () => {
           >
             <VscGraphLine onClick={() => setActiveNavBtn("graph")} />
             {activeNavBtn === "graph" && <span>Graph</span>}
+          </div>
+          <div
+            className={
+              activeNavBtn === "digitalmeter" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <IoSpeedometerSharp
+              className="mb-1"
+              onClick={() => setActiveNavBtn("digitalmeter")}
+            />
+            {activeNavBtn === "digitalmeter" && <span>Digital</span>}
           </div>
           <div
             className={

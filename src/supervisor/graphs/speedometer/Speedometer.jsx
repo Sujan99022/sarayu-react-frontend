@@ -30,58 +30,65 @@ const Speedometer = ({ user }) => {
   const maxSpeed = 110; // Adjust if the range of the values is not between 0 and 100
 
   return (
-    <div className="speedometer-container">
-      <div className="speedometer-text">
-        <div className="static">Current Value</div>
-        <div className="dynamic">
-          <span
-            className={`km ${
-              currentSpeed > 50 ? "gauge_text_red" : "gauge_text_green"
-            }`}
-          >
-            {currentSpeed.toFixed(2)}
-          </span>
-          <span className="unit"> unit</span>
+    <div
+      className="center_the_digital_graph_container"
+      data-aos="fade-out"
+      data-aos-duration={1000}
+      data-aos-once="true"
+    >
+      <div className="speedometer-container">
+        <div className="speedometer-text">
+          <div className="static">Current Value</div>
+          <div className="dynamic">
+            <span
+              className={`km ${
+                currentSpeed > 50 ? "gauge_text_red" : "gauge_text_green"
+              }`}
+            >
+              {currentSpeed.toFixed(2)}
+            </span>
+            <span className="unit"> unit</span>
+          </div>
         </div>
-      </div>
 
-      {/* GaugeComponent with custom height and width */}
-      <GaugeComponent
-        value={currentSpeed}
-        minValue={minSpeed}
-        maxValue={maxSpeed}
-        type="radial"
-        width={300}
-        height={300}
-        labels={{
-          tickLabels: {
-            type: "inner",
-            ticks: [
-              { value: 20 },
-              { value: 30 },
-              { value: 40 },
-              { value: 50 },
-              { value: maxSpeed },
+        {/* GaugeComponent with custom height and width */}
+        <GaugeComponent
+          value={currentSpeed}
+          minValue={minSpeed}
+          maxValue={maxSpeed}
+          type="radial"
+          width={300}
+          height={300}
+          labels={{
+            tickLabels: {
+              type: "inner",
+              ticks: [
+                { value: 20 },
+                { value: 30 },
+                { value: 40 },
+                { value: 50 },
+                { value: maxSpeed },
+              ],
+            },
+          }}
+          arc={{
+            colorArray: ["#5BE12C", "#EA4228"],
+            subArcs: [
+              { limit: 20 },
+              { limit: 30 },
+              { limit: 40 },
+              { limit: 50 },
+              { limit: maxSpeed },
             ],
-          },
-        }}
-        arc={{
-          colorArray: ["#5BE12C", "#EA4228"],
-          subArcs: [
-            { limit: 20 },
-            { limit: 30 },
-            { limit: 40 },
-            { limit: 50 },
-            { limit: maxSpeed },
-          ],
-          padding: 0.02,
-          width: 0.3,
-        }}
-        pointer={{
-          elastic: true,
-          animationDelay: 0,
-        }}
-      />
+            padding: 0.02,
+            width: 0.3,
+          }}
+          pointer={{
+            elastic: true,
+            animationDelay: 0,
+          }}
+        />
+      </div>
     </div>
   );
 };
