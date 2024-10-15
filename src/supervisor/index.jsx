@@ -22,7 +22,8 @@ import TestChart from "./graphs/TestChart";
 import TradeViewGraph from "./graphs/tradeViewGraph/TradeViewGraph";
 import Speedometer from "./graphs/speedometer/Speedometer";
 import DigitalMeter from "./graphs/digitalmeter/DigitalMeter";
-import { IoSpeedometerSharp } from "react-icons/io5";
+import { BsSpeedometer2 } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
 
 const Supervisor = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -154,7 +155,7 @@ const Supervisor = () => {
               }
               onClick={() => setActiveNavBtn("digitalmeter")}
             >
-              <IoSpeedometerSharp /> Digital
+              <BsSpeedometer2 /> Digital
             </p>
             <p
               className={
@@ -218,9 +219,10 @@ const Supervisor = () => {
               data-aos-once="true"
             >
               <div>
-                <p>
-                  Note : Lorem ipsum dolor sit amet consectetur adipisicing
-                  elit. Placeat, neque.
+                <p className="md-py-5 text-center">
+                  Note: Here you will see all the operators under you, and you
+                  can view the specific graph assigned to the user by clicking
+                  on the graph or digital meter.
                 </p>
                 <span className="note_close_icon">
                   <IoClose onClick={() => setCloseNote(false)} />
@@ -230,41 +232,52 @@ const Supervisor = () => {
           )}
           {/* users under supervisor dispaly starts here */}
           {activeNavBtn === "operators" && (
-            <div className="supervisor_display_all_operators_container">
-              <p className="text-a">Operators({operatorsList.length})</p>
-              {operatorsList &&
-                operatorsList?.map((item, index) => {
-                  return (
-                    <div
-                      key={item._id}
-                      data-aos="fade-up"
-                      data-aos-duration={100 + index * 50}
-                      data-aos-once="true"
-                    >
-                      <div>
-                        <table>
-                          <tr>
-                            <td rowSpan={2} className="px-3">
-                              {index + 1}.
-                            </td>
-                            <td>{item.name}</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              {item.email.length <= 30
-                                ? item.email
-                                : item.email.slice(0, 30) + "..."}
-                            </td>
-                          </tr>
-                        </table>
+            <>
+              <p className="supervisor_display_all_operators_container_p">
+                Operators List
+              </p>
+              <div className="supervisor_display_all_operators_container">
+                {operatorsList &&
+                  operatorsList?.map((item, index) => {
+                    return (
+                      <div
+                        key={item._id}
+                        data-aos="fade-up"
+                        data-aos-duration={100 + index * 50}
+                        data-aos-once="true"
+                      >
+                        <div>
+                          <div>
+                            <span>{index + 1}</span>
+                          </div>
+                          <div>
+                            <p>
+                              <FaUser size={"12"} /> {item.name}
+                            </p>
+                            <p>
+                              <MdEmail size={"12"} /> {item.email}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <div>
+                            <span onClick={() => setActiveNavBtn("graph")}>
+                              <VscGraphLine />
+                            </span>
+                          </div>
+                          <div>
+                            <span
+                              onClick={() => setActiveNavBtn("digitalmeter")}
+                            >
+                              <BsSpeedometer2 />
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div onClick={() => setActiveNavBtn("graph")}>
-                        <img src={GraphPNG} alt="graph png" />
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
+                    );
+                  })}
+              </div>
+            </>
           )}
           {/* users under supervisor dispaly ends here */}
           {/* supervisor graph container starts here */}
@@ -389,7 +402,7 @@ const Supervisor = () => {
               `footer_navigationbar_mobile_view_active`
             }
           >
-            <IoSpeedometerSharp
+            <BsSpeedometer2
               className="mb-1"
               onClick={() => setActiveNavBtn("digitalmeter")}
             />

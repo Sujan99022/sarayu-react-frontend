@@ -9,7 +9,8 @@ const RealtimeChart = ({ user }) => {
   const oldLineWidth = JSON.parse(localStorage.getItem("lineWidth"));
 
   const chartContainerRef = useRef(null);
-  const seriesRef = useRef(null);
+  const chartRef = useRef(null); // Ref for the chart instance
+  const seriesRef = useRef(null); // Ref for the series instance
   const [userData, setUserData] = useState([]);
   const [theme, setTheme] = useState(oldTheme || false);
   const [lineWidth, setLineWidth] = useState(oldLineWidth || 2);
@@ -58,6 +59,7 @@ const RealtimeChart = ({ user }) => {
     };
 
     const chart = createChart(chartContainerRef.current, chartOptions);
+    chartRef.current = chart; // Store the chart in the ref
 
     seriesRef.current = chart.addLineSeries({
       lineWidth: parseInt(lineWidth),
@@ -79,6 +81,8 @@ const RealtimeChart = ({ user }) => {
     return () => {
       clearInterval(intervalId);
       chart.remove();
+      chartRef.current = null; // Reset the ref when chart is removed
+      seriesRef.current = null; // Reset the series ref
     };
   }, [user.email, theme, lineWidth, viewportHeight]);
 
@@ -117,7 +121,10 @@ const RealtimeChart = ({ user }) => {
           };
         });
 
-        seriesRef.current.setData(colorizedData);
+        // Ensure chart and series still exist before updating data
+        if (seriesRef.current) {
+          seriesRef.current.setData(colorizedData);
+        }
 
         return updatedData;
       });

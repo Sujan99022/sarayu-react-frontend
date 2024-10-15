@@ -6,8 +6,12 @@
 }
 .note_close_icon {
     position: absolute;
-    top: -4px;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
     right: 0;
+    width: 20px;
     font-size: 18px;
 }
 .supervisor_note_model_container > div {
@@ -18,6 +22,7 @@
     border-radius: 10px;
     padding: 10px 20px;
     position: relative;
+    font-size: 14px;
 }
 .supervisor_note_model_container > div > p {
     margin: 0;
@@ -32,41 +37,75 @@
     transition: all 0.3s ease-in-out;
     margin: 0 !important;
 }
-.supervisor_display_all_operators_container > p:first-child {
+.supervisor_display_all_operators_container_p {
     color: white;
     text-align: center;
     margin: 15px 0;
     font-size: 20px;
 }
-.supervisor_display_all_operators_container > div {
-    width: 90%;
+.supervisor_display_all_operators_container {
     display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-    padding: 10px 15px;
-    border-radius: 5px;
-    color: rgba(255, 255, 255, 0.843);
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+.supervisor_display_all_operators_container > div {
+    width: 350px;
+    height: 100%;
+    border: 1px solid rgb(39, 51, 39);
+    display: grid;
+    grid-template-columns: 80% 20%;
+    cursor: pointer;
+}
+.supervisor_display_all_operators_container > div > div:first-child {
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
+.supervisor_display_all_operators_container > div > div:first-child > div:first-child {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(128, 128, 128, 0.217);
+    border: 2px solid black;
+    color: white;
+}
+.supervisor_display_all_operators_container > div > div:first-child > div:last-child {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.supervisor_display_all_operators_container > div > div:first-child > div:last-child > p {
+    margin: 0;
+    font-weight: 300;
     font-size: 14px;
-    box-shadow: 0 0 2px rgb(109, 108, 108);
-    background: rgb(13, 13, 13);
-    position: relative;
+    height: 100%;
+    padding: 0 5px;
+    border: 2px solid black;
+    background: rgba(128, 128, 128, 0.217);
 }
 .supervisor_display_all_operators_container > div > div:last-child {
-    background: rgba(183, 5, 142, 0.928);
-    height: 100%;
-    width: 50px;
-    position: absolute;
-    right: 0;
-    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+.supervisor_display_all_operators_container > div > div:last-child > div {
+    height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
-.supervisor_display_all_operators_container > div > div:last-child > img {
-    width: 30px;
-    height: 30px;
+.supervisor_display_all_operators_container > div > div:last-child > div:first-child {
+    background: rgba(128, 128, 128, 0.217);
+    color: white;
+    border: 2px solid black;
+}
+.supervisor_display_all_operators_container > div > div:last-child > div:last-child {
+    background: rgba(128, 128, 128, 0.217);
+    color: white;
+    border: 2px solid black;
 }
 /* responsive graph code starts here */
 .center_the_graph_container {
@@ -169,5 +208,8 @@
 @media (max-width: 800px) {
     .trade_lightweight_graph_container {
         width: 100%;
+    }
+    .supervisor_note_model_container > div {
+        font-size: 12px;
     }
 }
