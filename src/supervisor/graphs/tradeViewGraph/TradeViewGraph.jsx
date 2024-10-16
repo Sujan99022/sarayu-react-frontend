@@ -3,8 +3,9 @@ import { createChart } from "lightweight-charts";
 import apiClient from "../../../api/apiClient";
 import { parse } from "date-fns";
 import "./style.css";
+import { toast } from "react-toastify";
 
-const RealtimeChart = ({ user }) => {
+const RealtimeChart = ({ selectedEmployee, email, topic }) => {
   const oldTheme = JSON.parse(localStorage.getItem("theme"));
   const oldLineWidth = JSON.parse(localStorage.getItem("lineWidth"));
 
@@ -15,6 +16,18 @@ const RealtimeChart = ({ user }) => {
   const [theme, setTheme] = useState(oldTheme || false);
   const [lineWidth, setLineWidth] = useState(oldLineWidth || 2);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    subscribeToTheTopic();
+  }, [selectedEmployee]);
+
+  const subscribeToTheTopic = async () => {
+    try {
+      await apiClient.post("/auth/subscribeToEmployeeTopic", selectedEmployee);
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
 
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme));
@@ -84,11 +97,11 @@ const RealtimeChart = ({ user }) => {
       chartRef.current = null; // Reset the ref when chart is removed
       seriesRef.current = null; // Reset the series ref
     };
-  }, [user.email, theme, lineWidth, viewportHeight]);
+  }, [email, theme, lineWidth, viewportHeight]);
 
   const fetchGraphData = async () => {
     try {
-      const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
+      const res = await apiClient.get(`/mqtt/messages?email=${email}`);
       const { timestamp, message } = res.data.message;
       const date = parse(timestamp, "yyyy-MM-dd HH:mm:ss", new Date());
       const timezoneOffset = 330;

@@ -13,11 +13,11 @@ const Speedometer = ({ user }) => {
       fetchGraphData();
     }, 1000);
     return () => clearInterval(intervalId);
-  }, [user.email]);
+  }, [user]);
 
   const fetchGraphData = async () => {
     try {
-      const res = await apiClient.get(`/mqtt/messages?email=${user.email}`);
+      const res = await apiClient.get(`/mqtt/messages?email=${user}`);
       let floatRes = parseFloat(res.data.message.message);
       dispatch(updateSpeed(floatRes));
     } catch (error) {

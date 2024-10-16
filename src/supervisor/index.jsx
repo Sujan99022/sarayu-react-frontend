@@ -13,12 +13,10 @@ import { IoKey } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { VscGraphLine } from "react-icons/vsc";
-import GraphPNG from "../utils/graph.png";
 import { setUserDetails } from "../redux/slices/UserDetailsSlice";
 import apiClient from "../api/apiClient";
 import "./style.css";
 import { handleWarningModel } from "../redux/slices/UserSlice";
-import TestChart from "./graphs/TestChart";
 import TradeViewGraph from "./graphs/tradeViewGraph/TradeViewGraph";
 import Speedometer from "./graphs/speedometer/Speedometer";
 import DigitalMeter from "./graphs/digitalmeter/DigitalMeter";
@@ -32,6 +30,11 @@ const Supervisor = () => {
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [activeNavBtn, setActiveNavBtn] = useState("home");
   const [closeNote, setCloseNote] = useState(true);
+  const [displayGraphUserEmail, setDisplayGraphUserEmail] = useState("");
+  const [displayGraphUserTopic, setDisplayGraphUserTopic] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState({});
+  const [displayDigitalMeterUserEmail, setDisplayDigitalMeterUserEmail] =
+    useState("");
   const [passwordData, setPasswordData] = useState({
     email: user?.email,
     activePassword: "",
@@ -261,13 +264,24 @@ const Supervisor = () => {
                         </div>
                         <div>
                           <div>
-                            <span onClick={() => setActiveNavBtn("graph")}>
+                            <span
+                              onClick={() => [
+                                setDisplayGraphUserEmail(item.email),
+                                setActiveNavBtn("graph"),
+                                setSelectedEmployee(item),
+                                setDisplayGraphUserTopic(item.mqttTopic),
+                              ]}
+                            >
                               <VscGraphLine />
                             </span>
                           </div>
                           <div>
                             <span
-                              onClick={() => setActiveNavBtn("digitalmeter")}
+                              onClick={() => [
+                                setDisplayDigitalMeterUserEmail(item.email),
+                                setSelectedEmployee(item),
+                                setActiveNavBtn("digitalmeter"),
+                              ]}
                             >
                               <BsSpeedometer2 />
                             </span>
@@ -288,7 +302,11 @@ const Supervisor = () => {
               data-aos-once="true"
             >
               <div className="center_the_graph_container">
-                <TradeViewGraph user={user} />
+                <TradeViewGraph
+                  selectedEmployee={selectedEmployee}
+                  email={displayGraphUserEmail}
+                  topic={displayGraphUserTopic}
+                />
               </div>
             </div>
           )}
@@ -297,27 +315,26 @@ const Supervisor = () => {
           {activeNavBtn === "digitalmeter" && (
             <div className="digital_meter_data_view_container">
               <div>
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <Speedometer user={user} />
-                <DigitalMeter user={user} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <Speedometer user={displayDigitalMeterUserEmail} />
+                <DigitalMeter user={displayDigitalMeterUserEmail} />
               </div>
             </div>
           )}
