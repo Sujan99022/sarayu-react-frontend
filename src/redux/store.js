@@ -5,6 +5,7 @@ import UniversalLoader from "./slices/UniversalLoader";
 import UserDetailsSlice from "./slices/UserDetailsSlice";
 import MESSlice from "./slices/ManagerEmployeeSupervisorListSlice";
 import digitalMeterSlice from "./slices/DigitalMeterSlice";
+import EmployeeTopicDataSlice from "./slices/EmployeeTopicDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     UserDetailsSlice: UserDetailsSlice,
     MESSlice: MESSlice,
     digitalMeterSlice: digitalMeterSlice,
+    EmployeeTopicDataSlice: EmployeeTopicDataSlice,
   },
 });
 

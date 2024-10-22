@@ -10,11 +10,25 @@ import { setUserDetails } from "../redux/slices/UserDetailsSlice";
 import apiClient from "../api/apiClient";
 import "./style.css";
 import { handleWarningModel } from "../redux/slices/UserSlice";
+import { HiInformationCircle } from "react-icons/hi";
+import { IoClose } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
+import { IoKey } from "react-icons/io5";
+import { MdLogout } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
+import { VscGraphLine } from "react-icons/vsc";
+import { BsSpeedometer2 } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
 
 const Employee = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [loggedInUser, setLoggedInUser] = useState({});
   const [showMenu, setShowMenu] = useState(false);
+  const [showUserDetails, setShowUserDetails] = useState(false);
+  const [activeNavBtn, setActiveNavBtn] = useState("graph");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,6 +50,8 @@ const Employee = () => {
     }
   };
 
+  const handleChangePassword = () => {};
+
   return (
     <>
       <div className="manager_navbar_container">
@@ -48,60 +64,119 @@ const Employee = () => {
             </p>
           </div>
           <div className="manager_navbar_nav_desktop_view_links">
-            <p className="manager_navbar_nav_desktop_view_links_active">Dashboard</p>
-            <p>Contact Us</p>
-            <p>Logout</p>
+            <p
+              className={
+                activeNavBtn === "graph" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("graph")}
+            >
+              <VscGraphLine /> Graph
+            </p>
+            <p
+              className={
+                activeNavBtn === "digitalmeter" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("digitalmeter")}
+            >
+              <BsSpeedometer2 /> Digital
+            </p>
+            <p
+              className={
+                activeNavBtn === "password" &&
+                `manager_navbar_nav_desktop_view_links_active`
+              }
+              onClick={() => setActiveNavBtn("password")}
+            >
+              <IoKey /> Change Password
+            </p>
+            <p onClick={() => dispatch(handleWarningModel())}>
+              <MdLogout /> Logout
+            </p>
           </div>
           <div className="manager_navbar_nav_mobile_view_open_btn">
-            <IoMdMenu
-              onClick={() => setShowMenu(true)}
+            <HiInformationCircle
+              onClick={() => setShowUserDetails(true)}
               style={{ cursor: "pointer" }}
-              size={"25px"}
+              size={"24px"}
             />
           </div>
         </nav>
-        <section
-          className={`manager_navbar_nav_mobile_view_links ${
-            showMenu && "manager_navbar_nav_mobile_view_links_show"
-          }`}
-        >
-          <div>
-            <div>
-              <section>
-                <span>
-                  <img
-                    src="https://sarayuinfotech.in/images/sarayu/Logo/sarayu-comp-icon.png"
-                    alt="sarayu logo"
-                  />
-                </span>
-                <span>
-                  <IoCloseSharp
-                    size={"30px"}
-                    style={{ cursor: "pointer" }}
-                    className="mb-2"
-                    onClick={() => setShowMenu(false)}
-                  />
-                </span>
-              </section>
-              <div className="manager_navbar_nav_mobile_view_links_container">
-                <p>Dashboard</p>
-                <p>Contact Us</p>
+        {activeNavBtn === "graph" && <div>Graph</div>}
+        {activeNavBtn === "digitalmeter" && <div>Digital merter</div>}
+        {activeNavBtn === "password" && (
+          <div className="supervisor_change_password_section">
+            <p className="text-center">Change Password</p>
+            <section>
+              <div>
+                <label htmlFor="oldpassword">Enter active password</label>
+                <input
+                  type="password"
+                  id="oldpassword"
+                  name="activePassword"
+                  placeholder="Enter password here..."
+                />
               </div>
-              <footer
-                className="manager_navbar_nav_mobile_view_links_footer"
-                onClick={() => dispatch(handleWarningModel())}
-              >
-                <div className="manager_navbar_nav_mobile_view_links_footer_side_line"></div>
-                <div className="manager_navbar_nav_mobile_view_links_footer_details">
-                  <div>
-                    {loggedInUser?.name} <IoExitOutline />
-                  </div>
-                  <div>{loggedInUser?.email}</div>
-                </div>
-              </footer>
-            </div>
+              <div>
+                <label htmlFor="newpassword">Enter new password</label>
+                <input
+                  type="password"
+                  id="newpassword"
+                  name="newPassword"
+                  placeholder="Enter password here..."
+                />
+              </div>
+              <div>
+                <label htmlFor="confirmpassword">Confirm new password</label>
+                <input
+                  type="password"
+                  id="confirmpassword"
+                  name="confirmPassword"
+                  placeholder="Enter password here..."
+                />
+              </div>
+              <div>
+                <button onClick={handleChangePassword}>Change</button>
+              </div>
+            </section>
           </div>
-        </section>
+        )}
+        <div className="footer_navigationbar_mobile_view">
+          <div
+            className={
+              activeNavBtn === "graph" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <VscGraphLine onClick={() => setActiveNavBtn("graph")} />
+            {activeNavBtn === "graph" && <span>Graph</span>}
+          </div>
+          <div
+            className={
+              activeNavBtn === "digitalmeter" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <BsSpeedometer2
+              className="mb-1"
+              onClick={() => setActiveNavBtn("digitalmeter")}
+            />
+            {activeNavBtn === "digitalmeter" && <span>Digital</span>}
+          </div>
+          <div
+            className={
+              activeNavBtn === "password" &&
+              `footer_navigationbar_mobile_view_active`
+            }
+          >
+            <IoKey onClick={() => setActiveNavBtn("password")} />
+            {activeNavBtn === "password" && <span>Password</span>}
+          </div>
+          <div>
+            <MdLogout onClick={() => dispatch(handleWarningModel())} />
+          </div>
+        </div>
       </div>
     </>
   );

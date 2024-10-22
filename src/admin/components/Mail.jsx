@@ -32,8 +32,6 @@ import ActualMailCred from "../common/ActualMailCred";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 
-const socket = io("https://sarayu-node-backend.onrender.com");
-
 const Mail = () => {
   const [messages, setMessages] = useState([]);
   const [expandedMessageId, setExpandedMessageId] = useState(null);
@@ -62,6 +60,7 @@ const Mail = () => {
   const { mailCred, toggleAdminCred, mailLoading } = useSelector(
     (state) => state.mailSlice
   );
+  const { user } = useSelector((state) => state.userSlice);
   const read = false;
 
   useEffect(() => {
@@ -84,13 +83,22 @@ const Mail = () => {
       }
     };
     fetchMessages();
-    socket.on("newMessage", (message) => {
-      setMessages((prevMessages) => [message, ...prevMessages]);
-    });
-    return () => {
-      socket.off("newMessage");
-    };
-  }, [refresh, recycleBinData]);
+
+    // Initialize socket connection if the user is admin
+    if (user.role === "admin") {
+      const socket = io("https://sarayu-node-backend.onrender.com");
+
+      socket.on("newMessage", (message) => {
+        setMessages((prevMessages) => [message, ...prevMessages]);
+      });
+
+      // Cleanup socket connection on unmount
+      return () => {
+        socket.off("newMessage");
+        socket.disconnect();
+      };
+    }
+  }, [refresh, recycleBinData, user.role]); // Added user.role as a dependency
 
   useEffect(() => {
     if (messageEndRef.current) {
@@ -101,6 +109,7 @@ const Mail = () => {
   useEffect(() => {
     fetchRecycleBinData();
   }, [recycleBin]);
+
   const fetchRecycleBinData = async () => {
     dispatch(setLoading(true));
     try {

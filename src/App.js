@@ -39,6 +39,11 @@ const App = () => {
   useEffect(() => {
     AOS.init();
   }, []);
+
+  if (userLocal.role === "employee") {
+    console.log(`Hello from ${userLocal.role}`);
+  }
+
   return (
     <div className="App">
       <ToastContainer autoClose={1500} />
