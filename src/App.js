@@ -11,8 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./redux/slices/UserSlice";
 import WarningModel from "./common/WarningModel";
 import Loading from "./common/Loading";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import setAuthToken from "./setAuthToken";
+import { setLoading } from "./redux/slices/UniversalLoader";
+import { setUserDetails } from "./redux/slices/UserDetailsSlice";
+import { Navigate } from "react-router-dom";
+import apiClient from "./api/apiClient";
+import { interval } from "date-fns";
+import { setTopicData } from "./redux/slices/EmployeeTopicDataSlice";
 
 if (localStorage.getItem("token")) {
   setAuthToken(localStorage.getItem("token"));
@@ -40,9 +46,38 @@ const App = () => {
     AOS.init();
   }, []);
 
-  if (userLocal.role === "employee") {
-    console.log(`Hello from ${userLocal.role}`);
-  }
+  useEffect(() => {
+    let interval;
+    if (userLocal.id && userLocal.role === "employee") {
+      subscribeToTheTopic();
+      interval = setInterval(() => {
+        fetchGraphData();
+      }, 1000);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [userLocal]);
+
+  const subscribeToTheTopic = async () => {
+    try {
+      await apiClient.post("/auth/subscribeToEmployeeTopic", userLocal);
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
+  const fetchGraphData = async () => {
+    try {
+      const res = await apiClient.get(
+        `/mqtt/messages?email=${userLocal.email}`
+      );
+      const { timestamp, message } = res.data.message;
+      dispatch(setTopicData({ timestamp, message }));
+    } catch (error) {
+      toast.error(error?.response?.data?.error);
+    }
+  };
 
   return (
     <div className="App">

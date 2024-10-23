@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
-import apiClient from "../../../api/apiClient";
+import apiClient from "../../api/apiClient";
 import { parse } from "date-fns";
 import "./style.css";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
-const RealtimeChart = ({ selectedEmployee, email, topic }) => {
+const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
   const oldTheme = JSON.parse(localStorage.getItem("theme"));
   const oldLineWidth = JSON.parse(localStorage.getItem("lineWidth"));
 
@@ -17,18 +18,11 @@ const RealtimeChart = ({ selectedEmployee, email, topic }) => {
   const [lineWidth, setLineWidth] = useState(oldLineWidth || 2);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
-  useEffect(() => {
-    subscribeToTheTopic();
-  }, [selectedEmployee]);
-
-  const subscribeToTheTopic = async () => {
-    try {
-      await apiClient.post("/auth/subscribeToEmployeeTopic", selectedEmployee);
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
-
+  const { data } = useSelector((state) => state.EmployeeTopicDataSlice);
+  // const { timestamp, message } = data[data.length - 1];
+  // console.log("reduxtoolkit time:" + timestamp);
+  // console.log("reduxtoolkit message:" + message);
+  console.log("data :" + JSON.stringify(data[data.length - 1]));
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme));
     localStorage.setItem("lineWidth", JSON.stringify(lineWidth));
@@ -61,7 +55,7 @@ const RealtimeChart = ({ selectedEmployee, email, topic }) => {
           color: theme ? "gray" : "rgba(255, 255, 255, 0.2)",
         },
       },
-      height: viewportHeight * 0.8, // 80% of the viewport height
+      height: viewportHeight * 0.7, // 80% of the viewport height
       crossHairMarker: {
         visible: true,
       },
@@ -102,6 +96,7 @@ const RealtimeChart = ({ selectedEmployee, email, topic }) => {
   const fetchGraphData = async () => {
     try {
       const res = await apiClient.get(`/mqtt/messages?email=${email}`);
+      console.log("api :" + JSON.stringify(res.data.message));
       const { timestamp, message } = res.data.message;
       const date = parse(timestamp, "yyyy-MM-dd HH:mm:ss", new Date());
       const timezoneOffset = 330;
@@ -198,4 +193,4 @@ const RealtimeChart = ({ selectedEmployee, email, topic }) => {
   );
 };
 
-export default RealtimeChart;
+export default RealtimeChartEmployee;

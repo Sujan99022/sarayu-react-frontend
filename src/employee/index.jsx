@@ -22,6 +22,7 @@ import { FaUsers } from "react-icons/fa";
 import { VscGraphLine } from "react-icons/vsc";
 import { BsSpeedometer2 } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
+import RealtimeChartEmployee from "./tradeViewGraphEmployee/TradeViewGraphEmployee";
 
 const Employee = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -103,7 +104,11 @@ const Employee = () => {
             />
           </div>
         </nav>
-        {activeNavBtn === "graph" && <div>Graph</div>}
+        {activeNavBtn === "graph" && (
+          <div>
+            <RealtimeChartEmployee selectedEmployee={user} email={user.email} />
+          </div>
+        )}
         {activeNavBtn === "digitalmeter" && <div>Digital merter</div>}
         {activeNavBtn === "password" && (
           <div className="supervisor_change_password_section">
