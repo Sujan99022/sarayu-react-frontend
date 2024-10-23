@@ -1,28 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
-import apiClient from "../../api/apiClient";
 import { parse } from "date-fns";
-import "./style.css";
-import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import "./style.css";
 
-const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
+const RealtimeChartEmployee = ({ email }) => {
   const oldTheme = JSON.parse(localStorage.getItem("theme"));
   const oldLineWidth = JSON.parse(localStorage.getItem("lineWidth"));
 
   const chartContainerRef = useRef(null);
-  const chartRef = useRef(null); // Ref for the chart instance
-  const seriesRef = useRef(null); // Ref for the series instance
-  const [userData, setUserData] = useState([]);
+  const chartRef = useRef(null);
+  const seriesRef = useRef(null);
+  const objDataRef = useRef({});
+
   const [theme, setTheme] = useState(oldTheme || false);
   const [lineWidth, setLineWidth] = useState(oldLineWidth || 2);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem(`userData_${email}`)) || []
+  );
 
   const { data } = useSelector((state) => state.EmployeeTopicDataSlice);
-  // const { timestamp, message } = data[data.length - 1];
-  // console.log("reduxtoolkit time:" + timestamp);
-  // console.log("reduxtoolkit message:" + message);
-  console.log("data :" + JSON.stringify(data[data.length - 1]));
+
+  useEffect(() => {
+    objDataRef.current = data[data.length - 1];
+  }, [data]);
+
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme));
     localStorage.setItem("lineWidth", JSON.stringify(lineWidth));
@@ -32,10 +35,7 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
     const updateHeight = () => {
       setViewportHeight(window.innerHeight);
     };
-
-    // Update height on window resize
     window.addEventListener("resize", updateHeight);
-
     return () => {
       window.removeEventListener("resize", updateHeight);
     };
@@ -55,7 +55,7 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
           color: theme ? "gray" : "rgba(255, 255, 255, 0.2)",
         },
       },
-      height: viewportHeight * 0.7, // 80% of the viewport height
+      height: viewportHeight * 0.7,
       crossHairMarker: {
         visible: true,
       },
@@ -66,20 +66,24 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
     };
 
     const chart = createChart(chartContainerRef.current, chartOptions);
-    chartRef.current = chart; // Store the chart in the ref
+    chartRef.current = chart;
 
     seriesRef.current = chart.addLineSeries({
       lineWidth: parseInt(lineWidth),
     });
 
-    // Adding the horizontal yellow line at value 50
     seriesRef.current.createPriceLine({
       price: 50,
       color: "yellow",
       lineWidth: 2,
-      lineStyle: 2, // Dashed line
+      lineStyle: 2,
       axisLabelVisible: true,
     });
+
+    const existingData = JSON.parse(localStorage.getItem(`userData_${email}`));
+    if (existingData && seriesRef.current) {
+      seriesRef.current.setData(existingData);
+    }
 
     const intervalId = setInterval(() => {
       fetchGraphData();
@@ -88,16 +92,15 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
     return () => {
       clearInterval(intervalId);
       chart.remove();
-      chartRef.current = null; // Reset the ref when chart is removed
-      seriesRef.current = null; // Reset the series ref
+      chartRef.current = null;
+      seriesRef.current = null;
     };
   }, [email, theme, lineWidth, viewportHeight]);
 
   const fetchGraphData = async () => {
     try {
-      const res = await apiClient.get(`/mqtt/messages?email=${email}`);
-      console.log("api :" + JSON.stringify(res.data.message));
-      const { timestamp, message } = res.data.message;
+      const { timestamp, message } = objDataRef.current;
+
       const date = parse(timestamp, "yyyy-MM-dd HH:mm:ss", new Date());
       const timezoneOffset = 330;
       const offsetMilliseconds = timezoneOffset * 60 * 1000;
@@ -114,7 +117,7 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
 
         const lastDataPoint = prevData[prevData.length - 1];
         if (lastDataPoint && lastDataPoint.time >= newDataPoint.time) {
-          newDataPoint.time = lastDataPoint.time + 1; // Add 1 second for uniqueness
+          newDataPoint.time = lastDataPoint.time + 1;
         }
 
         const updatedData = [...prevData, newDataPoint];
@@ -129,10 +132,11 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
           };
         });
 
-        // Ensure chart and series still exist before updating data
         if (seriesRef.current) {
           seriesRef.current.setData(colorizedData);
         }
+
+        localStorage.setItem(`userData_${email}`, JSON.stringify(updatedData));
 
         return updatedData;
       });
@@ -158,36 +162,8 @@ const RealtimeChartEmployee = ({ selectedEmployee, email, topic }) => {
           position: "relative",
         }}
       />
-      <div className="tradeview_graph_theme_cahnge">
-        {/* <div className="tradingviewgraph_theme_btn-container">
-          <label className="tradingviewgraph_theme_switch tradingviewgraph_theme_btn-color-mode-switch">
-            <input
-              value="1"
-              id="color_mode"
-              name="color_mode"
-              type="checkbox"
-              onChange={() => setTheme(!theme)}
-            />
-            <label
-              className="tradingviewgraph_theme_btn-color-mode-switch-inner"
-              data-off="Dark"
-              data-on="Light"
-              htmlFor="color_mode"
-            ></label>
-          </label>
-        </div> */}
-        <div>
-          {/* <select
-            onChange={(e) => setLineWidth(e.target.value)}
-            value={lineWidth}
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select> */}
-        </div>
+      <div className="tradeview_graph_theme_change">
+        {/* Theme and Line Width controls */}
       </div>
     </div>
   );
