@@ -2,3 +2,29 @@
     background: black;
     min-height: 100vh;
 }
+.employee-graph-cover {
+    background: black;
+    min-height: 92vh;
+    width: 100%;
+    position: absolute;
+}
+.employee-graph-cover_hide_graph {
+    z-index: 9999;
+}
+.employee-digital-meter {
+    position: absolute;
+    background: black;
+    min-height: 92vh;
+    width: 100%;
+    z-index: 999999 !important;
+    top: 63px;
+    color: white;
+}
+.employee_change_password {
+    position: absolute;
+    top: 63px;
+    width: 100%;
+    min-height: 92vh;
+    background: black;
+    z-index: 99999999 !important;
+}

@@ -104,14 +104,19 @@ const Employee = () => {
             />
           </div>
         </nav>
-        {activeNavBtn === "graph" && (
-          <div>
-            <RealtimeChartEmployee selectedEmployee={user} email={user.email} />
-          </div>
+        <div
+          className={`employee-graph-cover ${
+            activeNavBtn !== "graph" && "employee-graph-cover_hide_graph"
+          }`}
+        ></div>
+        <div>
+          <RealtimeChartEmployee selectedEmployee={user} email={user.email} />
+        </div>
+        {activeNavBtn === "digitalmeter" && (
+          <div className="employee-digital-meter">Digital merter</div>
         )}
-        {activeNavBtn === "digitalmeter" && <div>Digital merter</div>}
         {activeNavBtn === "password" && (
-          <div className="supervisor_change_password_section">
+          <div className="supervisor_change_password_section employee_change_password">
             <p className="text-center">Change Password</p>
             <section>
               <div>
