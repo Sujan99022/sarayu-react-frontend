@@ -30,6 +30,7 @@ const Employee = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [activeNavBtn, setActiveNavBtn] = useState("graph");
+  const [activeGraphBtn, setActiveGraphBtn] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -109,9 +110,57 @@ const Employee = () => {
             activeNavBtn !== "graph" && "employee-graph-cover_hide_graph"
           }`}
         ></div>
-        <div>
+        {activeNavBtn === "graph" && (
+          <section className="employee_graph_realtime_history_switch_container">
+            <div className="employee_graph_container">
+              <input
+                hidden
+                id="check"
+                name="check"
+                type="checkbox"
+                checked={activeGraphBtn}
+                onChange={() => setActiveGraphBtn(!activeGraphBtn)}
+              />
+              <label className="employee_graph_toggle" htmlFor="check">
+                <div className="employee_graph_toggle__circle"></div>
+              </label>
+              <div className="employee_graph_toggle-text">
+                <span
+                  className={activeGraphBtn && `livegraph_text_color`}
+                  onClick={() => setActiveGraphBtn(true)}
+                >
+                  Live
+                </span>
+                <span
+                  className={!activeGraphBtn && `livegraph_text_color`}
+                  onClick={() => setActiveGraphBtn(false)}
+                >
+                  History
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
+        {/* live graph starts here */}
+        <div
+          className={`graph_displayblock ${
+            !activeGraphBtn && "graph_displaynone"
+          }`}
+          id="live_graph"
+        >
           <RealtimeChartEmployee selectedEmployee={user} email={user.email} />
         </div>
+        {/* live graph ends here */}
+        {/* history graph starts here */}
+        <div
+          className={`graph_displayblock ${
+            activeGraphBtn && "graph_displaynone"
+          }`}
+          id="history_graph"
+        >
+          <RealtimeChartEmployee selectedEmployee={user} email={user.email} />
+        </div>
+        {/* history graph ends here */}
         {activeNavBtn === "digitalmeter" && (
           <div className="employee-digital-meter">Digital merter</div>
         )}

@@ -28,3 +28,69 @@
     background: black;
     z-index: 99999999 !important;
 }
+
+/* employee toggle switch starts here */
+.employee_graph_realtime_history_switch_container {
+    position: absolute;
+    color: white;
+    z-index: 999999;
+    display: flex;
+    padding: 10px;
+    margin-top: 5px;
+}
+.employee_graph_container {
+    margin: auto;
+    color: hsl(0, 0%, 30%);
+    font-weight: 900;
+    font-size: 2rem;
+    display: flex;
+}
+
+.employee_graph_toggle {
+    width: 20px;
+    height: 50px;
+    background-color: hsl(0, 0%, 80%);
+    border-radius: 1.7rem;
+    padding: 0.25rem 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    transition: background-color 300ms 300ms;
+}
+
+.employee_graph_toggle__circle {
+    width: 10px;
+    height: 10px;
+    background-color: hsl(0, 0%, 100%);
+    border-radius: 50%;
+    margin-top: calc(60px - (0.25rem * 2) - 20px);
+    transition: margin 500ms ease-in-out;
+}
+
+.employee_graph_toggle-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 0.8;
+}
+.employee_graph_toggle-text > span {
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#check:checked + .employee_graph_toggle > .employee_graph_toggle__circle {
+    margin-top: 0;
+}
+
+#check:checked + .employee_graph_toggle {
+    background-color: #10f90487;
+}
+.livegraph_text_color {
+    color: white;
+}
+.graph_displayblock {
+    display: block;
+}
+.graph_displaynone {
+    display: none;
+}
+/* employee toggle switch ends here */
