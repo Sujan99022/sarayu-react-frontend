@@ -2,10 +2,6 @@ import React from "react";
 import Login from "../authentication/Login";
 import { Route, Routes } from "react-router-dom";
 import ContactSupport from "../authentication/ContactSupport";
-import Admin from "./../admin/index";
-import Supervisor from "./../supervisor/index";
-import Employee from "./../employee/index";
-import Manager from "./../manager/index";
 import DashboardPanel from "../admin/components/Dashboard";
 import Dashboard from "../pages/dashboard/index";
 import ProtectedRoute from "./ProtectedRoute";
@@ -17,6 +13,11 @@ import Users from "../admin/components/Users";
 import Mail from "../admin/components/Mail";
 import CompanySelect from "./../admin/components/userRoutesCompany/CompanySelect";
 import CreateSupervisorEmp from "../admin/components/userRoutesCompany/CreateSupervisorEmp";
+import AllUsers from "../users/index";
+import DigitalMeter from "../users/body/components/DigitalMeter";
+import AllOperators from "../users/body/components/AllOperators";
+import ChangePassword from "../users/body/components/ChangePassword";
+import AllUserDashBoard from "../users/body/components/Dashboard";
 
 const RoutersDom = () => {
   return (
@@ -30,6 +31,7 @@ const RoutersDom = () => {
             path="/dashboard/dashboard"
             element={<DashboardPanel />}
           />
+
           <Route path="/dashboard/live" element={<Live />} />
           <Route path="/dashboard/devices" element={<Devices />} />
           <Route path="/dashboard/reports" element={<Reports />} />
@@ -42,6 +44,14 @@ const RoutersDom = () => {
           </Route>
           <Route path="/dashboard/inbox" element={<Mail />} />
         </Route>
+        {/* users [manager,supervisor,employee] routes starts here  */}
+        <Route path="/allusers" element={<AllUsers />}>
+          <Route index path="/allusers/graphs" element={<AllUserDashBoard />} />
+          <Route path="/allusers/alloperators" element={<AllOperators />} />
+          <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
+          <Route path="/allusers/changepassword" element={<ChangePassword />} />
+        </Route>
+        {/* users [manager,supervisor,employee] routes ends here  */}
         <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>

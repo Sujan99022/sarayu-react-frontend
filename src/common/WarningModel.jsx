@@ -23,9 +23,9 @@ const WarningModel = () => {
       data-aos-once="true"
       className="logout_warning_model_container"
     >
-      <div class="_card">
-        <div class="_header">
-          <div class="_image">
+      <div className="_card">
+        <div className="_header">
+          <div className="_image">
             <svg
               aria-hidden="true"
               stroke="currentColor"
@@ -40,15 +40,23 @@ const WarningModel = () => {
               ></path>
             </svg>
           </div>
-          <div class="_content">
-            <span class="_title">Logout account ({user.email})</span>
-            <p class="_message">Are you sure, you want to logout?</p>
+          <div className="_content">
+            <span className="_title">Logout account ({user.email})</span>
+            <p className="_message">Are you sure, you want to logout?</p>
           </div>
-          <div class="_actions">
-            <button class="_desactivate" type="button" onClick={handleLogout}>
+          <div className="_actions">
+            <button
+              className="_desactivate"
+              type="button"
+              onClick={handleLogout}
+            >
               Logout
             </button>
-            <button class="_cancel" type="button" onClick={handleCloseModel}>
+            <button
+              className="_cancel"
+              type="button"
+              onClick={handleCloseModel}
+            >
               Cancel
             </button>
           </div>

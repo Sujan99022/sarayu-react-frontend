@@ -1,0 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap");
+.users_navbar_container {
+    display: flex;
+    justify-content: center;
+    margin: 0 5px;
+    background-color: rgb(25, 30, 49);
+    position: relative;
+}
+
+.users_navbar_container > div {
+    display: flex;
+    color: white;
+    align-items: center;
+    position: relative;
+}
+.users_navbar_link {
+    margin: 0;
+    padding: 10px 30px;
+    font-size: 13px;
+    line-height: 1.7rem;
+    cursor: pointer;
+    background-color: rgb(25, 30, 49);
+    font-family: "Roboto", sans-serif;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    color: white;
+}
+.active {
+    background: rgb(255, 255, 255) !important;
+    color: black !important;
+}
+.users_navbar_link:hover {
+    background: rgb(255, 255, 255);
+    color: black;
+}
+.users_navbar_link_separator {
+    width: 1px;
+    height: 100%;
+    background: white;
+}

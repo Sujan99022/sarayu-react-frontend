@@ -46,39 +46,6 @@ const App = () => {
     AOS.init();
   }, []);
 
-  useEffect(() => {
-    let interval;
-    if (userLocal.id && userLocal.role === "employee") {
-      subscribeToTheTopic();
-      interval = setInterval(() => {
-        fetchGraphData();
-      }, 1000);
-    }
-    return () => {
-      clearInterval(interval);
-    };
-  }, [userLocal]);
-
-  const subscribeToTheTopic = async () => {
-    try {
-      await apiClient.post("/auth/subscribeToEmployeeTopic", userLocal);
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
-
-  const fetchGraphData = async () => {
-    try {
-      const res = await apiClient.get(
-        `/mqtt/messages?email=${userLocal.email}`
-      );
-      const { timestamp, message } = res.data.message;
-      dispatch(setTopicData({ timestamp, message }));
-    } catch (error) {
-      toast.error(error?.response?.data?.error);
-    }
-  };
-
   return (
     <div className="App">
       <ToastContainer autoClose={1500} />

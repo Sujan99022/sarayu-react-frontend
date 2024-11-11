@@ -92,7 +92,11 @@ const Login = () => {
       try {
         const res = await apiClient.post(`/auth/${role}/login`, data);
         localStorage.setItem("token", res?.data?.token);
-        window.location = "/dashboard/dashboard";
+        {
+          role === "admin"
+            ? (window.location = "/dashboard/dashboard")
+            : (window.location = "/allusers/graphs");
+        }
       } catch (error) {
         setLoginError(error?.response?.data?.error);
       }
