@@ -136,7 +136,7 @@ const SmallGraph = ({ topic, height }) => {
 
     fetchInitialData().then(() => {
       isMounted.current = true;
-      timerRef.current = setInterval(fetchRealTimeData, 500);
+      timerRef.current = setInterval(fetchRealTimeData, 1000 * 2 * 30);
     });
 
     return () => {

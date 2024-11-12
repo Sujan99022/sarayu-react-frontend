@@ -1,17 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap");
 .users_navbar_container {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
     margin: 0 5px;
     background-color: rgb(25, 30, 49);
     position: relative;
 }
-
+.users_navbar_user_details {
+    display: flex;
+    flex-direction: column;
+}
+.users_navbar_user_details > p {
+    margin: 0;
+    font-size: 16px;
+}
 .users_navbar_container > div {
     display: flex;
     color: white;
     align-items: center;
     position: relative;
+    justify-content: center;
 }
 .users_navbar_link {
     margin: 0;
@@ -27,7 +35,8 @@
 }
 .active {
     background: rgb(255, 255, 255) !important;
-    color: black !important;
+    color: rgb(42, 194, 0) !important;
+    font-weight: 500;
 }
 .users_navbar_link:hover {
     background: rgb(255, 255, 255);
@@ -38,3 +47,33 @@
     height: 100%;
     background: white;
 }
+/* serchbar style in the dahsboard graph */
+.allusers_input-wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+.allusers_input-wrapper > div {
+    border-radius: 50px;
+    width: 300px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+.allusers_input-wrapper > div > input {
+    outline: none;
+    border: none;
+    padding: 3px 10px;
+    font-size: 12px;
+    width: 85%;
+}
+.allusers_input-wrapper > div > button {
+    outline: none;
+    border: none;
+    padding: 5px 10px;
+    background: white;
+    color: black;
+    width: 15%;
+}
+/* serchbar style in the dahsboard graph */

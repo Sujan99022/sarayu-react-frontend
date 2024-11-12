@@ -8,7 +8,6 @@ import SmallGraph from "../graphs/smallgraph/SmallGraph";
 import "../../style.css";
 import { FaRegEye } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
-import { IoSearch } from "react-icons/io5";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -22,7 +21,7 @@ const Dashboard = () => {
   const fetchUserDetails = async () => {
     try {
       dispatch(setLoading(true));
-      const res = await apiClient.get(`/auth/employee/${user.id}`);
+      const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
       setLoggedInUser(res?.data?.data);
       dispatch(setUserDetails(res?.data?.data));
       dispatch(setLoading(false));
@@ -34,19 +33,6 @@ const Dashboard = () => {
   console.log(loggedInUser);
   return (
     <div>
-      <div className="users_small_graphs_searchbar_container my-2">
-        <div className="input-wrapper_allusers">
-          <button className="icon_allusers">
-            <IoSearch size={25} color="#fff" />
-          </button>
-          <input
-            placeholder="search.."
-            className="input_allusers"
-            name="text"
-            type="text"
-          />
-        </div>
-      </div>
       <div className="users_small_graphs_primary_container">
         {loggedInUser?.topics?.map((item, index) => {
           return (
