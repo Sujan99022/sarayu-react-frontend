@@ -19,8 +19,8 @@ const Dashboard = () => {
     }
   }, [user.id]);
   const fetchUserDetails = async () => {
+    dispatch(setLoading(true));
     try {
-      dispatch(setLoading(true));
       const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
       setLoggedInUser(res?.data?.data);
       dispatch(setUserDetails(res?.data?.data));

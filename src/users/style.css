@@ -52,3 +52,63 @@
 }
 
 /* SmallGraph style ends here */
+
+/*                           AllOperator section starts here                    */
+.users_alloperators_main_container {
+    display: flex;
+    max-width: 98.2vw;
+    overflow-x: hidden;
+    flex-direction: column;
+    overflow-y: scroll;
+    max-height: 90vh;
+    gap: 10px;
+}
+.users_alloperators_main_container::-webkit-scrollbar {
+    display: none !important;
+}
+.users_alloperators_carousel_container {
+    /* box-shadow: 0 0 4px rgba(0, 0, 0, 0.448); */
+    margin: 5px 0;
+    margin-left: 30px;
+}
+.users_alloperators_carousel_title {
+    padding: 4px 20px;
+    color: black;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.261);
+    cursor: pointer;
+}
+.users_alloperators_carousel_body {
+    width: 97vw;
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    padding: 20px 60px;
+    scrollbar-color: rgb(0, 119, 255) rgba(211, 211, 211, 0.004);
+    scrollbar-width: thin;
+}
+
+.users_alloperators_carousel_body::-webkit-scrollbar {
+    width: 12px;
+}
+
+.users_alloperators_carousel_body::-webkit-scrollbar-track {
+    background: lightgray;
+}
+
+.users_alloperators_carousel_body::-webkit-scrollbar-thumb {
+    background-color: rgb(0, 119, 255);
+    border-radius: 10px;
+    border: 3px solid rgba(211, 211, 211, 0);
+}
+
+.users_alloperators_carousel_body > div {
+    min-width: 480px;
+    height: 100%;
+    margin: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.367);
+}
+/*                            AllOperator section ends here                     */

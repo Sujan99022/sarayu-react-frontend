@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IoSearch } from "react-icons/io5";
 import { FaUserCheck } from "react-icons/fa";
 import { MdMarkEmailRead } from "react-icons/md";
+import SaveIcon from "../../utils/supervisor_like_graph_icon_2.png";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -20,18 +21,25 @@ const Navbar = () => {
         {/* <p><MdMarkEmailRead /> {user.email}</p> */}
       </div>
       <div>
-        <NavLink to={"/allusers/graphs"} className="users_navbar_link">
+        <p
+          onClick={() => {
+            window.location.href = "/allusers/graphs";
+          }}
+          className="users_navbar_link"
+        >
           Graphs
-        </NavLink>
+        </p>
         {user.role === "supervisor" && (
           <>
             <div className="users_navbar_link_separator"></div>
-            <NavLink
-              to={"/allusers/alloperators"}
+            <p
+              onClick={() => {
+                window.location.href = "/allusers/alloperators";
+              }}
               className="users_navbar_link"
             >
               All Operators
-            </NavLink>{" "}
+            </p>{" "}
           </>
         )}
         <div className="users_navbar_link_separator"></div>
@@ -63,6 +71,11 @@ const Navbar = () => {
             </button>
           </div>
         </div>
+        {user.role !== "employee" && (
+          <div className="users_nav_favorite_img_container">
+            <img src={SaveIcon} alt="favorite" />
+          </div>
+        )}
       </div>
     </div>
   );
