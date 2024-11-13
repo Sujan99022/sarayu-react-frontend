@@ -1,55 +1,98 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import "../style.css";
-import { NavLink } from "react-router-dom";
 import { handleWarningModel } from "../../redux/slices/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IoSearch } from "react-icons/io5";
 import { FaUserCheck } from "react-icons/fa";
-import { MdMarkEmailRead } from "react-icons/md";
-import SaveIcon from "../../utils/supervisor_like_graph_icon_2.png";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.userSlice);
   const dispatch = useDispatch();
+
+  const oldActive = localStorage.getItem(`active`);
+  const [active, setActive] = useState(JSON.parse(oldActive) || "graph");
+
+  useEffect(() => {
+    localStorage.setItem(`active`, JSON.stringify(active));
+    return () => {
+      localStorage.removeItem(`active`);
+    };
+  }, [active]);
+
   return (
     <div className="users_navbar_container">
       <div className="users_navbar_user_details">
         <p>
           <FaUserCheck /> {user.name}
         </p>
-        {/* <p><MdMarkEmailRead /> {user.email}</p> */}
       </div>
       <div>
         <p
           onClick={() => {
             window.location.href = "/allusers/graphs";
+            setActive("graph");
           }}
-          className="users_navbar_link"
+          className={`users_navbar_link ${
+            active === "graph" && "alluser_active_navbar"
+          }`}
         >
           Graphs
+        </p>
+        <div className="users_navbar_link_separator"></div>
+        {user.role !== "employee" && (
+          <p
+            onClick={() => {
+              window.location.href = "/allusers/favorites";
+              setActive("favorites");
+            }}
+            className={`users_navbar_link ${
+              active === "favorites" && "alluser_active_navbar"
+            }`}
+          >
+            Favorites
+          </p>
+        )}
+        <div className="users_navbar_link_separator"></div>
+        <p
+          onClick={() => {
+            window.location.href = "/allusers/digitalmeter";
+            setActive("digitalmeter");
+          }}
+          className={`users_navbar_link ${
+            active === "digitalmeter" && "alluser_active_navbar"
+          }`}
+        >
+          Digital meter
         </p>
         {user.role === "supervisor" && (
           <>
             <div className="users_navbar_link_separator"></div>
             <p
               onClick={() => {
-                window.location.href = "/allusers/alloperators";
+                window.location.href = "/allusers/users";
+                setActive("alloperators");
               }}
-              className="users_navbar_link"
+              className={`users_navbar_link ${
+                active === "alloperators" && "alluser_active_navbar"
+              }`}
             >
-              All Operators
+              Users
             </p>{" "}
           </>
         )}
         <div className="users_navbar_link_separator"></div>
-        <NavLink to={"/allusers/digitalmeter"} className="users_navbar_link">
-          Digital meter
-        </NavLink>
-        <div className="users_navbar_link_separator"></div>
-        <NavLink to={"/allusers/changepassword"} className="users_navbar_link">
+        <p
+          onClick={() => {
+            window.location.href = "/allusers/changepassword";
+            setActive("changepassword");
+          }}
+          className={`users_navbar_link ${
+            active === "changepassword" && "alluser_active_navbar"
+          }`}
+        >
           Change password
-        </NavLink>
+        </p>
         <div className="users_navbar_link_separator"></div>
         <p
           className="users_navbar_link"
@@ -71,11 +114,6 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-        {user.role !== "employee" && (
-          <div className="users_nav_favorite_img_container">
-            <img src={SaveIcon} alt="favorite" />
-          </div>
-        )}
       </div>
     </div>
   );

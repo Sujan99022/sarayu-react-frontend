@@ -47,7 +47,7 @@
 }
 .users_graphs_view_edit_icon_container > div {
     padding: 3px 5px;
-    background: rgba(207, 207, 248, 0.385);
+    /* background: rgba(207, 207, 248, 0.385); */
     cursor: pointer;
 }
 
@@ -67,7 +67,6 @@
     display: none !important;
 }
 .users_alloperators_carousel_container {
-    /* box-shadow: 0 0 4px rgba(0, 0, 0, 0.448); */
     margin: 5px 0;
     margin-left: 30px;
 }
@@ -76,6 +75,9 @@
     color: black;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.261);
     cursor: pointer;
+}
+.users_alloperators_carousel_title > p {
+    margin: 0;
 }
 .users_alloperators_carousel_body {
     width: 97vw;
