@@ -44,7 +44,7 @@ const Favorite = () => {
               <div className="users_graphs_topic_name">
                 <p>{item?.split("/")[2]}</p>
               </div>
-              <SmallGraph topic={item} height={280} />
+              <SmallGraph topic={item} height={220} />
             </div>
           );
         })}

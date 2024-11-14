@@ -19,6 +19,7 @@ import AllOperators from "../users/body/components/AllOperators";
 import ChangePassword from "../users/body/components/ChangePassword";
 import AllUserDashBoard from "../users/body/components/Dashboard";
 import Favorite from "../users/body/components/Favorite";
+import SingleUserDashBoard from "../users/body/components/SingleUserDashBoard";
 
 const RoutersDom = () => {
   return (
@@ -52,6 +53,10 @@ const RoutersDom = () => {
           <Route path="/allusers/favorites" element={<Favorite />} />
           <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
           <Route path="/allusers/changepassword" element={<ChangePassword />} />
+          <Route
+            path="/allusers/singleuserdashboard/:id"
+            element={<SingleUserDashBoard />}
+          />
         </Route>
         {/* users [manager,supervisor,employee] routes ends here  */}
         <Route path="/logout" element={<Logout />} />

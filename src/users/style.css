@@ -1,7 +1,6 @@
 .users_main_container {
     display: grid;
-    grid-template-rows: auto 95vh;
-    background-color: rgb(25, 30, 49);
+    grid-template-rows: auto auto;
 }
 
 /* SmallGraph style starts here */
@@ -12,13 +11,14 @@
     width: 100%;
     height: 100%;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 45px;
 }
 .users_small_graphs_secondary_container {
-    width: 480px;
-    height: 100%;
+    width: 400px;
+    height: 220px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.372);
     position: relative;
+    overflow: hidden;
 }
 .users_graphs_topic_name {
     position: absolute;
@@ -53,64 +53,62 @@
 
 /* SmallGraph style ends here */
 
-/*                           AllOperator section starts here                    */
-.users_alloperators_main_container {
-    display: flex;
-    max-width: 98.2vw;
-    overflow-x: hidden;
-    flex-direction: column;
-    overflow-y: scroll;
-    max-height: 90vh;
-    gap: 10px;
+/*                            AllOperator new section starts here                     */
+.users_alloperators_new_main_container {
 }
-.users_alloperators_main_container::-webkit-scrollbar {
-    display: none !important;
-}
-.users_alloperators_carousel_container {
-    margin: 5px 0;
-    margin-left: 30px;
-}
-.users_alloperators_carousel_title {
-    padding: 4px 20px;
-    color: black;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.261);
-    cursor: pointer;
-}
-.users_alloperators_carousel_title > p {
-    margin: 0;
-}
-.users_alloperators_carousel_body {
-    width: 97vw;
-    height: 100%;
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: row !important;
-    flex-wrap: nowrap;
-    padding: 20px 60px;
-    scrollbar-color: rgb(0, 119, 255) rgba(211, 211, 211, 0.004);
-    scrollbar-width: thin;
-}
+/* radio button style starts here */
 
-.users_alloperators_carousel_body::-webkit-scrollbar {
-    width: 12px;
-}
+/* radio button style ends here */
+/*                            AllOperator new section ends here                     */
 
-.users_alloperators_carousel_body::-webkit-scrollbar-track {
-    background: lightgray;
-}
-
-.users_alloperators_carousel_body::-webkit-scrollbar-thumb {
-    background-color: rgb(0, 119, 255);
-    border-radius: 10px;
-    border: 3px solid rgba(211, 211, 211, 0);
-}
-
-.users_alloperators_carousel_body > div {
-    min-width: 480px;
-    height: 100%;
+/* single user dashboard style starts here */
+.singleuserdashboard_main_container {
+    height: 86vh;
     margin: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.367);
+    border-radius: 20px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.284);
 }
-/*                            AllOperator section ends here                     */
+.singleuserdashboard_main_container::-webkit-scrollbar {
+    display: none;
+}
+.singleuserdashboard_main_container > div:first-child {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    background: rgb(7, 10, 40);
+    color: white;
+    text-transform: capitalize;
+    font-size: 20px;
+    position: relative;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+.singleuserdashboard_close_icon {
+    position: absolute;
+    z-index: 9999;
+    color: white;
+    right: 10px;
+    top: 19%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.singleuserdashboard_close_icon:hover {
+    color: orange;
+}
+.singleuserdashboard_main_container > div:last-child {
+    height: 93%;
+    padding: 50px 20px;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+/* single user dashboard style ends here */
+
+@media (width < 700px) {
+    .users_small_graphs_secondary_container {
+        width: 340px;
+    }
+}

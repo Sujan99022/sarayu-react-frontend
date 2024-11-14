@@ -2,21 +2,25 @@ import React, { useEffect, useState } from "react";
 import "../../style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { setLoading } from "../../../redux/slices/UniversalLoader";
 import apiClient from "../../../api/apiClient";
 import SmallGraph from "../graphs/smallgraph/SmallGraph";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { FaCheck } from "react-icons/fa6";
 import Loader from "../../loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 const AllOperators = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [loggedInUser, setLoggedInUser] = useState({});
+  const [selectedUser, setSelectedUser] = useState({});
+  const [operatorsList, setOperatorsList] = useState([]);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [selectedGraph, setSelectedGraph] = useState("asdasd");
+
   useEffect(() => {
     if (user.id) {
       fetchUserDetails();
     }
   }, [user.id]);
+
   const fetchUserDetails = async () => {
     try {
       const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
@@ -26,22 +30,11 @@ const AllOperators = () => {
     }
   };
 
-  const dispatch = useDispatch();
-  const [operatorsList, setOperatorsList] = useState([]);
-  const [openIndex, setOpenIndex] = useState(null);
-  const [localLoading, setLocalLoading] = useState(false);
-
   useEffect(() => {
-    // Load the stored open index from localStorage on page load
-    const storedIndex = localStorage.getItem("openOperatorIndex");
-    if (storedIndex !== null) {
-      setOpenIndex(Number(storedIndex));
+    if (user.id) {
+      fetchAllEmployees();
     }
-    fetchAllEmployees();
-    return () => {
-      localStorage.removeItem("openOperatorIndex");
-    };
-  }, [user]);
+  }, [user.id]);
 
   const fetchAllEmployees = async () => {
     setLocalLoading(true);
@@ -57,15 +50,15 @@ const AllOperators = () => {
     }
   };
 
-  const handleToggle = (index) => {
-    if (openIndex === index) {
-      localStorage.removeItem("openOperatorIndex");
-      setOpenIndex(null);
-      window.location.reload();
-    } else {
-      localStorage.setItem("openOperatorIndex", index);
-      window.location.reload();
+  useEffect(() => {
+    if (selectedUser?.topics) {
     }
+  }, [selectedUser]);
+
+  const navigate = useNavigate();
+
+  const handleUserClick = (id) => {
+    navigate(`/allusers/singleuserdashboard/${id}`);
   };
 
   if (localLoading) {
@@ -73,44 +66,14 @@ const AllOperators = () => {
   }
 
   return (
-    <div className="users_alloperators_main_container">
-      {operatorsList?.map((item, index) => (
-        <div key={index} className="users_alloperators_carousel_container">
-          <div
-            className="users_alloperators_carousel_title"
-            onClick={() => handleToggle(index)}
-          >
-            <p>{item?.name}</p>
-            <p>{item?.email}</p>
-            <p>{item?.phonenumber}</p>
-            <p>{item?.topics?.length}</p>
-          </div>
-          {openIndex === index && (
-            <div className="users_alloperators_carousel_body">
-              {item?.topics?.map((topic, index2) => (
-                <div
-                  key={index2}
-                  className="users_small_graphs_secondary_container"
-                >
-                  <div className="users_graphs_view_edit_icon_container">
-                    <div>
-                      {loggedInUser.favorites?.includes(topic) ? (
-                        <FaCheck color="green" />
-                      ) : (
-                        <IoMdAddCircleOutline color="blue" />
-                      )}
-                    </div>
-                  </div>
-                  <div className="users_graphs_topic_name">
-                    <p>{topic?.split("/")[2]}</p>
-                  </div>
-                  <SmallGraph topic={topic} height={280} />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+    <div className="users_alloperators_new_main_container">
+      {operatorsList?.map((item, index) => {
+        return (
+          <button key={index} onClick={() => handleUserClick(item._id)}>
+            {item?.email}
+          </button>
+        );
+      })}
     </div>
   );
 };

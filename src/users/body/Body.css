@@ -1,5 +1,5 @@
 .users_body_container {
-    height: 98%;
+    height: 100%;
     width: 99.4%;
     margin: 0 5px 5px 5px;
     display: flex;
@@ -7,14 +7,10 @@
     align-items: center;
 }
 .users_body_second_container {
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.232);
-    background: white;
     border-radius: 20px;
     padding: 10px;
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
-    overflow: hidden;
 }
 .users_body_second_container::-webkit-scrollbar {
     display: none;
