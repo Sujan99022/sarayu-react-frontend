@@ -45,10 +45,20 @@ const Dashboard = () => {
           return (
             <div key={index} className="users_small_graphs_secondary_container">
               <div className="users_graphs_view_edit_icon_container">
-                <div>
+                <div
+                  onClick={() => {
+                    const encodePrams = encodeURIComponent(item);
+                    window.location.href = `/allusers/viewsinglegraph/${encodePrams}`;
+                  }}
+                >
                   <FaRegEye />
                 </div>
-                <div>
+                <div
+                  onClick={() => {
+                    const encodeParams = encodeURIComponent(item);
+                    window.location.href = `/allusers/editsinglegraph/${encodeParams}`;
+                  }}
+                >
                   <FiEdit2 />
                 </div>
               </div>

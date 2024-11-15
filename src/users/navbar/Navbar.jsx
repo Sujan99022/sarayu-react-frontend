@@ -8,11 +8,12 @@ import { FaUserCheck } from "react-icons/fa";
 import { IoMdMenu } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import { handlToggleMenu } from "../../redux/slices/NavbarSlice";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.userSlice);
   const dispatch = useDispatch();
-  const [showMenu, setShowMenu] = useState(false);
+  const { showMenu } = useSelector((state) => state.NavBarSlice);
 
   const oldActive = localStorage.getItem(`active`);
   const [active, setActive] = useState(JSON.parse(oldActive) || "graph");
@@ -127,7 +128,7 @@ const Navbar = () => {
         </div>
         <div
           className="users_mobile_navbar_right"
-          onClick={() => setShowMenu(!showMenu)}
+          onClick={() => dispatch(handlToggleMenu())}
         >
           {showMenu ? <IoClose /> : <IoMdMenu />}
         </div>
@@ -149,17 +150,19 @@ const Navbar = () => {
             >
               Graphs
             </p>
-            <p
-              onClick={() => {
-                window.location.href = "/allusers/favorites";
-                setActive("favorites");
-              }}
-              className={`users_navbar_link ${
-                active === "favorites" && "alluser_active_navbar"
-              }`}
-            >
-              Favorites
-            </p>
+            {user?.role !== "employee" && (
+              <p
+                onClick={() => {
+                  window.location.href = "/allusers/favorites";
+                  setActive("favorites");
+                }}
+                className={`users_navbar_link ${
+                  active === "favorites" && "alluser_active_navbar"
+                }`}
+              >
+                Favorites
+              </p>
+            )}
             <p
               onClick={() => {
                 window.location.href = "/allusers/digitalmeter";
@@ -171,17 +174,19 @@ const Navbar = () => {
             >
               Digital meter
             </p>
-            <p
-              onClick={() => {
-                window.location.href = "/allusers/users";
-                setActive("alloperators");
-              }}
-              className={`users_navbar_link ${
-                active === "alloperators" && "alluser_active_navbar"
-              }`}
-            >
-              Users
-            </p>
+            {user?.role !== "employee" && (
+              <p
+                onClick={() => {
+                  window.location.href = "/allusers/users";
+                  setActive("alloperators");
+                }}
+                className={`users_navbar_link ${
+                  active === "alloperators" && "alluser_active_navbar"
+                }`}
+              >
+                Users
+              </p>
+            )}
             <p
               onClick={() => {
                 window.location.href = "/allusers/changepassword";

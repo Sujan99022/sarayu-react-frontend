@@ -6,6 +6,7 @@ import UserDetailsSlice from "./slices/UserDetailsSlice";
 import MESSlice from "./slices/ManagerEmployeeSupervisorListSlice";
 import digitalMeterSlice from "./slices/DigitalMeterSlice";
 import EmployeeTopicDataSlice from "./slices/EmployeeTopicDataSlice";
+import NavBarSlice from "./slices/NavbarSlice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     MESSlice: MESSlice,
     digitalMeterSlice: digitalMeterSlice,
     EmployeeTopicDataSlice: EmployeeTopicDataSlice,
+    NavBarSlice: NavBarSlice,
   },
 });
 

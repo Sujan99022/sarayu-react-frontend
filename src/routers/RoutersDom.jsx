@@ -20,6 +20,8 @@ import ChangePassword from "../users/body/components/ChangePassword";
 import AllUserDashBoard from "../users/body/components/Dashboard";
 import Favorite from "../users/body/components/Favorite";
 import SingleUserDashBoard from "../users/body/components/SingleUserDashBoard";
+import ViewGraph from "../users/body/components/ViewGraph";
+import EditGraph from "../users/body/components/EditGraph";
 
 const RoutersDom = () => {
   return (
@@ -56,6 +58,14 @@ const RoutersDom = () => {
           <Route
             path="/allusers/singleuserdashboard/:id"
             element={<SingleUserDashBoard />}
+          />
+          <Route
+            path="/allusers/viewsinglegraph/:topicparams"
+            element={<ViewGraph />}
+          />
+          <Route
+            path="/allusers/editsinglegraph/:topicparams"
+            element={<EditGraph />}
           />
         </Route>
         {/* users [manager,supervisor,employee] routes ends here  */}
