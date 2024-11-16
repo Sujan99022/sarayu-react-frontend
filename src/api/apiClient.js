@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://sarayu-node-backend.onrender.com/api/v1",
+  baseURL: "https://sarayu-node-backend-pmuw.onrender.com/api/v1",
 });
 
 export default apiClient;

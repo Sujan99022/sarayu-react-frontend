@@ -17,6 +17,7 @@
     "date-fns-tz": "^3.2.0",
     "jwt-decode": "^4.0.0",
     "lightweight-charts": "^4.2.0",
+    "pm2": "^5.4.3",
     "react": "^18.3.1",
     "react-app": "file:",
     "react-chartjs-2": "^5.2.0",
