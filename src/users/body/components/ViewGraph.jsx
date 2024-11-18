@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../style.css";
 import { useParams } from "react-router-dom";
 import SmallGraph from "../graphs/smallgraph/SmallGraph";
@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 
 const ViewGraph = () => {
   const { topicparams } = useParams();
+
   return (
     <div
       className="_viewgraph_main_container"
@@ -17,14 +18,14 @@ const ViewGraph = () => {
         <div>{topicparams?.split("/")[2]}</div>
         <div
           onClick={() => {
-            window.history.go(-1);
+            window.history.back();
           }}
         >
           <IoClose />
         </div>
       </header>
       <div>
-        <SmallGraph topic={topicparams} height={"675"} />
+        <SmallGraph topic={topicparams} height={"600"} />
       </div>
     </div>
   );

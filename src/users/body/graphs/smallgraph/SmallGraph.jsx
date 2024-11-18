@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
 import apiClient from "../../../../api/apiClient";
 
@@ -7,14 +7,44 @@ const SmallGraph = ({ topic, height }) => {
   const chartRef = useRef();
   const lineSeriesRef = useRef();
   const areaSeriesRef = useRef();
+  const thresholdLineSeriesRefs = useRef([]);
   const timerRef = useRef();
   const dataWindow = useRef([]);
   const latestTimestamp = useRef(0);
   const isMounted = useRef(true);
 
+  const [thresholds, setThreshold] = useState([]);
+  const [subscribed, setSubscribed] = useState(false);
+  let encodedTopic = encodeURIComponent(topic);
+  useEffect(() => {
+    fetchSubscriptionApi();
+    fetchThresholdApi();
+  }, []);
+
+  const fetchSubscriptionApi = async () => {
+    try {
+      const res = await apiClient.get(
+        `/mqtt/is-subscribed?topic=${encodedTopic}`
+      );
+      setSubscribed(res?.data?.isSubscribed);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const fetchThresholdApi = async () => {
+    try {
+      const res = await apiClient.get(`/mqtt/get?topic=${topic}`);
+      setThreshold(res?.data?.data?.thresholds);
+    } catch (error) {
+      console.log("No threshold is present");
+    }
+  };
+
   const TWO_HOURS_IN_SECONDS = 2 * 60 * 60;
 
   useEffect(() => {
+    // Create chart and set up initial data
     chartRef.current = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height,
@@ -53,6 +83,25 @@ const SmallGraph = ({ topic, height }) => {
       lineWidth: 2,
     });
 
+    // Add threshold lines
+    thresholds.forEach((threshold) => {
+      const thresholdLine = chartRef.current.addLineSeries({
+        color: threshold.color,
+        lineWidth: 1,
+        lineStyle: 0, // Solid line
+      });
+
+      thresholdLine.setData([
+        {
+          time: Math.floor(Date.now() / 1000) - TWO_HOURS_IN_SECONDS,
+          value: threshold.value,
+        },
+        { time: Math.floor(Date.now() / 1000), value: threshold.value },
+      ]);
+
+      thresholdLineSeriesRefs.current.push(thresholdLine);
+    });
+
     const handleResize = () => {
       if (chartRef.current) {
         chartRef.current.applyOptions({
@@ -60,21 +109,20 @@ const SmallGraph = ({ topic, height }) => {
         });
       }
     };
+
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
       if (chartRef.current) chartRef.current.remove();
     };
-  }, []);
+  }, [thresholds]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         const response = await apiClient.post(
           "/mqtt/realtime-data/last-2-hours",
-          {
-            topic,
-          }
+          { topic }
         );
         if (response.data && response.data.messages) {
           let historicalData = response.data.messages.map((msg) => ({
@@ -90,8 +138,8 @@ const SmallGraph = ({ topic, height }) => {
 
           latestTimestamp.current =
             historicalData[historicalData.length - 1].time;
-
           dataWindow.current = historicalData;
+
           if (lineSeriesRef.current)
             lineSeriesRef.current.setData(historicalData);
           if (areaSeriesRef.current)
@@ -123,6 +171,7 @@ const SmallGraph = ({ topic, height }) => {
               (point) => point.time >= earliestAllowedTime
             );
             dataWindow.current.sort((a, b) => a.time - b.time);
+
             if (lineSeriesRef.current)
               lineSeriesRef.current.setData(dataWindow.current);
             if (areaSeriesRef.current)
@@ -134,18 +183,21 @@ const SmallGraph = ({ topic, height }) => {
       }
     };
 
-    fetchInitialData().then(() => {
-      isMounted.current = true;
-      timerRef.current = setInterval(fetchRealTimeData, 500);
-    });
+    // Only fetch initial and real-time data if the topic is subscribed
+    if (subscribed) {
+      fetchInitialData().then(() => {
+        isMounted.current = true;
+        timerRef.current = setInterval(fetchRealTimeData, 1000);
+      });
+    }
 
     return () => {
       isMounted.current = false;
       clearInterval(timerRef.current);
     };
-  }, [topic]);
+  }, [topic, subscribed]);
 
-  return <div ref={chartContainerRef} />;
+  return <div ref={chartContainerRef}></div>;
 };
 
 export default SmallGraph;

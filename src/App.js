@@ -29,6 +29,21 @@ const App = () => {
   const { logoutToggle } = useSelector((state) => state.userSlice);
   const { loading } = useSelector((state) => state.UniversalLoader);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        window.location.reload();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   useEffect(() => {
     const jwt = localStorage.getItem("token");
     try {

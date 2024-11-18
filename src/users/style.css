@@ -109,11 +109,11 @@
 
 /* ViewGraph style starts here */
 ._viewgraph_main_container {
-    width: 100%;
-    height: 85vh;
+    width: 96vw;
+    height: 100%;
     padding: 5px;
+    padding-top: 20px;
     display: flex;
-    margin-left: -5px;
     flex-direction: column;
     justify-content: center;
 }
@@ -144,13 +144,91 @@
     /* box-shadow: 0 0 4px black; */
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    height: 100%;
     overflow: hidden;
     border: 2px solid rgb(7, 10, 40);
 }
 /* ViewGraph style ends here */
+/* edit graph starts here */
+._editgraph_main_container {
+    padding: 10px 0;
+}
+._editgraph_graph_container {
+    width: 96vw;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+._editgraph_second_main_left_container > header {
+    height: 6vh;
+    width: 100%;
+    background: rgb(7, 10, 40);
+    color: white;
+    display: flex;
+    padding: 0 20px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    margin: 0;
+}
+._editgraph_second_main_container {
+    border: 2px solid rgb(7, 10, 40);
+    border-radius: 20px;
+    overflow: hidden;
+}
+._editgraph_main_input_container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+}
+._editgraph_main_select_numberof_threshold > select {
+    width: 300px;
+    border-radius: 50px;
+    height: 35px;
+    text-align: center;
+    outline: none;
+    border: none;
+    border: 2px solid rgb(7, 10, 40);
+}
+._editgraph_savechanges_button_container {
+    display: flex;
+    gap: 30px;
+}
+._editgraph_savechanges_button_container > button {
+    width: 120px;
+    border: none;
+    padding: 5px 0;
+    border-radius: 5px;
+    color: white;
+    background: rgb(7, 10, 40);
+}
+._editgraph_main_input_container > section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+._editgraph_main_input_container > section > div {
+    display: flex;
+    gap: 5px;
+}
+._editgraph_main_input_container > section > div > input {
+    width: 220px;
+    text-align: center;
+    border: none;
+    outline: none;
+    border: 1px solid rgb(7, 10, 40);
+    border-radius: 50px;
+}
+/* edit graph ends here */
 
 @media (width < 700px) {
     .users_small_graphs_secondary_container {
         width: 340px;
+    }
+    ._editgraph_graph_container {
+        grid-template-columns: 100%;
+    }
+    ._editgraph_graph__right {
+        padding: 35px 0;
     }
 }
