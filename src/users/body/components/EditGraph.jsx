@@ -7,8 +7,7 @@ import apiClient from "../../../api/apiClient";
 
 const EditGraph = () => {
   const { topicparams } = useParams();
-  const [thresholdNumber, setThresholdNumber] = useState("0");
-
+  const [thresholdNumber, setThresholdNumber] = useState(0);
   const [thresholds, setThreshold] = useState([]);
 
   let topic = encodeURIComponent(topicparams);
@@ -17,11 +16,28 @@ const EditGraph = () => {
     fetchThresholdApi();
   }, []);
 
+  useEffect(() => {
+    // Adjust thresholds when the number of thresholds changes manually
+    const updatedThresholds = Array.from(
+      { length: Number(thresholdNumber) },
+      (_, index) => {
+        return thresholds[index] || { value: "", color: "green" };
+      }
+    );
+    setThreshold(updatedThresholds);
+  }, [thresholdNumber]);
+
   const fetchThresholdApi = async () => {
     try {
       const res = await apiClient.get(`/mqtt/get?topic=${topic}`);
-      setThreshold(res?.data?.data?.thresholds);
-      setThresholdNumber(res?.data?.data?.thresholds?.length);
+      const fetchedThresholds = res?.data?.data?.thresholds || [];
+      // Ensure all values are integers
+      const processedThresholds = fetchedThresholds.map((threshold) => ({
+        ...threshold,
+        value: parseInt(threshold.value, 10), // Convert value to integer
+      }));
+      setThreshold(processedThresholds);
+      setThresholdNumber(processedThresholds.length);
     } catch (error) {
       console.log("No threshold is present");
     }
@@ -29,6 +45,26 @@ const EditGraph = () => {
 
   const handleSelectNumberOfThreshold = (e) => {
     setThresholdNumber(e.target.value);
+  };
+
+  const handleThresholdChange = (index, key, value) => {
+    const updatedThresholds = [...thresholds];
+    updatedThresholds[index] = {
+      ...updatedThresholds[index],
+      [key]: key === "value" ? parseInt(value, 10) || 0 : value,
+    };
+    setThreshold(updatedThresholds);
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      await apiClient.post(`/mqtt/add?topic=${topic}`, {
+        thresholds: thresholds,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -49,7 +85,7 @@ const EditGraph = () => {
         </div>
         <div className="_editgraph_graph_container">
           <div className="_editgraph_graph_left">
-            <SmallGraph topic={topicparams} height={"400"} />
+            <SmallGraph topic={topicparams} height={"400"} shadow={true} />
           </div>
           <div className="_editgraph_graph__right">
             <h5 className="m-0 my-3 text-center">Edit threshold</h5>
@@ -65,105 +101,33 @@ const EditGraph = () => {
                   <option value="3">3</option>
                 </select>
               </div>
-              {thresholdNumber === 1 && (
-                <section>
+              {[...Array(Number(thresholdNumber))].map((_, index) => (
+                <section key={index}>
                   <div>
                     <input
                       type="number"
-                      name=""
-                      id=""
-                      value={thresholds[0]?.value}
-                      placeholder="Enter lowest threshold"
+                      value={thresholds[index]?.value || ""}
+                      placeholder={`Enter threshold ${index + 1}`}
+                      onChange={(e) =>
+                        handleThresholdChange(index, "value", e.target.value)
+                      }
                     />
-                    <select name="" id="" value={thresholds[0]?.color}>
-                      <option value="green">Green</option>
-                      <option value="yello">Yellow</option>
-                      <option value="red">Red</option>
-                    </select>
-                  </div>
-                </section>
-              )}
-              {thresholdNumber === 2 && (
-                <section>
-                  <div>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      value={thresholds[0]?.value}
-                      placeholder="Enter lowest threshold"
-                    />
-                    <select name="" id="" value={thresholds[0]?.color}>
-                      <option value="green">Green</option>
-                      <option value="yello">Yellow</option>
-                      <option value="red">Red</option>
-                    </select>
-                  </div>
-                  <div>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      value={thresholds[1]?.value}
-                      placeholder="Enter highest threshold"
-                    />
-                    <select name="" id="" value={thresholds[1]?.color}>
-                      <option value="green">Green</option>
-                      <option value="yello">Yellow</option>
-                      <option value="red">Red</option>
-                    </select>
-                  </div>
-                </section>
-              )}
-              {thresholdNumber === 3 && (
-                <section>
-                  <div>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      value={thresholds[0]?.value}
-                      placeholder="Enter lowest threshold"
-                    />
-                    <select name="" id="" value={thresholds[0]?.color}>
-                      <option value="green">Green</option>
-                      <option value="yello">Yellow</option>
-                      <option value="red">Red</option>
-                    </select>
-                  </div>
-                  <div>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      value={thresholds[1]?.value}
-                      placeholder="Enter middle threshold"
-                    />
-                    <select name="" id="" value={thresholds[1]?.color}>
+                    <select
+                      value={thresholds[index]?.color || ""}
+                      onChange={(e) =>
+                        handleThresholdChange(index, "color", e.target.value)
+                      }
+                    >
                       <option value="green">Green</option>
                       <option value="yellow">Yellow</option>
                       <option value="red">Red</option>
                     </select>
                   </div>
-                  <div>
-                    <input
-                      type="number"
-                      name=""
-                      id=""
-                      value={thresholds[2]?.value}
-                      placeholder="Enter highest threshold"
-                    />
-                    <select name="" id="" value={thresholds[2]?.color}>
-                      <option value="green">Green</option>
-                      <option value="yello">Yellow</option>
-                      <option value="red">Red</option>
-                    </select>
-                  </div>
                 </section>
-              )}
+              ))}
               <div className="_editgraph_savechanges_button_container">
-                <button>Clear All</button>
-                <button>Save Changes</button>
+                <button onClick={() => setThreshold([])}>Clear All</button>
+                <button onClick={handleSaveChanges}>Save Changes</button>
               </div>
             </div>
           </div>

@@ -25,7 +25,7 @@ const ViewGraph = () => {
         </div>
       </header>
       <div>
-        <SmallGraph topic={topicparams} height={"600"} />
+        <SmallGraph topic={topicparams} height={"600"} viewgraph={true} />
       </div>
     </div>
   );

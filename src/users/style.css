@@ -139,6 +139,39 @@
 ._viewgraph_main_container > header > div:last-child {
     cursor: pointer;
 }
+._view_graph_download_current_plot_btn_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+._view_graph_download_current_plot_btn_container > div {
+    border: 0;
+    outline: none;
+    height: 35px;
+    width: 200px;
+    margin: 10px 0;
+    color: white;
+    background: green;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+}
+._view_graph_download_current_plot_btn_container div > button {
+    border: none;
+    background: transparent;
+    color: white;
+    width: 100%;
+}
+._view_graph_download_current_plot_btn_container div > span {
+    height: 100%;
+    padding: 0 5px;
+    background-color: rgb(2, 84, 2);
+    display: flex;
+    align-items: center;
+}
 /* ._viewgraph_main_container > header */
 ._viewgraph_main_container > div {
     /* box-shadow: 0 0 4px black; */
@@ -220,7 +253,19 @@
     border-radius: 50px;
 }
 /* edit graph ends here */
-
+.graph_shadow {
+    box-sizing: 0 0 4px black !important;
+}
+.threshold-label {
+    background: white;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    pointer-events: none; /* Prevent mouse events on the label */
+}
 @media (width < 700px) {
     .users_small_graphs_secondary_container {
         width: 340px;
