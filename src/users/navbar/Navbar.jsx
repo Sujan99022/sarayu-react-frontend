@@ -9,6 +9,10 @@ import { IoMdMenu } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 import { handlToggleMenu } from "../../redux/slices/NavbarSlice";
+import apiClient from "../../api/apiClient";
+import { toast } from "react-toastify";
+import { PiBuildingOfficeBold } from "react-icons/pi";
+import ChangePassword from "./../body/components/ChangePassword";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -17,6 +21,9 @@ const Navbar = () => {
 
   const oldActive = localStorage.getItem(`active`);
   const [active, setActive] = useState(JSON.parse(oldActive) || "graph");
+  const [loggedInUser, setLoggedInUser] = useState({});
+  const [localLoading, setLocalLoading] = useState(false);
+  const [changePasswordModel, setChangePasswordModel] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(`active`, JSON.stringify(active));
@@ -25,12 +32,30 @@ const Navbar = () => {
     };
   }, [active]);
 
+  useEffect(() => {
+    if (user.id) {
+      fetchUserDetails();
+    }
+  }, [user.id]);
+
+  const fetchUserDetails = async () => {
+    setLocalLoading(true);
+    try {
+      const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
+      setLoggedInUser(res?.data?.data);
+      setLocalLoading(false);
+    } catch (error) {
+      toast.error(error?.response?.data?.error);
+      setLocalLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="users_navbar_container">
         <div className="users_navbar_user_details">
           <p>
-            <FaUserCheck /> {user.name}
+            <PiBuildingOfficeBold /> {loggedInUser?.company?.name}
           </p>
         </div>
         <div>
@@ -89,10 +114,7 @@ const Navbar = () => {
           )}
           <div className="users_navbar_link_separator"></div>
           <p
-            onClick={() => {
-              window.location.href = "/allusers/changepassword";
-              setActive("changepassword");
-            }}
+            onClick={() => setChangePasswordModel(true)}
             className={`users_navbar_link ${
               active === "changepassword" && "alluser_active_navbar"
             }`}
@@ -107,24 +129,16 @@ const Navbar = () => {
             Logout
           </p>
         </div>
-        <div className="users_small_graphs_searchbar_container">
-          <div className="allusers_input-wrapper">
-            <div>
-              <input
-                type="text"
-                placeholder="Search by tag name"
-                className="search_input"
-              />
-              <button>
-                <IoSearch />
-              </button>
-            </div>
-          </div>
+
+        <div className="users_navbar_user_details">
+          <p>
+            <FaUserCheck /> {user.name}
+          </p>
         </div>
       </div>
       <div className="users_mobile_navbar_container">
         <div className="users_mobile_navbar_left">
-          <FaUserCheck /> {user.name}
+          <PiBuildingOfficeBold /> {loggedInUser?.company?.name}
         </div>
         <div
           className="users_mobile_navbar_right"
@@ -188,10 +202,7 @@ const Navbar = () => {
               </p>
             )}
             <p
-              onClick={() => {
-                window.location.href = "/allusers/changepassword";
-                setActive("changepassword");
-              }}
+              onClick={() => setChangePasswordModel(true)}
               className={`users_navbar_link ${
                 active === "changepassword" && "alluser_active_navbar"
               }`}
@@ -209,6 +220,9 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      {changePasswordModel && (
+        <ChangePassword setChangePasswordModel={setChangePasswordModel} />
+      )}
     </>
   );
 };

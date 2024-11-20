@@ -88,7 +88,7 @@ const EditGraph = () => {
             <SmallGraph topic={topicparams} height={"400"} shadow={true} />
           </div>
           <div className="_editgraph_graph__right">
-            <h5 className="m-0 my-3 text-center">Edit threshold</h5>
+            <h5 className="m-0 my-3 text-center">Set threshold</h5>
             <div className="_editgraph_main_input_container">
               <div className="_editgraph_main_select_numberof_threshold">
                 <select
@@ -119,7 +119,7 @@ const EditGraph = () => {
                       }
                     >
                       <option value="green">Green</option>
-                      <option value="yellow">Yellow</option>
+                      <option value="orange">Yellow</option>
                       <option value="red">Red</option>
                     </select>
                   </div>

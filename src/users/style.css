@@ -5,7 +5,7 @@
 
 /* SmallGraph style starts here */
 .users_small_graphs_primary_container {
-    padding: 20px;
+    padding: 50px 20px;
     display: flex;
     justify-content: space-evenly;
     width: 100%;
@@ -63,7 +63,8 @@
 
 /* single user dashboard style starts here */
 .singleuserdashboard_main_container {
-    height: 86vh;
+    height: 100%;
+    width: 90vw;
     margin: 10px;
     border-radius: 20px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.284);
@@ -98,12 +99,14 @@
     color: orange;
 }
 .singleuserdashboard_main_container > div:last-child {
-    height: 93%;
-    padding: 50px 20px;
-    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+    padding: 25px 0;
+    padding-bottom: 55px;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    gap: 25px;
 }
 /* single user dashboard style ends here */
 
@@ -142,35 +145,23 @@
 ._view_graph_download_current_plot_btn_container {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: end;
+    padding: 15px 20px;
+    gap: 10px;
 }
-._view_graph_download_current_plot_btn_container > div {
-    border: 0;
-    outline: none;
-    height: 35px;
-    width: 200px;
-    margin: 10px 0;
-    color: white;
-    background: green;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
+._view_graph_download_current_plot_btn_container > button {
+    padding: 4px 10px;
+    border: 2px solid rgba(128, 128, 128, 0.395);
     border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-}
-._view_graph_download_current_plot_btn_container div > button {
-    border: none;
-    background: transparent;
-    color: white;
-    width: 100%;
-}
-._view_graph_download_current_plot_btn_container div > span {
-    height: 100%;
-    padding: 0 5px;
-    background-color: rgb(2, 84, 2);
+    background: white;
+    color: rgb(78, 78, 78);
     display: flex;
     align-items: center;
+    gap: 5px;
+}
+._view_graph_download_current_plot_btn_container > button:hover {
+    border: 2px solid gray;
+    color: black;
 }
 /* ._viewgraph_main_container > header */
 ._viewgraph_main_container > div {
@@ -253,6 +244,89 @@
     border-radius: 50px;
 }
 /* edit graph ends here */
+/* change password section starts here */
+.allusers_change_password_container {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 9999999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.allusers_change_password_logo_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.allusers_change_password_logo_container > div {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+}
+.allusers_change_password_container > div {
+    width: 25vw;
+    min-height: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 4px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.219);
+}
+.allusers_change_password_container > div > p {
+    margin: 0;
+    text-align: center;
+    font-size: 22px;
+    transform: translateY(-10px);
+}
+.allusers_change_password_input_container {
+    display: flex;
+    flex-direction: column;
+}
+.allusers_change_password_input_container > input {
+    padding: 5px 10px;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(12, 12, 52, 0.786);
+}
+.allusers_change_password_button_container {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 15px;
+}
+.allusers_change_password_button_container > button {
+    border: none;
+    outline: none;
+    padding: 7px 0;
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.377);
+    transition: all 0.3s ease-in-out;
+}
+.allusers_change_password_button_container > button:first-child {
+    background: green;
+    color: white;
+}
+.allusers_change_password_button_container > button:first-child:hover {
+    background: rgb(2, 100, 2);
+}
+.allusers_change_password_button_container > button:last-child {
+    background: white;
+    color: gray;
+}
+.allusers_change_password_button_container > button:last-child:hover {
+    border: 2px solid rgba(0, 0, 0, 0.468);
+    color: black;
+}
+/* change password section ends here */
 .graph_shadow {
     box-sizing: 0 0 4px black !important;
 }
@@ -275,5 +349,9 @@
     }
     ._editgraph_graph__right {
         padding: 35px 0;
+    }
+    .allusers_change_password_container > div {
+        width: 100vw;
+        margin: 0 10px;
     }
 }

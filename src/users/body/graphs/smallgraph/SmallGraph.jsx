@@ -20,7 +20,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
   const TWO_HOURS_IN_SECONDS = 2 * 60 * 60;
 
-  // Create threshold lines with labels (using overlays)
+  // Create threshold lines with labels
   const createThresholdLines = () => {
     if (chartRef.current) {
       thresholdLineSeriesRefs.current.forEach((series) => {
@@ -37,22 +37,21 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     thresholdLineSeriesRefs.current = [];
 
     const currentTime = Math.floor(new Date().getTime() / 1000);
-    const startTime = currentTime - TWO_HOURS_IN_SECONDS; // Start from two hours ago
-    const endTime = currentTime + 60 * 60; // Extend to one hour into the future
+    const startTime = currentTime - TWO_HOURS_IN_SECONDS;
+    const endTime = currentTime + 60 * 60;
 
     thresholds.forEach((threshold) => {
       if (chartRef.current) {
         const thresholdLine = chartRef.current.addLineSeries({
           color: threshold.color,
           lineWidth: 2,
-          priceLineVisible: false, // Hide price line
-          crosshairMarkerVisible: false, // Hide crosshair marker
+          priceLineVisible: false,
+          crosshairMarkerVisible: false,
         });
 
-        // Set the threshold line data to cover the full range
         const thresholdData = [
-          { time: startTime, value: threshold.value }, // Start from two hours ago
-          { time: endTime, value: threshold.value }, // Extend to one hour into the future
+          { time: startTime, value: threshold.value },
+          { time: endTime, value: threshold.value },
         ];
 
         thresholdLine.setData(thresholdData);
@@ -61,12 +60,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     });
   };
 
-  // Fetch initial subscription and threshold data
-  useEffect(() => {
-    fetchSubscriptionApi();
-    fetchThresholdApi();
-  }, []);
-
+  // API Calls
   const fetchSubscriptionApi = async () => {
     try {
       const res = await apiClient.get(
@@ -91,7 +85,13 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
   };
 
-  // Create chart when component mounts
+  // Initialize APIs
+  useEffect(() => {
+    fetchSubscriptionApi();
+    fetchThresholdApi();
+  }, []);
+
+  // Create chart
   useEffect(() => {
     chartRef.current = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
@@ -104,7 +104,13 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
         vertLines: { color: "#eeeeee" },
         horzLines: { color: "#eeeeee" },
       },
-      priceScale: { borderColor: "#cccccc" },
+      priceScale: {
+        borderColor: "#cccccc",
+        scaleMargins: {
+          top: 0.1,
+          bottom: 0.1,
+        },
+      },
       timeScale: {
         borderColor: "#cccccc",
         timeVisible: true,
@@ -146,7 +152,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
   }, [thresholds]);
 
-  // Fetch real-time data and update chart
+  // Real-time data handling
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -238,6 +244,8 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
         isMounted.current = true;
         timerRef.current = setInterval(fetchRealTimeData, 1000);
       });
+    } else {
+      fetchInitialData();
     }
 
     return () => {
@@ -258,7 +266,8 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
   };
 
-  const handleDownload = () => {
+  // Enhanced download handlers
+  const downloadImage = () => {
     const canvas = chartContainerRef.current.querySelector("canvas");
     if (canvas) {
       const link = document.createElement("a");
@@ -268,19 +277,47 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
   };
 
+  const downloadCSV = () => {
+    if (dataWindow.current.length === 0) return;
+
+    let csvContent = "Timestamp,Value\n";
+
+    dataWindow.current.forEach((point) => {
+      const date = new Date(point.time * 1000).toISOString();
+      csvContent += `${date},${point.value}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${topic}-data.csv`;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
-    <div style={{ position: "relative", height }} ref={chartContainerRef}>
-      <RiDownloadCloud2Fill
-        onClick={handleDownload}
-        style={{
-          position: "absolute",
-          top: 5,
-          right: 5,
-          fontSize: "2rem",
-          cursor: "pointer",
-        }}
-      />
-    </div>
+    <>
+      <div
+        style={{ position: "relative", height }}
+        ref={chartContainerRef}
+      ></div>
+      {viewgraph && (
+        <>
+          <hr className="mb-2" />
+          <div className="_view_graph_download_current_plot_btn_container">
+            <button onClick={downloadImage}>
+              Chart Image
+              <RiDownloadCloud2Fill />
+            </button>
+            <button onClick={downloadCSV}>
+              CSV Data
+              <RiDownloadCloud2Fill />
+            </button>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 
