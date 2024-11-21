@@ -41,7 +41,7 @@ const SingleUserDashBoard = () => {
     try {
       await apiClient.post(`/auth/${supervisorId}/favorites`, { topic });
       setFavoriteList((prev) => [...prev, topic]);
-      toast.success("Topic added to favorites");
+      toast.success("Tagname to favorites");
     } catch (error) {
       toast.error(
         error?.response?.data?.error || "Failed to add topic to favorites"

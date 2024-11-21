@@ -312,11 +312,11 @@
     transition: all 0.3s ease-in-out;
 }
 .allusers_change_password_button_container > button:first-child {
-    background: green;
+    background: #34495e;
     color: white;
 }
 .allusers_change_password_button_container > button:first-child:hover {
-    background: rgb(2, 100, 2);
+    background: #2a3b4b;
 }
 .allusers_change_password_button_container > button:last-child {
     background: white;
@@ -327,6 +327,105 @@
     color: black;
 }
 /* change password section ends here */
+/* all users style starts here  */
+.alluser_alloperators_container {
+    width: 97.5vw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.242);
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.alluser_alloperators_container::-webkit-scrollbar {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.alluser_alloperators_container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.alluser_alloperators_container::-webkit-scrollbar:vertical {
+    display: none;
+}
+
+.alluser_alloperators_scrollable-table {
+    min-width: 900px;
+}
+.alluser_alloperators_table {
+    width: 100%;
+}
+.alluser_alloperators_table > thead > tr {
+    background: #34495e;
+    color: white;
+}
+.alluser_alloperators_table > thead > tr > th {
+    padding: 12px 15px;
+    text-align: center;
+}
+.alluser_alloperators_table > tbody > tr:nth-child(odd) {
+    background: #f9fafd;
+}
+.alluser_alloperators_table > tbody > tr:nth-child(even) {
+    background: #ffffff;
+}
+.alluser_alloperators_table > tbody > tr > td {
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid rgba(128, 128, 128, 0.269);
+}
+.alluser_alloperators_table > tbody > tr:hover {
+    background: #f1c404;
+}
+.allusers_dashboard_live_data_th {
+    position: relative;
+}
+.allusers_dashboard_live_data_th:after {
+    content: " ";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    right: 16px;
+    top: 45%;
+    bottom: 50%;
+    background-color: rgb(0, 255, 0);
+    animation: liveDot 1.5s infinite 0s forwards normal running;
+}
+@keyframes liveDot {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.allusers_dashboard_graph_digital_td {
+    padding: 0;
+}
+.allusers_dashboard_graph_digital_td > button {
+    width: 45%;
+    margin: 2px;
+    border: none;
+    outline: none;
+    background: white;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.278);
+}
+.allusers_dashboard_graph_digital_td > button:first-child {
+    background: red;
+    color: white;
+}
+.allusers_dashboard_graph_digital_td > button:last-child {
+    background: #34495e;
+    color: white;
+}
+/* all users style ends here  */
 .graph_shadow {
     box-sizing: 0 0 4px black !important;
 }
@@ -353,5 +452,16 @@
     .allusers_change_password_container > div {
         width: 100vw;
         margin: 0 10px;
+    }
+    .alluser_alloperators_container {
+        margin-bottom: 60px;
+    }
+    .alluser_alloperators_table > thead > tr > th {
+        font-size: 16px;
+        padding: 8px 2px;
+    }
+    .alluser_alloperators_table > tbody > tr > td {
+        font-size: 15px;
+        padding: 8px 2px;
     }
 }

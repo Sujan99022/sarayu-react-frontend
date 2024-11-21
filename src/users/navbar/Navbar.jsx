@@ -20,7 +20,7 @@ const Navbar = () => {
   const { showMenu } = useSelector((state) => state.NavBarSlice);
 
   const oldActive = localStorage.getItem(`active`);
-  const [active, setActive] = useState(JSON.parse(oldActive) || "graph");
+  const [active, setActive] = useState(JSON.parse(oldActive) || "dashboard");
   const [loggedInUser, setLoggedInUser] = useState({});
   const [localLoading, setLocalLoading] = useState(false);
   const [changePasswordModel, setChangePasswordModel] = useState(false);
@@ -59,6 +59,18 @@ const Navbar = () => {
           </p>
         </div>
         <div>
+          <p
+            onClick={() => {
+              window.location.href = "/allusers/dashboard";
+              setActive("dashboard");
+            }}
+            className={`users_navbar_link ${
+              active === "dashboard" && "alluser_active_navbar"
+            }`}
+          >
+            Dashboard
+          </p>
+          <div className="users_navbar_link_separator"></div>
           <p
             onClick={() => {
               window.location.href = "/allusers/graphs";
@@ -155,6 +167,17 @@ const Navbar = () => {
           >
             <p
               onClick={() => {
+                window.location.href = "/allusers/dashboard";
+                setActive("dashboard");
+              }}
+              className={`users_navbar_link ${
+                active === "dashboard" && "alluser_active_navbar"
+              }`}
+            >
+              Dashbaord
+            </p>
+            <p
+              onClick={() => {
                 window.location.href = "/allusers/graphs";
                 setActive("graph");
               }}
@@ -221,7 +244,10 @@ const Navbar = () => {
         )}
       </div>
       {changePasswordModel && (
-        <ChangePassword setChangePasswordModel={setChangePasswordModel} />
+        <ChangePassword
+          user={user}
+          setChangePasswordModel={setChangePasswordModel}
+        />
       )}
     </>
   );

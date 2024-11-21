@@ -95,7 +95,7 @@ const Login = () => {
         {
           role === "admin"
             ? (window.location = "/dashboard/dashboard")
-            : (window.location = "/allusers/graphs");
+            : (window.location = "/allusers/dashboard");
         }
       } catch (error) {
         setLoginError(error?.response?.data?.error);

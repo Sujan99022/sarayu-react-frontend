@@ -6,6 +6,7 @@ import apiClient from "../../../api/apiClient";
 import SmallGraph from "../graphs/smallgraph/SmallGraph";
 import Loader from "../../loader/Loader";
 import { useNavigate } from "react-router-dom";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 const AllOperators = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -13,7 +14,6 @@ const AllOperators = () => {
   const [selectedUser, setSelectedUser] = useState({});
   const [operatorsList, setOperatorsList] = useState([]);
   const [localLoading, setLocalLoading] = useState(false);
-  const [selectedGraph, setSelectedGraph] = useState("asdasd");
 
   useEffect(() => {
     if (user.id) {
@@ -64,16 +64,38 @@ const AllOperators = () => {
   if (localLoading) {
     return <Loader />;
   }
-
+  console.log(operatorsList);
   return (
-    <div className="users_alloperators_new_main_container">
-      {operatorsList?.map((item, index) => {
-        return (
-          <button key={index} onClick={() => handleUserClick(item._id)}>
-            {item?.email}
-          </button>
-        );
-      })}
+    <div className="alluser_alloperators_container">
+      <div className="alluser_alloperators_scrollable-table">
+        <table className="alluser_alloperators_table">
+          <thead>
+            <tr>
+              <th>Employee No</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone No</th>
+              <th>Visit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {operatorsList.map((employee, index) => (
+              <tr key={employee._id}>
+                <td>{index + 1}</td>
+                <td>{employee.name}</td>
+                <td>{employee.email}</td>
+                <td>{employee.phonenumber ? employee.phonenumber : "--"}</td>
+                <td>
+                  <FaExternalLinkAlt
+                    onClick={() => handleUserClick(employee._id)}
+                    style={{ cursor: "pointer", color: "green" }}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

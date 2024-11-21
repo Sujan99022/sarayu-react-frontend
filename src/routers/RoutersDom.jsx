@@ -17,6 +17,7 @@ import AllUsers from "../users/index";
 import DigitalMeter from "../users/body/components/DigitalMeter";
 import AllOperators from "../users/body/components/AllOperators";
 import ChangePassword from "../users/body/components/ChangePassword";
+import Graphs from "../users/body/components/Graphs";
 import AllUserDashBoard from "../users/body/components/Dashboard";
 import Favorite from "../users/body/components/Favorite";
 import SingleUserDashBoard from "../users/body/components/SingleUserDashBoard";
@@ -50,7 +51,12 @@ const RoutersDom = () => {
         </Route>
         {/* users [manager,supervisor,employee] routes starts here  */}
         <Route path="/allusers" element={<AllUsers />}>
-          <Route index path="/allusers/graphs" element={<AllUserDashBoard />} />
+          <Route
+            index
+            path="/allusers/dashboard"
+            element={<AllUserDashBoard />}
+          />
+          <Route path="/allusers/graphs" element={<Graphs />} />
           <Route path="/allusers/users" element={<AllOperators />} />
           <Route path="/allusers/favorites" element={<Favorite />} />
           <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
