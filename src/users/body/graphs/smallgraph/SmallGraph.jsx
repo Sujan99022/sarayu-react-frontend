@@ -196,9 +196,9 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
       try {
         const response = await apiClient.post("/mqtt/messages", { topic });
         if (response.data.success) {
-          const { message } = response.data;
+          const { message, timestamp } = response.data.message;
           const newPoint = {
-            time: Math.floor(new Date(message.timestamp).getTime() / 1000),
+            time: Math.floor(new Date(timestamp).getTime() / 1000),
             value: parseFloat(message.message),
           };
 

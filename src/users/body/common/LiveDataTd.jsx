@@ -34,7 +34,7 @@ const LiveDataTd = ({ topic }) => {
   const fetchLiveData = async () => {
     try {
       const res = await apiClient.post("/mqtt/messages", { topic });
-      setLiveMessages(res?.data?.message?.message);
+      setLiveMessages(res?.data?.message?.message?.message);
     } catch (error) {
       console.log(error?.message);
     }

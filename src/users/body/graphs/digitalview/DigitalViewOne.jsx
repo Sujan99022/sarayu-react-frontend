@@ -30,7 +30,9 @@ const DigitalViewOne = ({ topic }) => {
     const fetchRealTimeData = async () => {
       try {
         const response = await apiClient.post("/mqtt/messages", { topic });
-        const newSpeed = parseFloat(response?.data?.message?.message || 0);
+        const newSpeed = parseFloat(
+          response?.data?.message?.message?.message || 0
+        );
         setCurrentSpeed(newSpeed);
       } catch (error) {
         console.error("Error fetching real-time data:", error.message);

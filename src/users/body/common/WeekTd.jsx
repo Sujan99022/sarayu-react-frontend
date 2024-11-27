@@ -7,6 +7,7 @@ const WeekTd = ({ topic }) => {
   useEffect(() => {
     fetchWeeksHighest();
   }, [topic]);
+
   const fetchWeeksHighest = async () => {
     try {
       const res = await apiClient.get(
