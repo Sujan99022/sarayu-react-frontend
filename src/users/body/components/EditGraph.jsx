@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../style.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SmallGraph from "../graphs/smallgraph/SmallGraph";
 import { IoClose } from "react-icons/io5";
 import apiClient from "../../../api/apiClient";
@@ -9,6 +9,7 @@ const EditGraph = () => {
   const { topicparams } = useParams();
   const [thresholdNumber, setThresholdNumber] = useState(0);
   const [thresholds, setThreshold] = useState([]);
+  const navigate = useNavigate();
 
   let topic = encodeURIComponent(topicparams);
 
@@ -73,12 +74,7 @@ const EditGraph = () => {
         <div className="_editgraph_second_main_left_container">
           <header>
             <div>Edit {topicparams?.split("/")[2]}</div>
-            <div
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                window.history.back();
-              }}
-            >
+            <div style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
               <IoClose />
             </div>
           </header>

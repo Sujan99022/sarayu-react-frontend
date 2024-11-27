@@ -13,24 +13,17 @@ import apiClient from "../../api/apiClient";
 import { toast } from "react-toastify";
 import { PiBuildingOfficeBold } from "react-icons/pi";
 import ChangePassword from "./../body/components/ChangePassword";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.userSlice);
   const dispatch = useDispatch();
   const { showMenu } = useSelector((state) => state.NavBarSlice);
+  const navigate = useNavigate();
 
-  const oldActive = localStorage.getItem(`active`);
-  const [active, setActive] = useState(JSON.parse(oldActive) || "dashboard");
   const [loggedInUser, setLoggedInUser] = useState({});
   const [localLoading, setLocalLoading] = useState(false);
   const [changePasswordModel, setChangePasswordModel] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem(`active`, JSON.stringify(active));
-    return () => {
-      localStorage.removeItem(`active`);
-    };
-  }, [active]);
 
   useEffect(() => {
     if (user.id) {
@@ -59,87 +52,48 @@ const Navbar = () => {
           </p>
         </div>
         <div>
-          <p
-            onClick={() => {
-              window.location.href = "/allusers/dashboard";
-              setActive("dashboard");
-            }}
-            className={`users_navbar_link ${
-              active === "dashboard" && "alluser_active_navbar"
-            }`}
-          >
+          <NavLink className={"users_navbar_link"} to={"/allusers/dashboard"}>
             Dashboard
-          </p>
+          </NavLink>
           <div className="users_navbar_link_separator"></div>
-          <p
-            onClick={() => {
-              window.location.href = "/allusers/graphs";
-              setActive("graph");
-            }}
-            className={`users_navbar_link ${
-              active === "graph" && "alluser_active_navbar"
-            }`}
-          >
+          <NavLink className={"users_navbar_link"} to={"/allusers/graphs"}>
             Graphs
-          </p>
+          </NavLink>
           <div className="users_navbar_link_separator"></div>
           {user.role !== "employee" && (
-            <p
-              onClick={() => {
-                window.location.href = "/allusers/favorites";
-                setActive("favorites");
-              }}
-              className={`users_navbar_link ${
-                active === "favorites" && "alluser_active_navbar"
-              }`}
-            >
+            <NavLink className={"users_navbar_link"} to={"/allusers/favorites"}>
               Favorites
-            </p>
+            </NavLink>
           )}
           <div className="users_navbar_link_separator"></div>
-          <p
-            onClick={() => {
-              window.location.href = "/allusers/digitalmeter";
-              setActive("digitalmeter");
-            }}
-            className={`users_navbar_link ${
-              active === "digitalmeter" && "alluser_active_navbar"
-            }`}
+          <NavLink
+            className={"users_navbar_link"}
+            to={"/allusers/digitalmeter"}
           >
             Digital meter
-          </p>
+          </NavLink>
           {user.role === "supervisor" && (
             <>
               <div className="users_navbar_link_separator"></div>
-              <p
-                onClick={() => {
-                  window.location.href = "/allusers/users";
-                  setActive("alloperators");
-                }}
-                className={`users_navbar_link ${
-                  active === "alloperators" && "alluser_active_navbar"
-                }`}
-              >
+              <NavLink className={"users_navbar_link"} to={"/allusers/users"}>
                 Users
-              </p>{" "}
+              </NavLink>{" "}
             </>
           )}
           <div className="users_navbar_link_separator"></div>
-          <p
+          <Link
+            className={"users_navbar_link"}
             onClick={() => setChangePasswordModel(true)}
-            className={`users_navbar_link ${
-              active === "changepassword" && "alluser_active_navbar"
-            }`}
           >
             Change password
-          </p>
+          </Link>
           <div className="users_navbar_link_separator"></div>
-          <p
+          <Link
             className="users_navbar_link"
             onClick={() => dispatch(handleWarningModel())}
           >
             Logout
-          </p>
+          </Link>
         </div>
 
         <div className="users_navbar_user_details">
@@ -165,73 +119,46 @@ const Navbar = () => {
             data-aos-duration="300"
             data-aos-once="true"
           >
-            <p
-              onClick={() => {
-                window.location.href = "/allusers/dashboard";
-                setActive("dashboard");
-              }}
-              className={`users_navbar_link ${
-                active === "dashboard" && "alluser_active_navbar"
-              }`}
+            <NavLink
+              className={"users_mobile_navbar_show_menu_navlink"}
+              to={"/allusers/dashboard"}
             >
               Dashbaord
-            </p>
-            <p
-              onClick={() => {
-                window.location.href = "/allusers/graphs";
-                setActive("graph");
-              }}
-              className={`users_navbar_link ${
-                active === "graph" && "alluser_active_navbar"
-              }`}
+            </NavLink>
+            <NavLink
+              className={"users_mobile_navbar_show_menu_navlink"}
+              to={"/allusers/graphs"}
             >
               Graphs
-            </p>
+            </NavLink>
             {user?.role !== "employee" && (
-              <p
-                onClick={() => {
-                  window.location.href = "/allusers/favorites";
-                  setActive("favorites");
-                }}
-                className={`users_navbar_link ${
-                  active === "favorites" && "alluser_active_navbar"
-                }`}
+              <NavLink
+                className={"users_mobile_navbar_show_menu_navlink"}
+                to={"/allusers/favorites"}
               >
                 Favorites
-              </p>
+              </NavLink>
             )}
-            <p
-              onClick={() => {
-                window.location.href = "/allusers/digitalmeter";
-                setActive("digitalmeter");
-              }}
-              className={`users_navbar_link ${
-                active === "digitalmeter" && "alluser_active_navbar"
-              }`}
+            <NavLink
+              className={"users_mobile_navbar_show_menu_navlink"}
+              to={"/allusers/digitalmeter"}
             >
               Digital meter
-            </p>
+            </NavLink>
             {user?.role !== "employee" && (
-              <p
-                onClick={() => {
-                  window.location.href = "/allusers/users";
-                  setActive("alloperators");
-                }}
-                className={`users_navbar_link ${
-                  active === "alloperators" && "alluser_active_navbar"
-                }`}
+              <NavLink
+                className={"users_mobile_navbar_show_menu_navlink"}
+                to={"/allusers/users"}
               >
                 Users
-              </p>
+              </NavLink>
             )}
-            <p
+            <Link
+              className={"users_mobile_navbar_show_menu_navlink"}
               onClick={() => setChangePasswordModel(true)}
-              className={`users_navbar_link ${
-                active === "changepassword" && "alluser_active_navbar"
-              }`}
             >
               Change password
-            </p>
+            </Link>
             <div
               className="users_mobile_navbar_show_menu_logout_container"
               onClick={() => dispatch(handleWarningModel())}

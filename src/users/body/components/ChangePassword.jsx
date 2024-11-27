@@ -47,7 +47,7 @@ const ChangePassword = ({ setChangePasswordModel, user }) => {
         </div>
         <p>Change password</p>
         <div className="allusers_change_password_input_container">
-          <label htmlFor="activePassword">Enter your old password</label>
+          <label htmlFor="activePassword">Enter your active password</label>
           <input
             type="password"
             value={data.activePassword}

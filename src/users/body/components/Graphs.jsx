@@ -9,12 +9,14 @@ import "../../style.css";
 import { FaRegEye } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import Loader from "../../loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.userSlice);
   const dispatch = useDispatch();
   const [loggedInUser, setLoggedInUser] = useState({});
   const [localLoading, setLocalLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user.id) {
@@ -48,7 +50,7 @@ const Dashboard = () => {
                 <div
                   onClick={() => {
                     const encodePrams = encodeURIComponent(item);
-                    window.location.href = `/allusers/viewsinglegraph/${encodePrams}`;
+                    navigate(`/allusers/viewsinglegraph/${encodePrams}`);
                   }}
                 >
                   <FaRegEye />
@@ -56,7 +58,7 @@ const Dashboard = () => {
                 <div
                   onClick={() => {
                     const encodeParams = encodeURIComponent(item);
-                    window.location.href = `/allusers/editsinglegraph/${encodeParams}`;
+                    navigate(`/allusers/editsinglegraph/${encodeParams}`);
                   }}
                 >
                   <FiEdit2 />

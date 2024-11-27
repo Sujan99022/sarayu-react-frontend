@@ -31,9 +31,8 @@
     text-decoration: none;
     color: white;
 }
-.alluser_active_navbar {
+.active {
     background: rgb(255, 255, 255) !important;
-    /* color: rgb(42, 194, 0) !important; */
     color: black !important;
     font-weight: 500;
 }
@@ -46,49 +45,6 @@
     height: 100%;
     background: white;
 }
-/* serchbar style in the dahsboard graph */
-.users_small_graphs_searchbar_container {
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    gap: 70px;
-}
-.allusers_input-wrapper {
-    display: flex;
-    flex-wrap: nowrap;
-}
-.allusers_input-wrapper > div {
-    border-radius: 50px;
-    width: 300px;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow: hidden;
-}
-.allusers_input-wrapper > div > input {
-    outline: none;
-    border: none;
-    padding: 3px 10px;
-    font-size: 12px;
-    width: 85%;
-}
-.allusers_input-wrapper > div > button {
-    outline: none;
-    border: none;
-    padding: 5px 10px;
-    background: white;
-    color: black;
-    width: 15%;
-}
-.users_nav_favorite_img_container {
-    width: 50px;
-    height: 48px;
-}
-.users_nav_favorite_img_container > img {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-/* serchbar style in the dahsboard graph */
 
 /* mobile navbar style starts here */
 .users_mobile_navbar_container {
@@ -129,16 +85,19 @@
     display: flex;
     flex-direction: column;
 }
-.users_mobile_navbar_show_menu > p {
+.users_mobile_navbar_show_menu_navlink {
     margin: 0;
     width: 100%;
     padding: 20px 30px;
     font-size: 18px;
+    color: white;
+    text-decoration: none;
+    background: rgb(25, 30, 49);
     border-bottom: 1px solid rgba(128, 128, 128, 0.387);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
 }
-.users_mobile_navbar_show_menu > p:hover {
+.users_mobile_navbar_show_menu_navlink:hover {
     color: white !important;
     background: black !important;
 }

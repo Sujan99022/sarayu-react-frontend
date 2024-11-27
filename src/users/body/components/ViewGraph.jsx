@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "../../style.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SmallGraph from "../graphs/smallgraph/SmallGraph";
 import { IoClose } from "react-icons/io5";
 
 const ViewGraph = () => {
   const { topicparams } = useParams();
-
+  const navigate = useNavigate();
   return (
     <div
       className="_viewgraph_main_container"
@@ -16,11 +16,7 @@ const ViewGraph = () => {
     >
       <header>
         <div>{topicparams?.split("/")[2]}</div>
-        <div
-          onClick={() => {
-            window.history.back();
-          }}
-        >
+        <div onClick={() => navigate(-1)}>
           <IoClose />
         </div>
       </header>

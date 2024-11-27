@@ -4,6 +4,64 @@
 }
 
 /* SmallGraph style starts here */
+.allusers_favorites_main_container {
+    width: 97vw;
+}
+.allusers_favorites_main_btn_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+.allusers_favorites_main_btn_container > div {
+    max-width: min-content;
+    padding: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+    display: flex;
+    flex-wrap: nowrap;
+}
+.allusers_favorites_main_btn_container > div > button {
+    height: 35px;
+    width: 120px;
+    font-size: 14px;
+    background: transparent;
+    outline: none;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+.allusers_favorites_digitalmeter_container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 40px;
+    gap: 40px;
+}
+.allusers_favorites_digitalmeter_container > div {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.405);
+}
+.allusers_favorites_main_active_btn {
+    color: white;
+    position: relative;
+    background: orange !important;
+}
+.allusers_favorites_main_active_btn::after {
+    content: " ";
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50%;
+    left: 38%;
+    right: 50%;
+    animation: activeFavBtn 0.5s linear 0s forwards normal;
+}
+@keyframes activeFavBtn {
+    from {
+        bottom: -50px;
+    }
+    to {
+        bottom: -25px;
+    }
+}
 .users_small_graphs_primary_container {
     padding: 50px 20px;
     display: flex;
@@ -13,12 +71,45 @@
     flex-wrap: wrap;
     gap: 45px;
 }
+
 .users_small_graphs_secondary_container {
     width: 430px;
     height: 220px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.372);
     position: relative;
-    overflow: hidden;
+}
+.users_small_graphs_favorite_tab_switch_container {
+    position: absolute;
+    top: 0;
+    max-width: min-content;
+    z-index: 99999;
+    transform: translateY(-99%) translateX(-1px);
+    display: flex;
+    border-radius: 5px;
+}
+.users_small_graphs_favorite_tab_switch_container > div {
+    padding: 2px 15px;
+    background: purple;
+    cursor: pointer;
+    color: white;
+    border: 2px solid purple;
+    font-size: 16px;
+}
+.users_small_graphs_favorite_tab_switch_container > div:first-child {
+    border-top-left-radius: 5px;
+}
+.users_small_graphs_favorite_tab_switch_container > div:last-child {
+    border-top-right-radius: 5px;
+}
+.users_small_graphs_favorite_tab_switch_active {
+    color: red !important;
+    background: white !important;
+    border-bottom: 2px solid transparent !important;
+}
+.users_small_graphs_favorite_tab_switch_container > div:hover {
+    color: white !important;
+    background: red !important;
+    border: 2px solid transparent;
 }
 .users_graphs_topic_name {
     position: absolute;
@@ -53,60 +144,82 @@
 
 /* SmallGraph style ends here */
 
-/*                            AllOperator new section starts here                     */
-.users_alloperators_new_main_container {
+/* favorites digital view style starts here */
+.allusers_favorite_digital_meter_container {
+    height: 100%;
+    width: 100%;
+    position: relative;
 }
+.allusers_favorite_digital_meter_prev_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    padding: 0 15px;
+    display: flex;
+    user-select: none;
+    align-items: center;
+}
+.allusers_favorite_digital_meter_next_container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    user-select: none;
+    align-items: center;
+}
+.allusers_favorite_digital_meter_content_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.allusers_favorite_digital_meter_content_container > p {
+    margin: 0;
+    font-size: 20px;
+    color: gray;
+}
+/* favorites digital view style ends here */
+
+/* allusers digital view all topics starts here */
+.allusers_digitalview_main_container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+}
+.allusers_digitalview_main_container > div {
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.285);
+}
+/* allusers digital view all topics ends here */
+
+/*                            AllOperator new section starts here                     */
+
 /* radio button style starts here */
 
 /* radio button style ends here */
 /*                            AllOperator new section ends here                     */
 
 /* single user dashboard style starts here */
-.singleuserdashboard_main_container {
-    height: 100%;
-    width: 90vw;
-    margin: 10px;
-    border-radius: 20px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.284);
-}
-.singleuserdashboard_main_container::-webkit-scrollbar {
-    display: none;
-}
 .singleuserdashboard_main_container > div:first-child {
-    width: 100%;
+    width: 97.5vw;
     display: flex;
-    justify-content: center;
-    padding: 10px 0;
-    background: rgb(7, 10, 40);
-    color: white;
+    justify-content: space-between;
+    padding: 10px 20px;
+    padding-bottom: 0;
+    color: gray;
+    font-size: 22px;
     text-transform: capitalize;
-    font-size: 20px;
-    position: relative;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    font-weight: bold;
 }
 .singleuserdashboard_close_icon {
-    position: absolute;
-    z-index: 9999;
-    color: white;
-    right: 10px;
-    top: 19%;
-    font-size: 20px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
-.singleuserdashboard_close_icon:hover {
-    color: orange;
-}
-.singleuserdashboard_main_container > div:last-child {
-    height: 100%;
-    width: 100%;
-    padding: 25px 0;
-    padding-bottom: 55px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 25px;
 }
 /* single user dashboard style ends here */
 
@@ -336,6 +449,9 @@
     border-radius: 5px;
     margin: 20px 0;
 }
+.tradingview-widget-container__logo {
+    display: none !important;
+}
 
 .alluser_alloperators_container::-webkit-scrollbar {
     height: 8px;
@@ -463,5 +579,8 @@
     .alluser_alloperators_table > tbody > tr > td {
         font-size: 15px;
         padding: 8px 2px;
+    }
+    .singleuserdashboard_main_container > div:first-child {
+        width: 97vw;
     }
 }

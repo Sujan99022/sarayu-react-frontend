@@ -5,14 +5,15 @@ import { RiDownloadCloud2Fill } from "react-icons/ri";
 
 const SmallGraph = ({ topic, height, viewgraph }) => {
   const chartContainerRef = useRef();
-  const chartRef = useRef();
-  const areaSeriesRef = useRef();
+  const chartRef = useRef(null);
+  const areaSeriesRef = useRef(null);
   const thresholdLineSeriesRefs = useRef([]);
-  const timerRef = useRef();
+  const timerRef = useRef(null);
   const dataWindow = useRef([]);
   const latestTimestamp = useRef(0);
   const isMounted = useRef(true);
   const currentColorRef = useRef("rgba(41, 98, 255, 0.3)");
+  const isChartInitialized = useRef(false); // Flag to track chart initialization
 
   const [thresholds, setThreshold] = useState([]);
   const [subscribed, setSubscribed] = useState(false);
@@ -20,47 +21,48 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
   const TWO_HOURS_IN_SECONDS = 2 * 60 * 60;
 
-  // Create threshold lines with labels
+  // Check if the chart is initialized before performing operations
+  const isChartValid = () => chartRef.current && isChartInitialized.current;
+
+  // Create the threshold lines
   const createThresholdLines = () => {
-    if (chartRef.current) {
+    if (isChartValid()) {
+      // Remove previous threshold lines
       thresholdLineSeriesRefs.current.forEach((series) => {
-        if (series) {
-          try {
-            chartRef.current.removeSeries(series);
-          } catch (error) {
-            console.warn("Error removing series:", error);
-          }
+        try {
+          chartRef.current.removeSeries(series);
+        } catch (error) {
+          console.warn("Error removing threshold series:", error);
+        }
+      });
+
+      thresholdLineSeriesRefs.current = [];
+
+      const currentTime = Math.floor(new Date().getTime() / 1000);
+      const startTime = currentTime - TWO_HOURS_IN_SECONDS;
+      const endTime = currentTime + 60 * 60;
+
+      thresholds.forEach((threshold) => {
+        if (isChartValid()) {
+          const thresholdLine = chartRef.current.addLineSeries({
+            color: threshold.color,
+            lineWidth: 2,
+            priceLineVisible: false,
+            crosshairMarkerVisible: false,
+          });
+
+          const thresholdData = [
+            { time: startTime, value: threshold.value },
+            { time: endTime, value: threshold.value },
+          ];
+
+          thresholdLine.setData(thresholdData);
+          thresholdLineSeriesRefs.current.push(thresholdLine);
         }
       });
     }
-
-    thresholdLineSeriesRefs.current = [];
-
-    const currentTime = Math.floor(new Date().getTime() / 1000);
-    const startTime = currentTime - TWO_HOURS_IN_SECONDS;
-    const endTime = currentTime + 60 * 60;
-
-    thresholds.forEach((threshold) => {
-      if (chartRef.current) {
-        const thresholdLine = chartRef.current.addLineSeries({
-          color: threshold.color,
-          lineWidth: 2,
-          priceLineVisible: false,
-          crosshairMarkerVisible: false,
-        });
-
-        const thresholdData = [
-          { time: startTime, value: threshold.value },
-          { time: endTime, value: threshold.value },
-        ];
-
-        thresholdLine.setData(thresholdData);
-        thresholdLineSeriesRefs.current.push(thresholdLine);
-      }
-    });
   };
 
-  // API Calls
   const fetchSubscriptionApi = async () => {
     try {
       const res = await apiClient.get(
@@ -85,14 +87,14 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
   };
 
-  // Initialize APIs
   useEffect(() => {
     fetchSubscriptionApi();
     fetchThresholdApi();
   }, []);
 
-  // Create chart
   useEffect(() => {
+    if (chartRef.current) return; // Prevent recreating the chart if already created
+
     chartRef.current = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height,
@@ -126,6 +128,9 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
       lineWidth: 2,
     });
 
+    // Set chart initialized flag to true
+    isChartInitialized.current = true;
+
     const handleResize = () => {
       if (chartRef.current) {
         chartRef.current.applyOptions({
@@ -141,18 +146,17 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
       if (chartRef.current) {
         chartRef.current.remove();
         chartRef.current = null;
+        isChartInitialized.current = false; // Reset flag when chart is removed
       }
     };
-  }, []);
+  }, [height]);
 
-  // Handle threshold changes
   useEffect(() => {
-    if (chartRef.current) {
+    if (isChartValid()) {
       createThresholdLines();
     }
   }, [thresholds]);
 
-  // Real-time data handling
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -177,7 +181,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
               historicalData[historicalData.length - 1].time;
             dataWindow.current = historicalData;
 
-            if (areaSeriesRef.current) {
+            if (isChartValid()) {
               areaSeriesRef.current.setData(historicalData);
               chartRef.current?.timeScale().fitContent();
             }
@@ -229,7 +233,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
               (point) => point.time >= earliestAllowedTime
             );
 
-            if (areaSeriesRef.current) {
+            if (isChartValid()) {
               areaSeriesRef.current.setData(dataWindow.current);
             }
           }
@@ -249,75 +253,83 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
 
     return () => {
-      isMounted.current = false;
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
+      isMounted.current = false;
     };
   }, [topic, subscribed, thresholds]);
 
+  // Update the color of the chart's series based on thresholds
   const updateSeriesColor = (color) => {
-    if (areaSeriesRef.current) {
-      areaSeriesRef.current.applyOptions({
-        topColor: color,
-        bottomColor: "rgba(0, 0, 0, 0)",
-        lineColor: color,
-      });
+    if (isChartValid()) {
+      try {
+        areaSeriesRef.current.applyOptions({
+          topColor: color,
+          bottomColor: "rgba(0, 0, 0, 0)",
+          lineColor: color,
+        });
+      } catch (error) {
+        console.warn("Error updating series color:", error);
+      }
     }
   };
 
-  // Enhanced download handlers
   const downloadImage = () => {
-    const canvas = chartContainerRef.current.querySelector("canvas");
-    if (canvas) {
-      const link = document.createElement("a");
-      link.download = `${topic}-chart.png`;
-      link.href = canvas.toDataURL();
-      link.click();
+    if (chartRef.current) {
+      const canvas = chartRef.current.getCanvas();
+      if (canvas) {
+        const url = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "chart.png";
+        a.click();
+      }
     }
   };
 
   const downloadCSV = () => {
-    if (dataWindow.current.length === 0) return;
+    if (dataWindow.current.length > 0) {
+      const csvRows = [];
+      const headers = ["Timestamp", "Value"];
+      csvRows.push(headers.join(","));
 
-    let csvContent = "Timestamp,Value\n";
+      dataWindow.current.forEach((dataPoint) => {
+        const row = [
+          new Date(dataPoint.time * 1000).toISOString(),
+          dataPoint.value,
+        ];
+        csvRows.push(row.join(","));
+      });
 
-    dataWindow.current.forEach((point) => {
-      const date = new Date(point.time * 1000).toISOString();
-      csvContent += `${date},${point.value}\n`;
-    });
+      const csvData = csvRows.join("\n");
+      const blob = new Blob([csvData], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${topic}-data.csv`;
-    link.click();
-    window.URL.revokeObjectURL(url);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "data.csv";
+      a.click();
+    }
   };
 
   return (
-    <>
-      <div
-        style={{ position: "relative", height }}
-        ref={chartContainerRef}
-      ></div>
+    <div>
+      <div ref={chartContainerRef}></div>
       {viewgraph && (
-        <>
-          <hr className="mb-2" />
-          <div className="_view_graph_download_current_plot_btn_container">
-            <button onClick={downloadImage}>
-              Chart Image
-              <RiDownloadCloud2Fill />
-            </button>
-            <button onClick={downloadCSV}>
-              CSV Data
-              <RiDownloadCloud2Fill />
-            </button>
-          </div>
-        </>
+        <div>
+          <button onClick={downloadImage}>
+            <RiDownloadCloud2Fill />
+            Download PNG
+          </button>
+          <button onClick={downloadCSV}>
+            <RiDownloadCloud2Fill />
+            Download CSV
+          </button>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

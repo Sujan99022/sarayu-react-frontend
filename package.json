@@ -22,6 +22,7 @@
     "pm2": "^5.4.3",
     "react": "^18.3.1",
     "react-app": "file:",
+    "react-canvas-gauge": "^1.0.2",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-gauge-component": "^1.2.61",

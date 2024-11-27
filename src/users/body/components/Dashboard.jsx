@@ -14,6 +14,7 @@ import YestardayTd from "../common/YestardayTd";
 import TodayTd from "../common/TodayTd";
 import { VscGraph } from "react-icons/vsc";
 import { FaDigitalOcean } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userSlice);
   const [favoriteList, setFavoriteList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user.id) {
@@ -79,9 +81,9 @@ const Dashboard = () => {
             <thead>
               <tr>
                 <th style={{ background: "red" }}>Tag name</th>
-                <th>Week's highest</th>
-                <th>Yesterday's highest</th>
-                <th>Today's highest</th>
+                <th>Week's max</th>
+                <th>Yesterday's max</th>
+                <th>Today's max</th>
                 <th className="allusers_dashboard_live_data_th">Live</th>
                 <th>Unit</th>
                 <th>Report</th>
@@ -111,7 +113,7 @@ const Dashboard = () => {
                     <button
                       onClick={() => {
                         const encodedTopic = encodeURIComponent(item);
-                        window.location.href = `/allusers/viewsinglegraph/${encodedTopic}`;
+                        navigate(`/allusers/viewsinglegraph/${encodedTopic}`);
                       }}
                     >
                       <VscGraph />
