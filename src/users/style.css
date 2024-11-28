@@ -1,8 +1,73 @@
+/* historygraph style starts here */
+._viewgraph_history_main_container {
+    overflow: hidden;
+    border: 2px solid rgb(18, 18, 90);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.157);
+    border-radius: 20px;
+}
+._historygraph_controls {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+._historygraph_date-pickers {
+    z-index: 999999999;
+    display: flex;
+    gap: 10px;
+}
+._historygraph_date-pickers input {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.425);
+    outline: none;
+    padding: 4px 5px;
+    text-align: center;
+}
+._historygraph_dropdown select {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.425);
+    outline: none;
+    padding: 4px 5px;
+    text-align: center;
+}
+._historygraph_apply-btn {
+    height: 30px;
+    width: 100px;
+    outline: none;
+    border: none;
+    background: red;
+    color: white;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+._historygraph_apply-btn:hover {
+    background: rgb(229, 1, 1);
+}
+/* historygraph style ends here */
+
 .users_main_container {
     display: grid;
     grid-template-rows: auto auto;
 }
-
+._viewgraph_downloadimg_csv_btn_container {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    padding-right: 20px;
+}
+._viewgraph_downloadimg_csv_btn_container > button {
+    border: none;
+    outline: none;
+    padding: 4px 5px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-radius: 4px;
+    border: 2px solid rgba(128, 128, 128, 0.303);
+    background: white;
+    color: rgba(0, 0, 0, 0.685);
+}
 /* SmallGraph style starts here */
 .allusers_favorites_main_container {
     width: 97vw;
@@ -37,6 +102,7 @@
 }
 .allusers_favorites_digitalmeter_container > div {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.405);
+    overflow: hidden;
 }
 .allusers_favorites_main_active_btn {
     color: white;
@@ -46,20 +112,22 @@
 .allusers_favorites_main_active_btn::after {
     content: " ";
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 15px;
+    height: 15px;
     background: white;
     border-radius: 50%;
-    left: 38%;
+    left: 44%;
     right: 50%;
     animation: activeFavBtn 0.5s linear 0s forwards normal;
 }
 @keyframes activeFavBtn {
     from {
-        bottom: -50px;
+        opacity: 0;
+        bottom: -10px;
     }
     to {
-        bottom: -25px;
+        opacity: 1;
+        bottom: -10px;
     }
 }
 .users_small_graphs_primary_container {
@@ -231,6 +299,11 @@
     padding-top: 20px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+._viewgraph_main_live_and_history_container {
+    display: flex;
     justify-content: center;
 }
 ._viewgraph_main_container > header {

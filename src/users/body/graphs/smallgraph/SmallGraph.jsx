@@ -318,7 +318,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     <div>
       <div ref={chartContainerRef}></div>
       {viewgraph && (
-        <div>
+        <div className="_viewgraph_downloadimg_csv_btn_container">
           <button onClick={downloadImage}>
             <RiDownloadCloud2Fill />
             Download PNG
