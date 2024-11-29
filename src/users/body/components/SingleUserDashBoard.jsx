@@ -132,7 +132,7 @@ const SingleUserDashBoard = () => {
                       <button
                         onClick={() => {
                           const encodedTopic = encodeURIComponent(item);
-                          window.location.href = `/allusers/viewsinglegraph/${encodedTopic}`;
+                          navigate(`/allusers/viewsinglegraph/${encodedTopic}`);
                         }}
                       >
                         <VscGraph />
