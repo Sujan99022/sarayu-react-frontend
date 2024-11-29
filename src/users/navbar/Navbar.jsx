@@ -60,11 +60,9 @@ const Navbar = () => {
             Graphs
           </NavLink>
           <div className="users_navbar_link_separator"></div>
-          {user.role !== "employee" && (
-            <NavLink className={"users_navbar_link"} to={"/allusers/favorites"}>
-              Favorites
-            </NavLink>
-          )}
+          <NavLink className={"users_navbar_link"} to={"/allusers/favorites"}>
+            Watch list
+          </NavLink>
           <div className="users_navbar_link_separator"></div>
           <NavLink
             className={"users_navbar_link"}
@@ -136,7 +134,7 @@ const Navbar = () => {
                 className={"users_mobile_navbar_show_menu_navlink"}
                 to={"/allusers/favorites"}
               >
-                Favorites
+                Watch list
               </NavLink>
             )}
             <NavLink

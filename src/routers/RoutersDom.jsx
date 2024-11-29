@@ -23,6 +23,7 @@ import Favorite from "../users/body/components/Favorite";
 import SingleUserDashBoard from "../users/body/components/SingleUserDashBoard";
 import ViewGraph from "../users/body/components/ViewGraph";
 import EditGraph from "../users/body/components/EditGraph";
+import Report from "../users/body/components/Report";
 
 const RoutersDom = () => {
   return (
@@ -72,6 +73,7 @@ const RoutersDom = () => {
             path="/allusers/editsinglegraph/:topicparams"
             element={<EditGraph />}
           />
+          <Route path="/allusers/report/:topicparams" element={<Report />} />
         </Route>
         {/* users [manager,supervisor,employee] routes ends here  */}
         <Route path="/logout" element={<Logout />} />

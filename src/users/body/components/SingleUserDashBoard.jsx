@@ -14,8 +14,10 @@ import TodayTd from "../common/TodayTd";
 import LiveDataTd from "../common/LiveDataTd";
 import { BiSolidReport } from "react-icons/bi";
 import { BsBookmarkStarFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 const SingleUserDashBoard = () => {
+  const { user } = useSelector((state) => state.userSlice);
   const [localLoading, setLocalLoading] = useState(false);
   const [singleUserData, setSingleUserData] = useState({});
   const { id } = useParams();
@@ -45,26 +47,28 @@ const SingleUserDashBoard = () => {
 
   const handleAddFavorite = async (topic) => {
     try {
-      await apiClient.post(`/auth/${supervisorId}/favorites`, { topic });
+      await apiClient.post(`/auth/${user.role}/${supervisorId}/favorites`, {
+        topic,
+      });
       setFavoriteList((prev) => [...prev, topic]);
-      toast.success("Tagname to favorites");
+      toast.success("Tagname to watchlist");
     } catch (error) {
       toast.error(
-        error?.response?.data?.error || "Failed to add topic to favorites"
+        error?.response?.data?.error || "Failed to add topic to watchlist"
       );
     }
   };
 
   const handleRemoveFavorite = async (topic) => {
     try {
-      await apiClient.delete(`/auth/${supervisorId}/favorites`, {
+      await apiClient.delete(`/auth/${user.role}/${supervisorId}/favorites`, {
         data: { topic },
       });
       setFavoriteList((prev) => prev.filter((fav) => fav !== topic));
-      toast.success("Topic removed from favorites");
+      toast.success("Topic removed from watchlist");
     } catch (error) {
       toast.error(
-        error?.response?.data?.error || "Failed to remove topic from favorites"
+        error?.response?.data?.error || "Failed to remove topic from watchlist"
       );
     }
   };
@@ -115,6 +119,10 @@ const SingleUserDashBoard = () => {
                     <td>V</td>
                     <td>
                       <BiSolidReport
+                        onClick={() => {
+                          const encodedTopic = encodeURIComponent(item);
+                          navigate(`/allusers/report/${encodedTopic}`);
+                        }}
                         size={"20"}
                         style={{ cursor: "pointer" }}
                         color="gray"

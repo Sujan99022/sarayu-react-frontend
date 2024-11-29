@@ -278,12 +278,12 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
   const downloadImage = () => {
     if (chartRef.current) {
-      const canvas = chartRef.current.getCanvas();
+      const canvas = chartContainerRef.current.querySelector("canvas");
       if (canvas) {
         const url = canvas.toDataURL("image/png");
         const a = document.createElement("a");
         a.href = url;
-        a.download = "chart.png";
+        a.download = `${topic}_${new Date().toISOString()}.png`;
         a.click();
       }
     }
@@ -309,7 +309,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
       const a = document.createElement("a");
       a.href = url;
-      a.download = "data.csv";
+      a.download = `${topic}_${new Date().toISOString()}.csv`;
       a.click();
     }
   };

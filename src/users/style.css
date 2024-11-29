@@ -615,6 +615,70 @@
     color: white;
 }
 /* all users style ends here  */
+
+/* Report section starts here */
+._allusers_topic_based_report_title_section {
+    display: flex;
+    justify-content: space-between;
+    width: 97vw;
+    padding: 10px 15px;
+    font-size: 20px;
+    color: gray;
+}
+._allusers_topic_based_report_input_container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+._allusers_topic_based_report_datepicker_input input {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.308);
+    outline: none;
+    text-align: center;
+}
+._allusers_topic_based_report_minvalue_input input {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.308);
+    outline: none;
+    width: 70px;
+    padding-left: 10px;
+    text-align: center;
+}
+._allusers_topic_based_report_minvalue_input input::placeholder {
+    font-size: 14px;
+}
+.__allusers_topic_based_report_button-container {
+    display: flex;
+    gap: 8px;
+}
+.__allusers_topic_based_report_button-container > button {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+.__allusers_topic_based_report_button-container > button:first-child {
+    background: red;
+    color: white;
+    height: 30px;
+    width: 80px;
+}
+.__allusers_topic_based_report_button-container > button:first-child:hover {
+    background: rgb(195, 0, 0);
+}
+.__allusers_topic_based_report_button-container > button:last-child {
+    background: blue;
+    color: white;
+    height: 30px;
+    width: 120px;
+}
+.__allusers_topic_based_report_button-container > button:last-child:hover {
+    background: rgb(0, 0, 186);
+}
+/* Report section ends here */
+
 .graph_shadow {
     box-sizing: 0 0 4px black !important;
 }

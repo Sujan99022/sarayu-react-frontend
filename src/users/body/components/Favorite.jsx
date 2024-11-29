@@ -41,7 +41,7 @@ const Favorite = () => {
 
   const removeFromFavorite = async (topic) => {
     try {
-      await apiClient.delete(`/auth/${user.id}/favorites`, {
+      await apiClient.delete(`/auth/${user.role}/${user.id}/favorites`, {
         data: { topic },
       });
 

@@ -46,9 +46,11 @@ const Dashboard = () => {
 
   const handleAddFavorite = async (topic) => {
     try {
-      await apiClient.post(`/auth/${user.id}/favorites`, { topic });
+      await apiClient.post(`/auth/${user.role}/${user.id}/favorites`, {
+        topic,
+      });
       setFavoriteList((prev) => [...prev, topic]);
-      toast.success("Tagname added to favorites");
+      toast.success("Tagname added to watchlist");
     } catch (error) {
       toast.error(
         error?.response?.data?.error || "Failed to add topic to favorites"
@@ -58,14 +60,14 @@ const Dashboard = () => {
 
   const handleRemoveFavorite = async (topic) => {
     try {
-      await apiClient.delete(`/auth/${user.id}/favorites`, {
+      await apiClient.delete(`/auth/${user.role}/${user.id}/favorites`, {
         data: { topic },
       });
       setFavoriteList((prev) => prev.filter((fav) => fav !== topic));
-      toast.success("Topic removed from favorites");
+      toast.success("Topic removed from watchlist");
     } catch (error) {
       toast.error(
-        error?.response?.data?.error || "Failed to remove topic from favorites"
+        error?.response?.data?.error || "Failed to remove topic from watchlist"
       );
     }
   };
@@ -104,6 +106,10 @@ const Dashboard = () => {
                   <td>V</td>
                   <td>
                     <BiSolidReport
+                      onClick={() => {
+                        const encodedTopic = encodeURIComponent(item);
+                        navigate(`/allusers/report/${encodedTopic}`);
+                      }}
                       size={"20"}
                       style={{ cursor: "pointer" }}
                       color="gray"
