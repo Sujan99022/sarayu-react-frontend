@@ -22,7 +22,7 @@ const EditGraph = () => {
     const updatedThresholds = Array.from(
       { length: Number(thresholdNumber) },
       (_, index) => {
-        return thresholds[index] || { value: "", color: "green" };
+        return thresholds[index] || { value: "", color: "orange" };
       }
     );
     setThreshold(updatedThresholds);
@@ -94,7 +94,6 @@ const EditGraph = () => {
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
-                  <option value="3">3</option>
                 </select>
               </div>
               {[...Array(Number(thresholdNumber))].map((_, index) => (
@@ -114,7 +113,6 @@ const EditGraph = () => {
                         handleThresholdChange(index, "color", e.target.value)
                       }
                     >
-                      <option value="green">Green</option>
                       <option value="orange">Yellow</option>
                       <option value="red">Red</option>
                     </select>
