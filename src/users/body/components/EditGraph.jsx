@@ -18,7 +18,6 @@ const EditGraph = () => {
   }, []);
 
   useEffect(() => {
-    // Adjust thresholds when the number of thresholds changes manually
     const updatedThresholds = Array.from(
       { length: Number(thresholdNumber) },
       (_, index) => {
@@ -32,10 +31,9 @@ const EditGraph = () => {
     try {
       const res = await apiClient.get(`/mqtt/get?topic=${topic}`);
       const fetchedThresholds = res?.data?.data?.thresholds || [];
-      // Ensure all values are integers
       const processedThresholds = fetchedThresholds.map((threshold) => ({
         ...threshold,
-        value: parseInt(threshold.value, 10), // Convert value to integer
+        value: parseInt(threshold.value, 10), 
       }));
       setThreshold(processedThresholds);
       setThresholdNumber(processedThresholds.length);

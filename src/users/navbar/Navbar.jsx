@@ -120,26 +120,28 @@ const Navbar = () => {
             <NavLink
               className={"users_mobile_navbar_show_menu_navlink"}
               to={"/allusers/dashboard"}
+              onClick={() => dispatch(handlToggleMenu(false))}
             >
               Dashbaord
             </NavLink>
             <NavLink
               className={"users_mobile_navbar_show_menu_navlink"}
               to={"/allusers/graphs"}
+              onClick={() => dispatch(handlToggleMenu(false))}
             >
               Graphs
             </NavLink>
-            {user?.role !== "employee" && (
-              <NavLink
-                className={"users_mobile_navbar_show_menu_navlink"}
-                to={"/allusers/favorites"}
-              >
-                Watch list
-              </NavLink>
-            )}
+            <NavLink
+              className={"users_mobile_navbar_show_menu_navlink"}
+              to={"/allusers/favorites"}
+              onClick={() => dispatch(handlToggleMenu(false))}
+            >
+              Watch list
+            </NavLink>
             <NavLink
               className={"users_mobile_navbar_show_menu_navlink"}
               to={"/allusers/digitalmeter"}
+              onClick={() => dispatch(handlToggleMenu(false))}
             >
               Digital meter
             </NavLink>
@@ -147,6 +149,7 @@ const Navbar = () => {
               <NavLink
                 className={"users_mobile_navbar_show_menu_navlink"}
                 to={"/allusers/users"}
+                onClick={() => dispatch(handlToggleMenu(false))}
               >
                 Users
               </NavLink>

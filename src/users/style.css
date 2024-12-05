@@ -711,11 +711,12 @@
     }
     .alluser_alloperators_table > thead > tr > th {
         font-size: 16px;
-        padding: 8px 2px;
+        padding: 12px 6px;
+        font-weight: 400;
     }
     .alluser_alloperators_table > tbody > tr > td {
         font-size: 15px;
-        padding: 8px 2px;
+        padding: 12px 6px;
     }
     .singleuserdashboard_main_container > div:first-child {
         width: 97vw;

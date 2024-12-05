@@ -1,0 +1,121 @@
+.admin_show_all_topic_container {
+    margin: 10px;
+    border: 2px solid rgba(128, 128, 128, 0.28);
+    padding: 10px;
+}
+/* Main container fixed to 100vh */
+.admin_alltopics_table_all_cred_container {
+    width: 95%;
+    max-width: 1200px;
+    height: 80vh; /* Full viewport height */
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* Prevent content overflow outside the container */
+}
+
+/* Fixed header inside the container */
+.admin_alltopics_table_all_cred_header {
+    background-color: #2c3e50;
+    color: #ffffff;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollable table container */
+.admin_alltopics_table_all_cred_scrollable-table {
+    flex: 1; /* Fills the remaining space below the header */
+    overflow-y: auto; /* Enable vertical scrolling for the table content */
+    border-radius: 10px;
+}
+
+/* Hide the scrollbar */
+.admin_alltopics_table_all_cred_scrollable-table::-webkit-scrollbar {
+    display: none;
+}
+
+/* Table styling */
+.admin_alltopics_table_all_cred_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    text-align: left;
+    background-color: #ffffff;
+}
+
+/* Table header styling */
+.admin_alltopics_table_all_cred_table th {
+    background-color: #34495e;
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0; /* Keeps table header visible during scrolling */
+    z-index: 1;
+}
+
+/* Table cell styling */
+.admin_alltopics_table_all_cred_table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Alternate row coloring for readability */
+.admin_alltopics_table_all_cred_table tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+.admin_alltopics_table_all_cred_table tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* Hover effect for rows */
+.admin_alltopics_table_all_cred_table tr:hover {
+    background-color: #9797975c;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.admin_alltopicname_table_subscribe_button {
+    border: none;
+    outline: none;
+    color: white;
+    background: orange;
+    height: 30px;
+    width: 100px;
+    border-radius: 4px;
+}
+.admin_alltopicname_table_subscribed_button {
+    border: none;
+    outline: none;
+    color: white;
+    background: black;
+    height: 30px;
+    width: 100px;
+    border-radius: 4px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .alluser_alloperators_all_cred_container {
+        width: 100%;
+    }
+
+    .admin_alltopics_table_all_cred_table th,
+    .admin_alltopics_table_alloperators_all_cred_table td {
+        font-size: 14px; /* Adjust font size for smaller screens */
+        padding: 10px;
+    }
+}
