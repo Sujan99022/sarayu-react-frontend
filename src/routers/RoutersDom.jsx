@@ -2,7 +2,8 @@ import React from "react";
 import Login from "../authentication/Login";
 import { Route, Routes } from "react-router-dom";
 import ContactSupport from "../authentication/ContactSupport";
-import DashboardPanel from "../admin/components/Dashboard";
+import TagCreation from "../admin/components/TagCreation";
+import AdminDashboard from "../admin/components/Dashboard";
 import Dashboard from "../pages/dashboard/index";
 import ProtectedRoute from "./ProtectedRoute";
 import Logout from "./../authentication/Logout";
@@ -35,8 +36,9 @@ const RoutersDom = () => {
           <Route
             index
             path="/dashboard/dashboard"
-            element={<DashboardPanel />}
+            element={<AdminDashboard />}
           />
+          <Route path="/dashboard/TagCreation" element={<TagCreation />} />
 
           <Route path="/dashboard/live" element={<Live />} />
           <Route path="/dashboard/devices" element={<Devices />} />

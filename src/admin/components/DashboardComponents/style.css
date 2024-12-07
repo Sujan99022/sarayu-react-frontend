@@ -7,7 +7,7 @@
 .admin_alltopics_table_all_cred_container {
     width: 95%;
     max-width: 1200px;
-    height: 80vh; /* Full viewport height */
+    height: 90vh; /* Full viewport height */
     margin: 0 auto;
     padding: 0;
     display: flex;
@@ -16,8 +16,60 @@
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     overflow: hidden; /* Prevent content overflow outside the container */
+    margin-top: 10px;
+}
+.admin_tagcreation_container {
+    /* background: red; */
+    padding-top: 40px;
+}
+.admin_tagcreation_container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.admin_tagcreation_container > div > h4 {
+    margin: 0;
+    margin: 20px 0;
+    color: gray;
+}
+.admin_tagcreation_container > div > input {
+    width: 95%;
+    margin: 0;
+    padding: 5px 20px;
+    border: none;
+    outline: none;
+    border-radius: 50px;
+    border: 2px solid rgba(128, 128, 128, 0.394);
+}
+.admin_tagcreation_container_note {
+    width: 85%;
+    text-align: center;
+    color: green;
+}
+.admin_alltopics_error_color {
+    color: red;
+}
+.admin_tagcreation_button_container {
+    margin: 20px 0;
+    display: flex;
+    gap: 20px;
 }
 
+.admin_tagcreation_button_container > button {
+    border: none;
+    outline: none;
+    width: 180px;
+    height: 35px;
+    border-radius: 4px;
+}
+.admin_tagcreation_button_container > button:first-child {
+    color: white;
+    background: black;
+}
+.admin_tagcreation_button_container > button:last-child {
+    color: white;
+    background: red;
+}
 /* Fixed header inside the container */
 .admin_alltopics_table_all_cred_header {
     background-color: #2c3e50;
@@ -106,6 +158,43 @@
     width: 100px;
     border-radius: 4px;
 }
+
+/* search bar logic starts here */
+.admin_alltopics_searchbar_container {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    border: 2px solid rgba(0, 0, 0, 0.253);
+    margin: 4px 0;
+    border-radius: 4px;
+}
+.admin_alltopics_searchbar_container > input {
+    border: none;
+    outline: none;
+    width: 95%;
+    padding: 0 20px;
+}
+.admin_alltopics_searchbar_container > button {
+    width: 5%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: #34495e;
+    /* background: red; */
+    color: white;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    transition: all 0.3s ease-in-out;
+    border-left: 2px solid rgba(0, 0, 0, 0.253);
+}
+.admin_alltopics_searchbar_container > button:hover {
+    background: rgb(216, 1, 1);
+}
+/* search bar logic ends here */
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {

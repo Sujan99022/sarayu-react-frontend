@@ -14,6 +14,7 @@
     background: rgb(25, 30, 49);
     /* border-top-left-radius: 5px;
     border-top-right-radius: 5px; */
+    display: none;
 }
 /* Dashboard mail */
 .mail_header_cred_set_container {
@@ -235,77 +236,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.875em;
-}
-
-/* SidebarBtn css */
-.active {
-    background: rgb(25, 30, 49) !important;
-    /* background: linear-gradient(to right, rgb(25, 30, 49), white) !important; */
-    padding-left: 25px !important;
-    color: white !important;
-}
-.active > span {
-    color: white !important;
-}
-/* .active > .sidebar_btn_circle {
-    position: absolute;
-    right: 20px;
-    top: 45%;
-    background: rgb(51, 255, 0);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    animation: circle 1.5s infinite 0s forwards normal running;
-} */
-.active > .sidebar_btn_circle {
-    position: absolute;
-    left: 0;
-    top: -0px;
-    background: rgb(3, 171, 255);
-    width: 8px;
-    height: 100%;
-}
-/* @keyframes circle {
-    0% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-} */
-.sidebar_btn {
-    padding: 15px 8px;
-    width: 100%;
-    display: flex;
-    justify-content: start;
-    position: relative;
-    border: none;
-    background: transparent;
-    color: rgb(0, 0, 0);
-    border-bottom: 0.2px solid rgba(128, 128, 128, 0.204);
-    transition: all 0.1s ease-in-out;
-}
-.sidebar_btn:hover {
-    text-decoration: none;
-    background: rgb(25, 30, 49);
-    padding-left: 24px;
-}
-.sidebar_btn:hover > span {
-    color: white !important;
-}
-.sidebar_btn > span {
-    display: flex;
-    gap: 10px;
-    color: rgb(0, 0, 0);
-    align-items: center;
-    font-size: 18px;
-    transition: all 0.3s ease-in-out;
-}
-.sidebar_btn:last-child {
-    border-bottom: none;
 }
 
 /* Actual mail cred */
