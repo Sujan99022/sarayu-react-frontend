@@ -25,6 +25,7 @@ import SingleUserDashBoard from "../users/body/components/SingleUserDashBoard";
 import ViewGraph from "../users/body/components/ViewGraph";
 import EditGraph from "../users/body/components/EditGraph";
 import Report from "../users/body/components/Report";
+import MapTopic from "../admin/components/DashboardComponents/MapTopic";
 
 const RoutersDom = () => {
   return (
@@ -39,8 +40,7 @@ const RoutersDom = () => {
             element={<AdminDashboard />}
           />
           <Route path="/dashboard/TagCreation" element={<TagCreation />} />
-
-          <Route path="/dashboard/live" element={<Live />} />
+          <Route path="/dashboard/maptopic/:role/:id" element={<MapTopic />} />
           <Route path="/dashboard/devices" element={<Devices />} />
           <Route path="/dashboard/reports" element={<Reports />} />
           <Route path="/dashboard/users" element={<Users />}>

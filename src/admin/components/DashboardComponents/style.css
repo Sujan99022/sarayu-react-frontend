@@ -1,3 +1,133 @@
+/* maptopic style starts here */
+._admin_maptopic_main_container {
+    display: grid;
+    width: 100vw;
+    grid-template-columns: 50% 50%;
+    height: 90vh;
+    margin: 0 10px;
+    margin-top: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.288);
+    background: white;
+}
+._admin_maptopic_main_container > div {
+}
+._admin_maptopic_left_container > div {
+    width: 100%;
+    height: 45vh;
+    overflow-x: hidden;
+    border-right: 2px solid rgba(0, 0, 0, 0.257);
+}
+._admin_maptopic_left_bottom_container > p {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+}
+._admin_maptopic_left_top_container > header {
+    width: 100%;
+    text-align: center;
+    background: rgb(4, 4, 34);
+    color: white;
+    padding: 4px 0;
+}
+._admin_maptopic_left_top_topic_container {
+    display: flex;
+    padding: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 40vh;
+}
+._admin_maptopic_left_top_topic_alternative_message_container {
+    height: 40vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+._admin_maptopic_left_top_topic_alternative_message_container > p {
+    margin: 0;
+    font-size: 30px;
+    color: rgba(128, 128, 128, 0.558);
+}
+._admin_maptopic_left_top_topic_container > div {
+    cursor: pointer;
+    max-width: min-content;
+    padding: 4px 10px;
+    background: orange;
+    color: white;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.425);
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+._admin_maptopic_left_top_topic_container > div:hover {
+    background: rgb(199, 129, 0);
+    color: white;
+}
+._admin_maptopic_right_container > header {
+    height: 4.2vh;
+    background: rgb(4, 4, 34);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+._admin_maptopic_right_container > div {
+    height: 85.8vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+}
+._admin_maptopic_right_tagnames {
+    width: 100%;
+    padding: 10px 0px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.182);
+}
+._admin_maptopic_right_tagnames:hover {
+    background: orange;
+    color: white;
+}
+._admin_maptopic_right_active_tagnames {
+    display: none;
+}
+._admin_maptopic_left_top_overright_header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 !important;
+    height: 33px;
+    padding-left: 20px !important;
+    align-items: center;
+}
+._admin_maptopic_left_top_overright_header > button {
+    background: red;
+    margin: 0;
+    border: none;
+    outline: none;
+    padding: 0 50px;
+    color: white;
+    font-size: 14px;
+    height: 33px;
+}
+._admin_maptopic_right_overwright_header {
+    justify-content: space-between !important;
+    padding: 0 20px !important;
+    padding-right: 6px !important;
+}
+._admin_maptopic_right_overwright_header_input_container > input {
+    border: none;
+    outline: none;
+    padding: 0 30px;
+    text-align: center;
+}
+/* maptopic style ends here */
 .admin_show_all_topic_container {
     margin: 10px;
     border: 2px solid rgba(128, 128, 128, 0.28);

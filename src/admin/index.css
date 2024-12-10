@@ -7,6 +7,84 @@
     grid-template-rows: auto auto;
 }
 
+/* admin dashboard style starts here */
+._admin_dashboard_grid_company_container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+/* admin maptopics model starts here */
+._admin_dashboard_maptopic_model {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 98vh;
+    overflow: scroll;
+    bottom: 0;
+    right: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(50px);
+}
+._admin_dashboard_maptopic_model_close {
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 5vh;
+    display: flex;
+    justify-content: end;
+    padding: 0 30px;
+    align-items: center;
+}
+._admin_dashboard_maptopic_model_close > span {
+    filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.585));
+}
+._admin_dashboard_maptopic_model_close > span:hover {
+    color: orange;
+}
+/* admin maptopics model ends here */
+._admin_dashboard_grid_company_container > section {
+    margin: 0 10px;
+    border-radius: 4px;
+}
+._admin_dashboard_grid_company_container > section > input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 6px 15px;
+    color: black;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.272);
+}
+._admin_dashboard_grid_company_container > section > input::placeholder {
+    color: gray;
+}
+._admin_dashboard_grid_company_list_container {
+    height: 80vh;
+    overflow-y: auto;
+    padding: 5px 10px;
+    border: 1px solid rgba(10, 7, 71, 0.51);
+}
+._admin_dashboard_grid_company_list_container > li {
+    list-style: none;
+    text-align: center;
+    background: rgb(10, 7, 71);
+    color: white;
+    margin: 4px 0;
+    padding: 4px 2px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border-radius: 4px;
+}
+._admin_dashboard_grid_company_list_container > li:hover {
+    background: orange;
+}
+._admin_dashboard_grid_company_list_container_active_li {
+    background: red !important;
+}
+/* admin dashboard style ends here */
+
 /* sidebar navbar style starts here */
 .sidebar_container {
     display: grid;
