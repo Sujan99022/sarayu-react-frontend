@@ -1,49 +1,32 @@
 import React, { useEffect, useState } from "react";
 import Gauge from "react-canvas-gauge";
-import apiClient from "../../../../api/apiClient";
+import io from "socket.io-client";
 import "../../../style.css";
 
 const DigitalViewOne = ({ topic }) => {
-  const [subscribed, setSubscribed] = useState(false);
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [minSpeed] = useState(0);
   const [maxSpeed] = useState(100);
-  const encodedTopic = encodeURIComponent(topic);
 
-  // Fetch subscription status
   useEffect(() => {
-    const fetchSubscriptionApi = async () => {
-      try {
-        const res = await apiClient.get(
-          `/mqtt/is-subscribed?topic=${encodedTopic}`
-        );
-        setSubscribed(res?.data?.isSubscribed);
-      } catch (error) {
-        console.error("Error fetching subscription status:", error.message);
-      }
-    };
+    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    socket.emit("subscribeToTopic", topic);
+    socket.on("liveMessage", (data) => {
+      setCurrentSpeed(data?.message?.message?.message);
+    });
+    socket.on("noData", (data) => {
+      console.warn(data.message);
+    });
 
-    fetchSubscriptionApi();
+    socket.on("error", (data) => {
+      console.error(data.message);
+    });
+
+    return () => {
+      socket.emit("unsubscribeFromTopic");
+      socket.disconnect();
+    };
   }, [topic]);
-
-  useEffect(() => {
-    const fetchRealTimeData = async () => {
-      try {
-        const response = await apiClient.post("/mqtt/messages", { topic });
-        const newSpeed = parseFloat(
-          response?.data?.message?.message?.message || 0
-        );
-        setCurrentSpeed(newSpeed);
-      } catch (error) {
-        console.error("Error fetching real-time data:", error.message);
-      }
-    };
-
-    if (subscribed) {
-      const interval = setInterval(fetchRealTimeData, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [subscribed]);
 
   return (
     <div

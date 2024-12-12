@@ -2,32 +2,32 @@ import React, { useEffect, useRef, useState } from "react";
 import { createChart } from "lightweight-charts";
 import apiClient from "../../../../api/apiClient";
 import { RiDownloadCloud2Fill } from "react-icons/ri";
+import io from "socket.io-client";
 
 const SmallGraph = ({ topic, height, viewgraph }) => {
   const chartContainerRef = useRef();
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
   const thresholdLineSeriesRefs = useRef([]);
-  const timerRef = useRef(null);
   const dataWindow = useRef([]);
   const latestTimestamp = useRef(0);
   const isMounted = useRef(true);
   const currentColorRef = useRef("rgba(41, 98, 255, 0.3)");
-  const isChartInitialized = useRef(false); // Flag to track chart initialization
+  const isChartInitialized = useRef(false);
 
   const [thresholds, setThreshold] = useState([]);
   const [subscribed, setSubscribed] = useState(false);
+
   const encodedTopic = encodeURIComponent(topic);
+  const socket = useRef(null);
 
   const TWO_HOURS_IN_SECONDS = 2 * 60 * 60;
 
   // Check if the chart is initialized before performing operations
   const isChartValid = () => chartRef.current && isChartInitialized.current;
 
-  // Create the threshold lines
   const createThresholdLines = () => {
     if (isChartValid()) {
-      // Remove previous threshold lines
       thresholdLineSeriesRefs.current.forEach((series) => {
         try {
           chartRef.current.removeSeries(series);
@@ -90,10 +90,11 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
   useEffect(() => {
     fetchSubscriptionApi();
     fetchThresholdApi();
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
-    if (chartRef.current) return; // Prevent recreating the chart if already created
+    if (chartRef.current) return;
 
     chartRef.current = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
@@ -128,7 +129,6 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
       lineWidth: 2,
     });
 
-    // Set chart initialized flag to true
     isChartInitialized.current = true;
 
     const handleResize = () => {
@@ -146,7 +146,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
       if (chartRef.current) {
         chartRef.current.remove();
         chartRef.current = null;
-        isChartInitialized.current = false; // Reset flag when chart is removed
+        isChartInitialized.current = false;
       }
     };
   }, [height]);
@@ -157,111 +157,93 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
     }
   }, [thresholds]);
 
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const response = await apiClient.post(
-          "/mqtt/realtime-data/last-2-hours",
-          { topic }
-        );
-        if (response.data && response.data.messages) {
-          let historicalData = response.data.messages.map((msg) => ({
-            time: Math.floor(new Date(msg.timestamp).getTime() / 1000),
-            value: parseFloat(msg.message),
-          }));
+  const fetchInitialData = async () => {
+    try {
+      const response = await apiClient.post(
+        "/mqtt/realtime-data/last-2-hours",
+        { topic }
+      );
+      if (response.data && response.data.messages) {
+        let historicalData = response.data.messages.map((msg) => ({
+          time: Math.floor(new Date(msg.timestamp).getTime() / 1000),
+          value: parseFloat(msg.message),
+        }));
 
-          historicalData.sort((a, b) => a.time - b.time);
-          historicalData = historicalData.filter(
-            (dataPoint, index, self) =>
-              index === 0 || dataPoint.time > self[index - 1].time
+        historicalData.sort((a, b) => a.time - b.time);
+        historicalData = historicalData.filter(
+          (dataPoint, index, self) =>
+            index === 0 || dataPoint.time > self[index - 1].time
+        );
+
+        if (historicalData.length > 0) {
+          latestTimestamp.current =
+            historicalData[historicalData.length - 1].time;
+          dataWindow.current = historicalData;
+
+          if (isChartValid()) {
+            areaSeriesRef.current.setData(historicalData);
+            chartRef.current?.timeScale().fitContent();
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching initial data:", error);
+    }
+  };
+
+  useEffect(() => {
+    socket.current = io("http://localhost:5000", { transports: ["websocket"] });
+
+    socket.current.emit("subscribeToTopic", topic);
+
+    socket.current.on("liveMessage", (data) => {
+      if (data.success) {
+        const { message, timestamp } = data.message;
+        const newPoint = {
+          time: Math.floor(new Date(timestamp).getTime() / 1000),
+          value: parseFloat(message.message),
+        };
+
+        const defaultColor = "rgba(41, 98, 255, 0.3)";
+        if (thresholds.length > 0) {
+          const sortedThresholds = [...thresholds].sort(
+            (a, b) => a.value - b.value
+          );
+          let newColor = defaultColor;
+
+          for (let i = sortedThresholds.length - 1; i >= 0; i--) {
+            if (newPoint.value > sortedThresholds[i].value) {
+              newColor = sortedThresholds[i].color;
+              break;
+            }
+          }
+
+          updateSeriesColor(newColor);
+        }
+
+        if (newPoint.time > latestTimestamp.current) {
+          latestTimestamp.current = newPoint.time;
+          dataWindow.current.push(newPoint);
+
+          const earliestAllowedTime = newPoint.time - TWO_HOURS_IN_SECONDS;
+          dataWindow.current = dataWindow.current.filter(
+            (point) => point.time >= earliestAllowedTime
           );
 
-          if (historicalData.length > 0) {
-            latestTimestamp.current =
-              historicalData[historicalData.length - 1].time;
-            dataWindow.current = historicalData;
-
-            if (isChartValid()) {
-              areaSeriesRef.current.setData(historicalData);
-              chartRef.current?.timeScale().fitContent();
-            }
+          if (isChartValid()) {
+            areaSeriesRef.current.setData(dataWindow.current);
           }
         }
-      } catch (error) {
-        console.error("Error fetching initial data:", error);
       }
-    };
-
-    const fetchRealTimeData = async () => {
-      try {
-        const response = await apiClient.post("/mqtt/messages", { topic });
-        if (response.data.success) {
-          const { message, timestamp } = response.data.message;
-          const newPoint = {
-            time: Math.floor(new Date(timestamp).getTime() / 1000),
-            value: parseFloat(message.message),
-          };
-
-          const visibleRange = chartRef.current?.timeScale().getVisibleRange();
-          if (visibleRange && newPoint.time < visibleRange.from) {
-            return;
-          }
-
-          const defaultColor = "rgba(41, 98, 255, 0.3)";
-          if (thresholds.length > 0) {
-            const sortedThresholds = [...thresholds].sort(
-              (a, b) => a.value - b.value
-            );
-            let newColor = defaultColor;
-
-            for (let i = sortedThresholds.length - 1; i >= 0; i--) {
-              if (newPoint.value > sortedThresholds[i].value) {
-                newColor = sortedThresholds[i].color;
-                break;
-              }
-            }
-
-            updateSeriesColor(newColor);
-          }
-
-          if (newPoint.time > latestTimestamp.current) {
-            latestTimestamp.current = newPoint.time;
-            dataWindow.current.push(newPoint);
-
-            const earliestAllowedTime = newPoint.time - TWO_HOURS_IN_SECONDS;
-            dataWindow.current = dataWindow.current.filter(
-              (point) => point.time >= earliestAllowedTime
-            );
-
-            if (isChartValid()) {
-              areaSeriesRef.current.setData(dataWindow.current);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching real-time data:", error);
-      }
-    };
-
-    if (subscribed) {
-      fetchInitialData().then(() => {
-        isMounted.current = true;
-        timerRef.current = setInterval(fetchRealTimeData, 1000);
-      });
-    } else {
-      fetchInitialData();
-    }
+    });
 
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
+      if (socket.current) {
+        socket.current.disconnect();
       }
-      isMounted.current = false;
     };
-  }, [topic, subscribed, thresholds]);
+  }, [topic, thresholds]);
 
-  // Update the color of the chart's series based on thresholds
   const updateSeriesColor = (color) => {
     if (isChartValid()) {
       try {
