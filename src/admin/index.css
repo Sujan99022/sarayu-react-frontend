@@ -25,10 +25,11 @@
     z-index: 99;
     display: flex;
     align-items: center;
-    backdrop-filter: blur(50px);
+    /* backdrop-filter: blur(50px); */
+    background: white;
 }
 ._admin_dashboard_maptopic_model_close {
-    color: white;
+    color: red;
     position: fixed;
     top: 0;
     width: 100vw;

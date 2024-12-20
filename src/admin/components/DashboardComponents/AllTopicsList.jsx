@@ -9,44 +9,11 @@ const AllTopicsList = ({
   topiCreated,
   setTopicToDelete,
   setShowTopicDeleteModel,
+  topiListFilter,
+  topicList,
 }) => {
-  const [topicList, setTopicList] = useState([]);
-  const [topiListFilter, setTopicListFilter] = useState([]);
-
-  useEffect(() => {
-    fetchAllTopics();
-  }, [topiCreated]);
-
-  const fetchAllTopics = async () => {
-    try {
-      const response = await apiClient("/mqtt/get-all-tagname");
-      setTopicList(response.data.data.sort((a, b) => b - a));
-      setTopicListFilter(response.data.data.sort((a, b) => b - a));
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleTopicSearchFilter = (e) => {
-    let query = e.target.value;
-    const filteredData = topicList.filter((item) =>
-      item.topic.toLowerCase().includes(query.toLowerCase())
-    );
-    setTopicListFilter(filteredData);
-  };
-
   return (
     <div className="admin_alltopics_table_all_cred_container">
-      <div className="admin_alltopics_searchbar_container">
-        <input
-          type="text"
-          onChange={handleTopicSearchFilter}
-          placeholder="Search by tagname"
-        />
-        <button>
-          <IoSearch />
-        </button>
-      </div>
       <div className="admin_alltopics_table_all_cred_scrollable-table">
         <table className="admin_alltopics_table_all_cred_table">
           <thead>

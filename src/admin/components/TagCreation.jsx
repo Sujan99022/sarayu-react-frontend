@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import AllTopicsList from "./DashboardComponents/AllTopicsList";
 import { MdDelete } from "react-icons/md";
 import { IoIosWarning } from "react-icons/io";
+import { IoSearch } from "react-icons/io5";
 
 const TagCreation = () => {
   const [createQuery, setCreateQuery] = useState("");
@@ -15,9 +16,34 @@ const TagCreation = () => {
   const [showTopicDeleteModel, setShowTopicDeleteModel] = useState(false);
   const [topicToDelete, setTopicToDelete] = useState("");
 
+  const [topicList, setTopicList] = useState([]);
+  const [topiListFilter, setTopicListFilter] = useState([]);
+
+  useEffect(() => {
+    fetchAllTopics();
+  }, [topiCreated]);
+
   const handleCreateQueryChange = (e) => {
     setCreateTagnameValidationError("");
     setCreateQuery(e.target.value);
+  };
+
+  const fetchAllTopics = async () => {
+    try {
+      const response = await apiClient("/mqtt/get-all-tagname");
+      setTopicList(response.data.data.sort((a, b) => b - a));
+      setTopicListFilter(response.data.data.sort((a, b) => b - a));
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleTopicSearchFilter = (e) => {
+    let query = e.target.value;
+    const filteredData = topicList.filter((item) =>
+      item.topic.toLowerCase().includes(query.toLowerCase())
+    );
+    setTopicListFilter(filteredData);
   };
 
   useEffect(() => {
@@ -192,9 +218,21 @@ const TagCreation = () => {
           </div>
         </div>
         <div className="admin_tagcreation_all_topics_container">
+          <div className="admin_alltopics_searchbar_container">
+            <input
+              type="text"
+              onChange={handleTopicSearchFilter}
+              placeholder="Search by tagname"
+            />
+            <button>
+              <IoSearch />
+            </button>
+          </div>
           <AllTopicsList
             topiCreated={topiCreated}
             setTopicToDelete={setTopicToDelete}
+            topiListFilter={topiListFilter}
+            topicList={topicList}
             setShowTopicDeleteModel={setShowTopicDeleteModel}
           />
         </div>

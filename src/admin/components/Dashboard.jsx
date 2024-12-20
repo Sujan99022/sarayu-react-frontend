@@ -11,7 +11,6 @@ const Dashboard = () => {
 
   const [selectedUserRole, setSelectedUserRole] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
-  const [mapModelToggle, setMapModelToggle] = useState(false);
 
   const [companyList, setCompanyList] = useState([]);
   const [supervisorList, setSupervisorList] = useState([]);
@@ -27,6 +26,27 @@ const Dashboard = () => {
   const [managerLoading, setManagerLoading] = useState(false);
   const [supervisorLoading, setSupervisorLoading] = useState(false);
   const [employeeLoading, setEmployeeLoading] = useState(false);
+
+  const [mapModelToggle, setMapModelToggle] = useState(() => {
+    const storedValue = sessionStorage.getItem("mapModelToggle");
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("mapModelToggle", JSON.stringify(mapModelToggle));
+  }, [mapModelToggle]);
+
+  const [toggleAssignMeterModel, setToggleAssignMeterModel] = useState(() => {
+    const storedValue = sessionStorage.getItem("toggleAssignMeterModel");
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      "toggleAssignMeterModel",
+      JSON.stringify(toggleAssignMeterModel)
+    );
+  }, [toggleAssignMeterModel]);
 
   const [queryInput, setQueryInput] = useState({
     company: "",
@@ -143,17 +163,21 @@ const Dashboard = () => {
         {mapModelToggle && (
           <div className="_admin_dashboard_maptopic_model">
             <div className="_admin_dashboard_maptopic_model_close">
-              <span>
-                <IoCloseSharp
-                  size={"22"}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setMapModelToggle(false)}
-                />
-              </span>
+              {!toggleAssignMeterModel && (
+                <span>
+                  <IoCloseSharp
+                    size={"22"}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setMapModelToggle(false)}
+                  />
+                </span>
+              )}
             </div>
             <MapTopic
               role={selectedUserRole}
               id={selectedUserId}
+              toggleAssignMeterModel={toggleAssignMeterModel}
+              setToggleAssignMeterModel={setToggleAssignMeterModel}
               setMapModelToggle={setMapModelToggle}
             />
           </div>

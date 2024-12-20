@@ -5,8 +5,16 @@ import apiClient from "../../../api/apiClient";
 import Loader from "./../../../users/loader/Loader";
 import { IoCloseSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
+import { IoMdSpeedometer } from "react-icons/io";
+import DigitalAssignModel from "./DigitalAssignModel";
 
-const MapTopic = ({ role, id, setMapModelToggle }) => {
+const MapTopic = ({
+  role,
+  id,
+  setMapModelToggle,
+  toggleAssignMeterModel,
+  setToggleAssignMeterModel,
+}) => {
   const navigate = useNavigate();
   const [fetchedUser, setFetchedUser] = useState({});
   const [loading, setLoading] = useState(false);
@@ -14,9 +22,7 @@ const MapTopic = ({ role, id, setMapModelToggle }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTagNames, setFilteredTagNames] = useState([]);
   const [selectedTagToAssign, setSelectedTagToAssign] = useState([]);
-
-  console.log(fetchedUser);
-
+  const [topicMeterAssign, setTopicMeterAssign] = useState("");
   useEffect(() => {
     fetchSelectedUser();
     fetchAllTagNames();
@@ -90,12 +96,23 @@ const MapTopic = ({ role, id, setMapModelToggle }) => {
     );
   };
 
+  const handleAssignDegitalMeterModel = () => {
+    setToggleAssignMeterModel(true);
+  };
+
   if (loading) {
     return <Loader />;
   }
 
   return (
     <div className="_admin_maptopic_main_container">
+      {toggleAssignMeterModel && (
+        <DigitalAssignModel
+          topicMeterAssign={topicMeterAssign}
+          userEmail={fetchedUser?.email}
+          setToggleAssignMeterModel={setToggleAssignMeterModel}
+        />
+      )}
       <div className="_admin_maptopic_left_container">
         <div className="_admin_maptopic_left_top_container">
           <header className="_admin_maptopic_left_top_overright_header">
@@ -116,10 +133,12 @@ const MapTopic = ({ role, id, setMapModelToggle }) => {
                     <span
                       onClick={() => handleRemoveTagNameFromRecentList(item)}
                     >
-                      <IoCloseSharp
-                        color="black"
-                        style={{ cursor: "pointer" }}
-                      />
+                      <p>
+                        <IoCloseSharp
+                          color="white"
+                          style={{ cursor: "pointer" }}
+                        />
+                      </p>
                     </span>
                   </div>
                 );
@@ -140,11 +159,21 @@ const MapTopic = ({ role, id, setMapModelToggle }) => {
                   return (
                     <div key={index}>
                       <span>{item}</span>
-                      <span onClick={() => handleDeleteAssignedTagname(item)}>
-                        <IoCloseSharp
-                          color="black"
-                          style={{ cursor: "pointer" }}
-                        />
+                      <span>
+                        <p
+                          onClick={() => [
+                            handleAssignDegitalMeterModel(),
+                            setTopicMeterAssign(item),
+                          ]}
+                        >
+                          <IoMdSpeedometer />
+                        </p>
+                        <p onClick={() => handleDeleteAssignedTagname(item)}>
+                          <IoCloseSharp
+                            color="white"
+                            style={{ cursor: "pointer" }}
+                          />
+                        </p>
                       </span>
                     </div>
                   );
