@@ -26,6 +26,8 @@ import ViewGraph from "../users/body/components/ViewGraph";
 import EditGraph from "../users/body/components/EditGraph";
 import Report from "../users/body/components/Report";
 import MapTopic from "../admin/components/DashboardComponents/MapTopic";
+import DigitalAssignModel from "../admin/components/DashboardComponents/DigitalAssignModel";
+import SingleDigitalMeterView from "../users/body/components/SingleDigitalMeterView";
 
 const RoutersDom = () => {
   return (
@@ -40,7 +42,6 @@ const RoutersDom = () => {
             element={<AdminDashboard />}
           />
           <Route path="/dashboard/TagCreation" element={<TagCreation />} />
-          <Route path="/dashboard/maptopic/:role/:id" element={<MapTopic />} />
           <Route path="/dashboard/devices" element={<Devices />} />
           <Route path="/dashboard/reports" element={<Reports />} />
           <Route path="/dashboard/users" element={<Users />}>
@@ -52,6 +53,11 @@ const RoutersDom = () => {
           </Route>
           <Route path="/dashboard/inbox" element={<Mail />} />
         </Route>
+        <Route path="/_dashboard/maptopic/:id/:role" element={<MapTopic />} />
+        <Route
+          path="/_dashboard/assignmetertotopic/:paramsTopic/:id/:role"
+          element={<DigitalAssignModel />}
+        />
         {/* users [manager,supervisor,employee] routes starts here  */}
         <Route path="/allusers" element={<AllUsers />}>
           <Route
@@ -63,6 +69,10 @@ const RoutersDom = () => {
           <Route path="/allusers/users" element={<AllOperators />} />
           <Route path="/allusers/favorites" element={<Favorite />} />
           <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
+          <Route
+            path="/allusers/singledigitalmeter/:topic/:role/:id"
+            element={<SingleDigitalMeterView />}
+          />
           <Route
             path="/allusers/singleuserdashboard/:id"
             element={<SingleUserDashBoard />}

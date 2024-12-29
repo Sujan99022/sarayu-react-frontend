@@ -124,7 +124,14 @@ const Dashboard = () => {
                     >
                       <VscGraph />
                     </button>
-                    <button>
+                    <button
+                      onClick={() => {
+                        const encodedTopic = encodeURIComponent(item);
+                        navigate(
+                          `/allusers/singledigitalmeter/${encodedTopic}/${user.role}/${user.id}`
+                        );
+                      }}
+                    >
                       <FaDigitalOcean />
                     </button>
                   </td>

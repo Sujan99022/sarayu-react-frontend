@@ -9,9 +9,6 @@ import { IoCloseSharp } from "react-icons/io5";
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const [selectedUserRole, setSelectedUserRole] = useState("");
-  const [selectedUserId, setSelectedUserId] = useState("");
-
   const [companyList, setCompanyList] = useState([]);
   const [supervisorList, setSupervisorList] = useState([]);
   const [employeeList, setEmployeeList] = useState([]);
@@ -26,27 +23,6 @@ const Dashboard = () => {
   const [managerLoading, setManagerLoading] = useState(false);
   const [supervisorLoading, setSupervisorLoading] = useState(false);
   const [employeeLoading, setEmployeeLoading] = useState(false);
-
-  const [mapModelToggle, setMapModelToggle] = useState(() => {
-    const storedValue = sessionStorage.getItem("mapModelToggle");
-    return storedValue ? JSON.parse(storedValue) : false;
-  });
-
-  useEffect(() => {
-    sessionStorage.setItem("mapModelToggle", JSON.stringify(mapModelToggle));
-  }, [mapModelToggle]);
-
-  const [toggleAssignMeterModel, setToggleAssignMeterModel] = useState(() => {
-    const storedValue = sessionStorage.getItem("toggleAssignMeterModel");
-    return storedValue ? JSON.parse(storedValue) : false;
-  });
-
-  useEffect(() => {
-    sessionStorage.setItem(
-      "toggleAssignMeterModel",
-      JSON.stringify(toggleAssignMeterModel)
-    );
-  }, [toggleAssignMeterModel]);
 
   const [queryInput, setQueryInput] = useState({
     company: "",
@@ -160,28 +136,6 @@ const Dashboard = () => {
   return (
     <div className="_admin_dashboard_main_container">
       <div className="_admin_dashboard_grid_company_container mt-4">
-        {mapModelToggle && (
-          <div className="_admin_dashboard_maptopic_model">
-            <div className="_admin_dashboard_maptopic_model_close">
-              {!toggleAssignMeterModel && (
-                <span>
-                  <IoCloseSharp
-                    size={"22"}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => setMapModelToggle(false)}
-                  />
-                </span>
-              )}
-            </div>
-            <MapTopic
-              role={selectedUserRole}
-              id={selectedUserId}
-              toggleAssignMeterModel={toggleAssignMeterModel}
-              setToggleAssignMeterModel={setToggleAssignMeterModel}
-              setMapModelToggle={setMapModelToggle}
-            />
-          </div>
-        )}
         <section>
           <input
             type="text"
@@ -227,11 +181,12 @@ const Dashboard = () => {
                 {filteredManagerList?.map((item) => (
                   <li
                     key={item?._id}
-                    onClick={() => [
-                      setSelectedUserId(item?._id),
-                      setSelectedUserRole(item?.role),
-                      setMapModelToggle(true),
-                    ]}
+                    onClick={() =>
+                      window.open(
+                        `/_dashboard/maptopic/${item?._id}/${item.role}`,
+                        "_blank"
+                      )
+                    }
                   >
                     {item?.name}
                   </li>
@@ -256,11 +211,12 @@ const Dashboard = () => {
                 {filteredSupervisorList?.map((item) => (
                   <li
                     key={item?._id}
-                    onClick={() => [
-                      setSelectedUserId(item?._id),
-                      setSelectedUserRole(item?.role),
-                      setMapModelToggle(true),
-                    ]}
+                    onClick={() =>
+                      window.open(
+                        `/_dashboard/maptopic/${item?._id}/${item.role}`,
+                        "_blank"
+                      )
+                    }
                   >
                     {item?.name}
                   </li>
@@ -285,11 +241,12 @@ const Dashboard = () => {
                 {filteredEmployeeList?.map((item) => (
                   <li
                     key={item?._id}
-                    onClick={() => [
-                      setSelectedUserId(item?._id),
-                      setSelectedUserRole(item?.role),
-                      setMapModelToggle(true),
-                    ]}
+                    onClick={() =>
+                      window.open(
+                        `/_dashboard/maptopic/${item?._id}/${item.role}`,
+                        "_blank"
+                      )
+                    }
                   >
                     {item?.name}
                   </li>
