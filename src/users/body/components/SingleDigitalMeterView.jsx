@@ -7,6 +7,7 @@ import Type2 from "../../../admin/components/digitalmeters/Type2";
 import Type3 from "../../../admin/components/digitalmeters/Type3";
 import { IoCloseSharp } from "react-icons/io5";
 import Loader from "../../loader/Loader";
+import Type4 from "../../../admin/components/digitalmeters/Type4";
 
 const SingleDigitalMeterView = () => {
   const { topic, role, id } = useParams();
@@ -62,6 +63,15 @@ const SingleDigitalMeterView = () => {
           )}
           {digitalMeterData.meterType === "Type3" && (
             <Type3
+              minValue={digitalMeterData.minValue}
+              maxValue={digitalMeterData.maxValue}
+              value={10}
+              tick={digitalMeterData.ticks}
+              unit={"v"}
+            />
+          )}
+          {digitalMeterData.meterType === "Type4" && (
+            <Type4
               minValue={digitalMeterData.minValue}
               maxValue={digitalMeterData.maxValue}
               value={10}

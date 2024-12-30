@@ -7,9 +7,11 @@ import { useParams } from "react-router-dom";
 import apiClient from "../../../api/apiClient";
 import Loader from "../../../users/loader/Loader";
 import Type3 from "../digitalmeters/Type3";
+import Type4 from "../digitalmeters/Type4";
 
 import Type2Img from "./../../../utils/Type2.png";
 import Type3Img from "./../../../utils/Type3.png";
+import Type4Img from "./../../../utils/Type4.png";
 
 const DigitalAssignModel = () => {
   const { id, paramsTopic, role } = useParams();
@@ -162,6 +164,15 @@ const DigitalAssignModel = () => {
           >
             <img src={Type3Img} alt="meter type three" />
           </div>
+          <div
+            onClick={() => setAlreadyAssignedMeterName("Type4")}
+            className={
+              alreadyAssignedMeterName === "Type4" &&
+              `_admin_assign_meter_carousel_container_active_meter`
+            }
+          >
+            <img src={Type4Img} alt="meter type four" />
+          </div>
           <section
             className="_admin_assign_meter_carousel_right_button_container"
             onClick={handleRightScroll}
@@ -227,8 +238,9 @@ const DigitalAssignModel = () => {
                     minValue={alreadyAssignedMinValue}
                     maxValue={alreadyAssignedMaxValue}
                     value={30}
-                    tick={alreadyAssignedTick}
+                    tick={alreadyAssignedTick || 5}
                     unit={"v"}
+                    topic={paramsTopic}
                     adminWidth="500px"
                     adminHeight="400px"
                   />
@@ -239,8 +251,17 @@ const DigitalAssignModel = () => {
                     maxValue={100}
                     value={50}
                     unit={"v"}
+                    topic={paramsTopic}
                     adminWidth="500px"
                     adminHeight="500px"
+                  />
+                )}
+                {alreadyAssignedMeterName === "Type4" && (
+                  <Type4
+                    topic={paramsTopic}
+                    minValue={alreadyAssignedMinValue}
+                    maxValue={alreadyAssignedMaxValue}
+                    ticks={alreadyAssignedTick}
                   />
                 )}
               </div>

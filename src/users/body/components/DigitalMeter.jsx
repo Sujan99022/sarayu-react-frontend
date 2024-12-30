@@ -8,6 +8,7 @@ import { setUserDetails } from "../../../redux/slices/UserDetailsSlice";
 import apiClient from "../../../api/apiClient";
 import Type2 from "./../../../admin/components/digitalmeters/Type2";
 import Type3 from "./../../../admin/components/digitalmeters/Type3";
+import Type4 from "../../../admin/components/digitalmeters/Type4";
 
 const DigitalMeter = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -50,6 +51,7 @@ const DigitalMeter = () => {
         <div className="meter-details">
           {meter.meterType === "Type2" && <Type2 {...meter} />}
           {meter.meterType === "Type3" && <Type3 {...meter} />}
+          {meter.meterType === "Type4" && <Type4 {...meter} />}
         </div>
       );
     } else {

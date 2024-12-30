@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Gauge from "react-canvas-gauge";
 import io from "socket.io-client";
-import "../../../style.css";
 
-const DigitalViewOne = ({ topic, minValue = 0, maxValue = 100, ticks = 5 }) => {
+const Type4 = ({ topic, minValue = 0, maxValue = 100, ticks = 5 }) => {
   const [currentSpeed, setCurrentSpeed] = useState(0);
 
   const calculateMajorTicks = (min, max, numTicks) => {
@@ -14,8 +13,6 @@ const DigitalViewOne = ({ topic, minValue = 0, maxValue = 100, ticks = 5 }) => {
       return Math.round(value).toString();
     });
   };
-
-  // Calculate ticks based on props
   const majorTicks = React.useMemo(
     () => calculateMajorTicks(minValue, maxValue, ticks),
     [minValue, maxValue, ticks]
@@ -88,4 +85,4 @@ const DigitalViewOne = ({ topic, minValue = 0, maxValue = 100, ticks = 5 }) => {
   );
 };
 
-export default DigitalViewOne;
+export default Type4;
