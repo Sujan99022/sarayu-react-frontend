@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import GaugeComponent from "react-gauge-component";
+import io from "socket.io-client";
 
 const Type2 = ({
   minValue = -100,
   maxValue = 100,
-  value = 0,
   unit = "",
   tick = 10,
   tickFontSize = "18px",
+  topic,
   adminWidth,
   adminHeight,
 }) => {
+  const [liveData, setLiveData] = useState(0);
+  useEffect(() => {
+    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    socket.emit("subscribeToTopic", topic);
+    socket.on("liveMessage", (data) => {
+      const value = data?.message?.message?.message ?? 0;
+      const boundedValue = Math.min(Math.max(value, minValue), maxValue);
+      setLiveData(boundedValue);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [topic, maxValue, minValue]);
+
   const generateTicks = (min, max, tickCount) => {
     const ticks = [];
     const step = (max - min) / tickCount;
@@ -47,7 +62,7 @@ const Type2 = ({
           labels={{
             valueLabel: {
               style: { fontSize: 28 },
-              formatTextValue: () => `${value.toFixed(0)} ${unit}`,
+              formatTextValue: () => `${liveData.toFixed(0)} ${unit}`,
             },
             tickLabels: {
               type: "outer",
@@ -61,7 +76,7 @@ const Type2 = ({
               },
             },
           }}
-          value={value}
+          value={liveData}
           maxValue={maxValue}
           minValue={minValue}
           pointer={{

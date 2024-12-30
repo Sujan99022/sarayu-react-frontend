@@ -1,47 +1,85 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Gauge from "react-canvas-gauge";
 import io from "socket.io-client";
 
-const Type4 = ({ topic, minValue = 0, maxValue = 100, ticks = 5 }) => {
+const Type4 = ({
+  topic,
+  minValue = 0,
+  maxValue = 100,
+  ticks = 5,
+  socketUrl = "http://localhost:5000",
+}) => {
   const [currentSpeed, setCurrentSpeed] = useState(0);
 
-  const calculateMajorTicks = (min, max, numTicks) => {
-    const range = max - min;
-    const step = range / (numTicks - 1);
-    return Array.from({ length: numTicks }, (_, index) => {
-      const value = min + index * step;
+  // Memoized calculation of major ticks
+  const majorTicks = useMemo(() => {
+    const range = maxValue - minValue;
+    const step = range / (ticks - 1);
+    return Array.from({ length: ticks }, (_, index) => {
+      const value = minValue + index * step;
       return Math.round(value).toString();
     });
-  };
-  const majorTicks = React.useMemo(
-    () => calculateMajorTicks(minValue, maxValue, ticks),
-    [minValue, maxValue, ticks]
-  );
+  }, [minValue, maxValue, ticks]);
 
   useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
-
-    socket.emit("subscribeToTopic", topic);
-
-    socket.on("liveMessage", (data) => {
-      const value = data?.message?.message?.message ?? 0;
-      const boundedValue = Math.min(Math.max(value, minValue), maxValue);
-      setCurrentSpeed(boundedValue);
+    // Create socket connection
+    const socket = io(socketUrl, {
+      transports: ["websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
-    socket.on("noData", (data) => {
-      console.warn(data.message);
-    });
+    // Subscribe to topic
+    const handleSubscribe = () => {
+      socket.emit("subscribeToTopic", topic);
+    };
 
-    socket.on("error", (data) => {
-      console.error(data.message);
-    });
+    // Handle live message
+    const handleLiveMessage = (data) => {
+      try {
+        // Safely extract value with fallback
+        const rawValue = data?.message?.message?.message ?? 0;
 
+        // Ensure value is within specified range
+        const boundedValue = Math.min(
+          Math.max(Number(rawValue), minValue),
+          maxValue
+        );
+
+        // Update state with bounded value
+        setCurrentSpeed(boundedValue);
+      } catch (error) {
+        console.error("Error processing live message:", error);
+      }
+    };
+
+    // Error handling
+    const handleError = (error) => {
+      console.error("Socket connection error:", error);
+    };
+
+    // No data handling
+    const handleNoData = (message) => {
+      console.warn("No data received:", message);
+    };
+
+    // Event listeners
+    socket.on("connect", handleSubscribe);
+    socket.on("liveMessage", handleLiveMessage);
+    socket.on("noData", handleNoData);
+    socket.on("error", handleError);
+
+    // Cleanup function
     return () => {
-      socket.emit("unsubscribeFromTopic");
+      socket.emit("unsubscribeFromTopic", topic);
+      socket.off("connect", handleSubscribe);
+      socket.off("liveMessage", handleLiveMessage);
+      socket.off("noData", handleNoData);
+      socket.off("error", handleError);
       socket.disconnect();
     };
-  }, [topic, minValue, maxValue]);
+  }, [topic, minValue, maxValue, socketUrl]);
 
   return (
     <div

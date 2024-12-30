@@ -57,6 +57,7 @@ const SingleDigitalMeterView = () => {
               minValue={digitalMeterData.minValue}
               maxValue={digitalMeterData.maxValue}
               value={10}
+              topic={topic}
               tick={digitalMeterData.ticks}
               unit={"v"}
             />
@@ -66,6 +67,7 @@ const SingleDigitalMeterView = () => {
               minValue={digitalMeterData.minValue}
               maxValue={digitalMeterData.maxValue}
               value={10}
+              topic={topic}
               tick={digitalMeterData.ticks}
               unit={"v"}
             />
@@ -75,6 +77,7 @@ const SingleDigitalMeterView = () => {
               minValue={digitalMeterData.minValue}
               maxValue={digitalMeterData.maxValue}
               value={10}
+              topic={topic}
               tick={digitalMeterData.ticks}
               unit={"v"}
             />

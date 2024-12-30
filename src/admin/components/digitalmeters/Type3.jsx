@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import GaugeChart from "react-gauge-chart";
+import io from "socket.io-client";
 
 const FallbackGaugeChart = ({
   id,
@@ -36,12 +37,27 @@ const FallbackGaugeChart = ({
 
 const Type3 = ({
   maxValue = 100,
+  minValue,
   value = 10,
   unit = "",
+  topic,
   adminWidth,
   adminHeight,
 }) => {
   const normalizeValue = (val, max) => Math.max(0, Math.min(val, max));
+  const [livaData, setLiveData] = useState(0);
+  useEffect(() => {
+    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    socket.emit("subscribeToTopic", topic);
+    socket.on("liveMessage", (data) => {
+      const value = data?.message?.message?.message ?? 0;
+      const boundedValue = Math.min(Math.max(value, minValue), maxValue);
+      setLiveData(boundedValue);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [topic, maxValue, minValue]);
 
   return (
     <div
@@ -65,7 +81,7 @@ const Type3 = ({
           nrOfLevels={4}
           arcsLength={[0.2, 0.2, 0.4]}
           colors={["green", "#F5CD19", "red"]}
-          percent={normalizeValue(value, maxValue) / maxValue}
+          percent={normalizeValue(livaData, maxValue) / maxValue}
           arcPadding={0.02}
           textColor="transparent"
           needleColor="#FFFFFF"
@@ -88,7 +104,7 @@ const Type3 = ({
             lineHeight: "1",
           }}
         >
-          {value} {unit}
+          {livaData} {unit}
         </div>
       </div>
     </div>
