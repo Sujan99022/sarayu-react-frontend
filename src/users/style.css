@@ -617,6 +617,7 @@
 /* all users style ends here  */
 
 /* Report section starts here */
+
 ._allusers_topic_based_report_title_section {
     display: flex;
     justify-content: space-between;
@@ -630,6 +631,7 @@
     justify-content: center;
     gap: 20px;
     padding: 10px 0;
+    flex-wrap: wrap;
 }
 ._allusers_topic_based_report_datepicker_input input {
     border-radius: 5px;
