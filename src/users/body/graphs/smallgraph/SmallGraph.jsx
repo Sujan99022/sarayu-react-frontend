@@ -192,7 +192,9 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
   };
 
   useEffect(() => {
-    socket.current = io("http://localhost:5000", { transports: ["websocket"] });
+    socket.current = io("https://sarayu-backend.onrender.com", {
+      transports: ["websocket"],
+    });
 
     socket.current.emit("subscribeToTopic", topic);
 

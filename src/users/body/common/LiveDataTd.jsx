@@ -5,7 +5,9 @@ import io from "socket.io-client";
 const LiveDataTd = ({ topic }) => {
   const [liveMessage, setLiveMessages] = useState();
   useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io("https://sarayu-backend.onrender.com", {
+      transports: ["websocket"],
+    });
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
       setLiveMessages(data?.message?.message?.message);

@@ -6,15 +6,20 @@ import "../Body.css";
 import { toast } from "react-toastify";
 import { setUserDetails } from "../../../redux/slices/UserDetailsSlice";
 import apiClient from "../../../api/apiClient";
+import { VscGraph } from "react-icons/vsc";
+import { BiSolidReport } from "react-icons/bi";
+
 import Type2 from "./../../../admin/components/digitalmeters/Type2";
 import Type3 from "./../../../admin/components/digitalmeters/Type3";
 import Type4 from "../../../admin/components/digitalmeters/Type4";
+import { useNavigate } from "react-router-dom";
 
 const DigitalMeter = () => {
   const { user } = useSelector((state) => state.userSlice);
   const dispatch = useDispatch();
   const [loggedInUser, setLoggedInUser] = useState({});
   const [localLoading, setLocalLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [assignedTopicList, setAssignedTopicList] = useState([]);
   const [topicBasedDigitalMeter, setTopicBasedDigitalMeter] = useState([]);
@@ -90,15 +95,27 @@ const DigitalMeter = () => {
     <div className="allusers_digitalview_main_container">
       {assignedTopicList?.map((topic, index) => (
         <div key={index} className="topic-container">
-          <p
-            style={{
-              width: "100%",
-              background: "orange",
-            }}
-            className="text-center"
-          >
-            {topic.split("|")[0].split("/")[2]}
-          </p>
+          <div className="allusers_digitalview_main_container_header_container">
+            <p>{topic.split("|")[0].split("/")[2]}</p>
+            <div>
+              <div
+                onClick={() => {
+                  const encodedTopic = encodeURIComponent(topic);
+                  navigate(`/allusers/viewsinglegraph/${encodedTopic}`);
+                }}
+              >
+                <VscGraph />
+              </div>
+              <div
+                onClick={() => {
+                  const encodedTopic = encodeURIComponent(topic);
+                  navigate(`/allusers/report/${encodedTopic}`);
+                }}
+              >
+                <BiSolidReport />
+              </div>
+            </div>
+          </div>
           {getMeterDetails(topic)}
         </div>
       ))}

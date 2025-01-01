@@ -63,3 +63,27 @@
     font-size: 22px;
     cursor: pointer;
 }
+.allusers_digitalview_main_container_header_container {
+    background: gray;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.allusers_digitalview_main_container_header_container > p {
+    margin: 0;
+    padding: 5px 8px;
+    color: rgba(255, 255, 255, 0.801);
+}
+.allusers_digitalview_main_container_header_container > div {
+    display: flex;
+}
+.allusers_digitalview_main_container_header_container > div > div {
+    padding: 5px 10px;
+    background: rgb(103, 103, 103);
+    cursor: pointer;
+    font-size: 20px;
+}
+.allusers_digitalview_main_container_header_container > div > div:first-child {
+    border-right: 2px solid gray;
+}

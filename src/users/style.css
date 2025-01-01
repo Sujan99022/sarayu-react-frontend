@@ -514,6 +514,58 @@
 }
 /* change password section ends here */
 /* all users style starts here  */
+.allusers_dashboard_main_container {
+    position: relative;
+}
+.watchlist_remove_model_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.watchlist_remove_model_container > div {
+    width: 350px;
+    min-height: 30px;
+    background: white;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.288);
+    padding: 10px;
+}
+.watchlist_remove_model_container > div > p {
+    margin: 0;
+    text-align: center;
+    padding: 15px 0;
+}
+.watchlist_remove_model_container > div > div {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.watchlist_remove_model_container > div > div > button:first-child {
+    border: none;
+    outline: none;
+    color: white;
+    background: red;
+    cursor: pointer;
+    padding: 5px 0;
+    border-radius: 5px;
+}
+.watchlist_remove_model_container > div > div > button:last-child {
+    background: gray;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px 0;
+    border-radius: 5px;
+}
 .alluser_alloperators_container {
     width: 97.5vw;
     overflow-x: auto;

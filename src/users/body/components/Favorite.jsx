@@ -22,6 +22,8 @@ const Dashboard = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [favoriteList, setFavoriteList] = useState([]);
   const navigate = useNavigate();
+  const [rmFavModel, setRmFavModel] = useState(false);
+  const [topicToRm, setTopicToRm] = useState("");
 
   useEffect(() => {
     if (user.id) {
@@ -63,6 +65,39 @@ const Dashboard = () => {
   }
   return (
     <div className="allusers_dashboard_main_container">
+      {rmFavModel && (
+        <div className="watchlist_remove_model_container">
+          <div>
+            <p>
+              Are you sure, you want to remove{" "}
+              <span
+                style={{
+                  color: "red",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                }}
+              >
+                {topicToRm.split("|")[0].split("/")[2]}
+              </span>{" "}
+              from watchlist...!
+            </p>
+            <div>
+              <button
+                onClick={() => [
+                  handleRemoveFavorite(topicToRm),
+                  setRmFavModel(false),
+                  setTopicToRm(""),
+                ]}
+              >
+                Remove
+              </button>
+              <button onClick={() => [setRmFavModel(false), setTopicToRm("")]}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="alluser_alloperators_container">
         <div className="alluser_alloperators_scrollable-table">
           <table className="alluser_alloperators_table">
@@ -126,7 +161,7 @@ const Dashboard = () => {
                       color="red"
                       size={"20"}
                       style={{ cursor: "pointer" }}
-                      onClick={() => handleRemoveFavorite(item)}
+                      onClick={() => [setRmFavModel(true), setTopicToRm(item)]}
                     />
                   </td>
                 </tr>

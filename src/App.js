@@ -30,24 +30,25 @@ const App = () => {
   const { loading } = useSelector((state) => state.UniversalLoader);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.userSlice);
-  useEffect(() => {
-    if (user?.role !== "admin") {
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === "visible") {
-          window.location.reload();
-        }
-      };
 
-      document.addEventListener("visibilitychange", handleVisibilityChange);
+  // useEffect(() => {
+  //   if (user?.role !== "admin") {
+  //     const handleVisibilityChange = () => {
+  //       if (document.visibilityState === "visible") {
+  //         window.location.reload();
+  //       }
+  //     };
 
-      return () => {
-        document.removeEventListener(
-          "visibilitychange",
-          handleVisibilityChange
-        );
-      };
-    }
-  }, [user?.role]);
+  //     document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  //     return () => {
+  //       document.removeEventListener(
+  //         "visibilitychange",
+  //         handleVisibilityChange
+  //       );
+  //     };
+  //   }
+  // }, [user?.role]);
 
   useEffect(() => {
     const jwt = localStorage.getItem("token");

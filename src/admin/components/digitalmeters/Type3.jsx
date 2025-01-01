@@ -47,7 +47,9 @@ const Type3 = ({
   const normalizeValue = (val, max) => Math.max(0, Math.min(val, max));
   const [livaData, setLiveData] = useState(0);
   useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io("https://sarayu-backend.onrender.com", {
+      transports: ["websocket"],
+    });
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
       const value = data?.message?.message?.message ?? 0;
@@ -104,7 +106,7 @@ const Type3 = ({
             lineHeight: "1",
           }}
         >
-          {livaData} {unit} /
+          {livaData} {unit}
         </div>
       </div>
     </div>

@@ -14,7 +14,9 @@ const Type2 = ({
 }) => {
   const [liveData, setLiveData] = useState(0);
   useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io("https://sarayu-backend.onrender.com", {
+      transports: ["websocket"],
+    });
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
       const value = data?.message?.message?.message ?? 0;
