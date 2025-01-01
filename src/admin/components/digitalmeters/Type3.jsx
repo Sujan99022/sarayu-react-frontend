@@ -39,7 +39,7 @@ const Type3 = ({
   maxValue = 100,
   minValue,
   value = 10,
-  unit = "",
+  unit,
   topic,
   adminWidth,
   adminHeight,
@@ -104,7 +104,7 @@ const Type3 = ({
             lineHeight: "1",
           }}
         >
-          {livaData} {unit}
+          {livaData} {unit} /
         </div>
       </div>
     </div>

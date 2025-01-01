@@ -65,7 +65,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="users_graphs_topic_name">
-                <p>{item?.split("/")[2]}</p>
+                <p>{item.split("|")[0].split("/")[2]}</p>
               </div>
               <SmallGraph topic={item} height={220} />
             </div>

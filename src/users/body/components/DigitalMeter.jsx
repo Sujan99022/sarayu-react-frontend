@@ -49,9 +49,24 @@ const DigitalMeter = () => {
     if (meter) {
       return (
         <div className="meter-details">
-          {meter.meterType === "Type2" && <Type2 {...meter} />}
-          {meter.meterType === "Type3" && <Type3 {...meter} />}
-          {meter.meterType === "Type4" && <Type4 {...meter} />}
+          {meter.meterType === "Type2" && (
+            <Type2
+              {...meter}
+              unit={topic.includes("|") ? topic.split("|")[1] : ""}
+            />
+          )}
+          {meter.meterType === "Type3" && (
+            <Type3
+              {...meter}
+              unit={topic.includes("|") ? topic.split("|")[1] : ""}
+            />
+          )}
+          {meter.meterType === "Type4" && (
+            <Type4
+              {...meter}
+              unit={topic.includes("|") ? topic.split("|")[1] : ""}
+            />
+          )}
         </div>
       );
     } else {
@@ -75,7 +90,15 @@ const DigitalMeter = () => {
     <div className="allusers_digitalview_main_container">
       {assignedTopicList?.map((topic, index) => (
         <div key={index} className="topic-container">
-          <p>Topic: {topic}</p>
+          <p
+            style={{
+              width: "100%",
+              background: "orange",
+            }}
+            className="text-center"
+          >
+            {topic.split("|")[0].split("/")[2]}
+          </p>
           {getMeterDetails(topic)}
         </div>
       ))}

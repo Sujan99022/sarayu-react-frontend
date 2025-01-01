@@ -7,7 +7,7 @@ const Type2 = ({
   maxValue = 100,
   unit = "",
   tick = 10,
-  tickFontSize = "18px",
+  tickFontSize = "12px",
   topic,
   adminWidth,
   adminHeight,
@@ -61,7 +61,7 @@ const Type2 = ({
           }}
           labels={{
             valueLabel: {
-              style: { fontSize: 28 },
+              style: { fontSize: 24 },
               formatTextValue: () => `${liveData.toFixed(0)} ${unit}`,
             },
             tickLabels: {

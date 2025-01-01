@@ -30,7 +30,8 @@
     align-items: center;
     background: black;
     color: white;
-    padding: 10px;
+    overflow: hidden;
+    /* padding: 10px; */
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.549);
 }
 .allusers_digitalview_main_container > div > p {
@@ -40,8 +41,8 @@
 /* users digital meter style ends here */
 .users_SingleDigitalMeterView_main_container {
     background: black;
-    height: 91.5vh;
-    width: 99vw;
+    height: 91vh;
+    width: 96vw;
     margin-top: 10px;
     border-radius: 5px;
     display: flex;

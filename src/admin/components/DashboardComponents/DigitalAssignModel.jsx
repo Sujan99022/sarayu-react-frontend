@@ -239,7 +239,9 @@ const DigitalAssignModel = () => {
                     maxValue={alreadyAssignedMaxValue}
                     value={30}
                     tick={alreadyAssignedTick || 5}
-                    unit={"v"}
+                    unit={
+                      paramsTopic.includes("|") ? paramsTopic.split("|")[1] : ""
+                    }
                     topic={paramsTopic}
                     adminWidth="500px"
                     adminHeight="400px"

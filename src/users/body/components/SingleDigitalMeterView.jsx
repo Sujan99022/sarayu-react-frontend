@@ -59,7 +59,7 @@ const SingleDigitalMeterView = () => {
               value={10}
               topic={topic}
               tick={digitalMeterData.ticks}
-              unit={"v"}
+              unit={topic.includes("|") ? topic.split("|")[1] : ""}
             />
           )}
           {digitalMeterData.meterType === "Type3" && (
@@ -69,7 +69,7 @@ const SingleDigitalMeterView = () => {
               value={10}
               topic={topic}
               tick={digitalMeterData.ticks}
-              unit={"v"}
+              unit={topic.includes("|") ? topic.split("|")[1] : ""}
             />
           )}
           {digitalMeterData.meterType === "Type4" && (
@@ -79,7 +79,7 @@ const SingleDigitalMeterView = () => {
               value={10}
               topic={topic}
               tick={digitalMeterData.ticks}
-              unit={"v"}
+              unit={topic.includes("|") ? topic.split("|")[1] : ""}
             />
           )}
         </div>

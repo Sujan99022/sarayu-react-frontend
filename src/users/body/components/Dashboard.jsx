@@ -97,13 +97,13 @@ const Dashboard = () => {
               {loggedInUser?.topics?.map((item, index) => (
                 <tr key={index}>
                   <td style={{ background: "#34495e", color: "white" }}>
-                    {item?.split("/")[2]}
+                    {item.split("|")[0].split("/")[2]}
                   </td>
                   <WeekTd topic={item} />
                   <YestardayTd topic={item} />
                   <TodayTd topic={item} />
                   <LiveDataTd topic={item} />
-                  <td>V</td>
+                  <td>{item.split("|")[1] ? item.split("|")[1] : "-"}</td>
                   <td>
                     <BiSolidReport
                       onClick={() => {

@@ -62,7 +62,10 @@ const TagCreation = () => {
   };
 
   const handleCreateTopic = async () => {
-    if (createQuery.split("/").length !== 3) {
+    // Updated validation logic: now allows company/device/tagname|unit
+    const regex =
+      /^([a-zA-Z0-9_]+\/[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+)\|([a-zA-Z0-9_/]+)$/;
+    if (!regex.test(createQuery)) {
       return setCreateTagnameValidationError("admin_alltopics_error_color");
     }
     try {
@@ -71,15 +74,8 @@ const TagCreation = () => {
       });
       toast.success("TagName created successfully!");
       await fetchRecentFiveTopics();
-      if (createQuery.split("/").length === 3) {
-        setCreateQuery(
-          createQuery.split("/")[0] + "/" + createQuery.split("/")[1] + "/"
-        );
-        setCreateTagnameValidationError("");
-      } else {
-        setCreateQuery("");
-        setCreateTagnameValidationError("");
-      }
+      setCreateQuery("");
+      setCreateTagnameValidationError("");
       setTopicCreated(!topiCreated);
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -87,7 +83,10 @@ const TagCreation = () => {
   };
 
   const handleCreateAndSubscribeTopic = async () => {
-    if (createQuery.split("/").length !== 3) {
+    // Updated validation logic: now allows company/device/tagname|unit
+    const regex =
+      /^([a-zA-Z0-9_]+\/[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+)\|([a-zA-Z0-9_/]+)$/;
+    if (!regex.test(createQuery)) {
       return setCreateTagnameValidationError("admin_alltopics_error_color");
     }
     try {
@@ -100,15 +99,8 @@ const TagCreation = () => {
       });
       toast.success(`Subscribed to ${createQuery} successfully!`);
       await fetchRecentFiveTopics();
-      if (createQuery.split("/").length === 3) {
-        setCreateQuery(
-          createQuery.split("/")[0] + "/" + createQuery.split("/")[1] + "/"
-        );
-        setCreateTagnameValidationError("");
-      } else {
-        setCreateQuery("");
-        setCreateTagnameValidationError("");
-      }
+      setCreateQuery("");
+      setCreateTagnameValidationError("");
       setTopicCreated(!topiCreated);
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -141,7 +133,7 @@ const TagCreation = () => {
             <div className="my-3">
               <IoIosWarning size={"35"} color="red" />
             </div>
-            <p>Are you sure you want to delete tagname : ${topicToDelete}</p>
+            <p>Are you sure you want to delete tagname : {topicToDelete}</p>
             <div>
               <button onClick={handleDeleteTopic}>Delete</button>
               <button onClick={() => setShowTopicDeleteModel(false)}>
@@ -158,14 +150,13 @@ const TagCreation = () => {
             <p
               className={`admin_tagcreation_container_note ${createTagnameValidationError}`}
             >
-              Note : Topic must be in the format: part1/part2/part3 (e.g.,
-              company/device/tagname).
+              Format: part1/part2/part3|unit
             </p>
             <input
               type="text"
               value={createQuery}
               onChange={handleCreateQueryChange}
-              placeholder="Enter the topic name (e.g., company/device/tagname)"
+              placeholder="Enter the topic name (e.g., company/device/tagname|unit)"
             />
             <div className="admin_tagcreation_button_container">
               <button onClick={handleCreateTopic}>Create</button>
