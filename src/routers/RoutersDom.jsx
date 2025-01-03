@@ -28,6 +28,7 @@ import Report from "../users/body/components/Report";
 import MapTopic from "../admin/components/DashboardComponents/MapTopic";
 import DigitalAssignModel from "../admin/components/DashboardComponents/DigitalAssignModel";
 import SingleDigitalMeterView from "../users/body/components/SingleDigitalMeterView";
+import ConfigDevice from "../admin/components/ConfigDevice";
 
 const RoutersDom = () => {
   return (
@@ -41,7 +42,9 @@ const RoutersDom = () => {
             path="/dashboard/dashboard"
             element={<AdminDashboard />}
           />
+
           <Route path="/dashboard/TagCreation" element={<TagCreation />} />
+          <Route path="/dashboard/ConfigDevice" element={<ConfigDevice />} />
           <Route path="/dashboard/devices" element={<Devices />} />
           <Route path="/dashboard/reports" element={<Reports />} />
           <Route path="/dashboard/users" element={<Users />}>

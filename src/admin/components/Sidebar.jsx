@@ -66,15 +66,15 @@ const Sidebar = () => {
         </p>
         <p
           className={
-            activeNavBtn === "admin_inbox" &&
+            activeNavBtn === "config_device" &&
             "admin_sidebar_container_nav_buttons_active"
           }
           onClick={() => [
-            navigate("/dashboard/inbox"),
-            setActiveNavBtn("admin_inbox"),
+            navigate("/dashboard/ConfigDevice"),
+            setActiveNavBtn("config_device"),
           ]}
         >
-          Inbox
+          Config-Device
         </p>
       </div>
       <div>
