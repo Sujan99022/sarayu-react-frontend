@@ -6,7 +6,7 @@ const VibrateMeter = ({ topic }) => {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    const socket = io("https://sarayu-backend.onrender.com", {
+    const socket = io("http://localhost:5000", {
       transports: ["websocket"],
     });
     socket.on(topic, (message) => {

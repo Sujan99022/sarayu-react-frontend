@@ -7,7 +7,7 @@ const Type4 = ({
   minValue = 0,
   maxValue = 100,
   ticks = 5,
-  socketUrl = "https://sarayu-backend.onrender.com",
+  socketUrl = "http://localhost:5000",
 }) => {
   const [currentSpeed, setCurrentSpeed] = useState(0);
 

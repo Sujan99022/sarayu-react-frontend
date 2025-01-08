@@ -3,7 +3,7 @@ import "./style.css";
 import apiClient from "../../../api/apiClient";
 import { toast } from "react-toastify";
 
-const SubscritionBtn = ({ topic }) => {
+const SubscritionBtn = ({ topic, storeSubscribedTopic }) => {
   const [subscribed, setSubscribed] = useState(false);
   let encodedTopic = encodeURIComponent(topic);
   const [subscribeToggler, setSubscribeToggler] = useState(false);
@@ -27,6 +27,7 @@ const SubscritionBtn = ({ topic }) => {
       await apiClient.post("/mqtt/subscribe", {
         topic: topic,
       });
+      storeSubscribedTopic(topic);
       setSubscribeToggler(!subscribeToggler);
       toast.success(`${topic} subscribed successfully!`);
     } catch (error) {

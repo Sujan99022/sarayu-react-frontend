@@ -28,6 +28,14 @@ const TagCreation = () => {
     setCreateQuery(e.target.value);
   };
 
+  const storeSubscribedTopic = async (topic) => {
+    try {
+      await apiClient.post(`/auth/subscribedTopics`, { topic });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const fetchAllTopics = async () => {
     try {
       const response = await apiClient("/mqtt/get-all-tagname");
@@ -62,7 +70,6 @@ const TagCreation = () => {
   };
 
   const handleCreateTopic = async () => {
-    // Updated validation logic: now allows company/device/tagname|unit
     const regex =
       /^([a-zA-Z0-9_]+\/[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+)\|([a-zA-Z0-9_/]+)$/;
     if (!regex.test(createQuery)) {
@@ -83,7 +90,6 @@ const TagCreation = () => {
   };
 
   const handleCreateAndSubscribeTopic = async () => {
-    // Updated validation logic: now allows company/device/tagname|unit
     const regex =
       /^([a-zA-Z0-9_]+\/[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+)\|([a-zA-Z0-9_/]+)$/;
     if (!regex.test(createQuery)) {
@@ -97,6 +103,7 @@ const TagCreation = () => {
       await apiClient.post("/mqtt/subscribe", {
         topic: createQuery,
       });
+      storeSubscribedTopic(createQuery);
       toast.success(`Subscribed to ${createQuery} successfully!`);
       await fetchRecentFiveTopics();
       setCreateQuery("");
@@ -224,6 +231,7 @@ const TagCreation = () => {
             setTopicToDelete={setTopicToDelete}
             topiListFilter={topiListFilter}
             topicList={topicList}
+            storeSubscribedTopic={storeSubscribedTopic}
             setShowTopicDeleteModel={setShowTopicDeleteModel}
           />
         </div>

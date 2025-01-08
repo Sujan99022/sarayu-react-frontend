@@ -11,6 +11,7 @@ const AllTopicsList = ({
   setShowTopicDeleteModel,
   topiListFilter,
   topicList,
+  storeSubscribedTopic,
 }) => {
   return (
     <div className="admin_alltopics_table_all_cred_container">
@@ -28,7 +29,10 @@ const AllTopicsList = ({
               <tr key={index}>
                 <td>{item.topic}</td>
                 <td>
-                  <SubscritionBtn topic={item.topic} />
+                  <SubscritionBtn
+                    storeSubscribedTopic={storeSubscribedTopic}
+                    topic={item.topic}
+                  />
                 </td>
                 <td>
                   {item?.isEmpty ? (
