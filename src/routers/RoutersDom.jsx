@@ -29,6 +29,7 @@ import MapTopic from "../admin/components/DashboardComponents/MapTopic";
 import DigitalAssignModel from "../admin/components/DashboardComponents/DigitalAssignModel";
 import SingleDigitalMeterView from "../users/body/components/SingleDigitalMeterView";
 import ConfigDevice from "../admin/components/ConfigDevice";
+import LayoutView from "../users/body/components/LayoutView";
 
 const RoutersDom = () => {
   return (
@@ -72,6 +73,7 @@ const RoutersDom = () => {
           <Route path="/allusers/users" element={<AllOperators />} />
           <Route path="/allusers/favorites" element={<Favorite />} />
           <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
+          <Route path="/allusers/layoutview/:topic" element={<LayoutView />} />
           <Route
             path="/allusers/singledigitalmeter/:topic/:role/:id"
             element={<SingleDigitalMeterView />}

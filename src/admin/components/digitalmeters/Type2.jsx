@@ -3,16 +3,18 @@ import GaugeComponent from "react-gauge-component";
 import io from "socket.io-client";
 
 const Type2 = ({
-  minValue = -100,
-  maxValue = 100,
+  minValue = -500,
+  maxValue = 500,
   unit = "",
   tick = 10,
   tickFontSize = "12px",
   topic,
   adminWidth,
   adminHeight,
+  darkColor = false,
 }) => {
   const [liveData, setLiveData] = useState(0);
+
   useEffect(() => {
     const socket = io("http://localhost:5000", {
       transports: ["websocket"],
@@ -39,6 +41,22 @@ const Type2 = ({
 
   const ticks = generateTicks(minValue, maxValue, tick);
 
+  const valueLabelStyle = {
+    fontSize: 24,
+    ...(darkColor && {
+      fill: "#000000",
+      color: "#000000",
+    }),
+  };
+
+  const tickLabelStyle = {
+    fontSize: tickFontSize,
+    ...(darkColor && {
+      fill: "#000000",
+      color: "#000000",
+    }),
+  };
+
   return (
     <div
       style={{
@@ -63,8 +81,9 @@ const Type2 = ({
           }}
           labels={{
             valueLabel: {
-              style: { fontSize: 24 },
+              style: valueLabelStyle,
               formatTextValue: () => `${liveData.toFixed(0)} ${unit}`,
+              styleText: darkColor ? { fill: "#000000" } : {},
             },
             tickLabels: {
               type: "outer",
@@ -72,9 +91,8 @@ const Type2 = ({
               defaultTickValueConfig: {
                 formatTextValue: (tickValue) =>
                   `${tickValue.toFixed(0)} ${unit}`,
-                style: {
-                  fontSize: tickFontSize,
-                },
+                style: tickLabelStyle,
+                styleText: darkColor ? { fill: "#000000" } : {},
               },
             },
           }}
@@ -84,6 +102,7 @@ const Type2 = ({
           pointer={{
             animationDuration: 0,
             animationDelay: 0,
+            color: darkColor ? "#000000" : undefined,
           }}
         />
       </div>
