@@ -124,7 +124,9 @@ const Dashboard = () => {
                       style={{ cursor: "pointer" }}
                       onClick={() => {
                         const encodedTopic = encodeURIComponent(item);
-                        navigate(`/allusers/layoutview/${encodedTopic}`);
+                        navigate(
+                          `/allusers/layoutview/${encodedTopic}/${loggedInUser?.layout}`
+                        );
                       }}
                     />
                   </td>

@@ -7,9 +7,12 @@ import BarChart from "../graphs/barchart/BarChart";
 import Type2 from "../../../admin/components/digitalmeters/Type2";
 import { IoCloseSharp } from "react-icons/io5";
 import io from "socket.io-client";
+import LayoutStyle1 from "../common/LayoutStyle1";
+import LayoutStyle2 from "../common/LayoutStyle2";
+import LayoutStyle3 from "../common/LayoutStyle3";
 
 const LayoutView = () => {
-  const { topic } = useParams();
+  const { topic, layout } = useParams();
   const navigate = useNavigate();
 
   const [liveMessage, setLiveMessages] = useState();
@@ -44,24 +47,15 @@ const LayoutView = () => {
           <IoCloseSharp onClick={() => navigate(-1)} />
         </div>
       </header>
-      <section className="allusers_layoutview_section">
-        <div className="allusers_layoutview_numaric_container">
-          <div>
-            <h3>{liveMessage ? liveMessage : "00"}</h3>
-            <p>{topic?.split("|")[1] || "N/A"}</p>
-          </div>
-        </div>
-        <div className="allusers_layoutview_digital_meter_container">
-          {/* <DigitalViewOne /> */}
-          <Type2 topic={topic} unit={topic?.split("|")[1]} darkColor={true} />
-        </div>
-        <section className="allusers_layoutview_live_graph_container">
-          <SmallGraph topic={topic} height={"310"} />
-        </section>
-        <div className="allusers_layoutview_bar_graph_container">
-          <BarChart topic={topic} />
-        </div>
-      </section>
+      {layout === "layout1" && (
+        <LayoutStyle1 liveMessage={liveMessage} topic={topic} />
+      )}
+      {layout === "layout2" && (
+        <LayoutStyle2 liveMessage={liveMessage} topic={topic} />
+      )}
+      {layout === "layout3" && (
+        <LayoutStyle3 liveMessage={liveMessage} topic={topic} />
+      )}
     </div>
   );
 };

@@ -22,8 +22,17 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
   const socket = useRef(null);
 
   const TWO_HOURS_IN_SECONDS = 2 * 60 * 60;
+  const formatToIST = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Kolkata",
+    });
+  };
 
-  // Check if the chart is initialized before performing operations
   const isChartValid = () => chartRef.current && isChartInitialized.current;
 
   const createThresholdLines = () => {
@@ -38,7 +47,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
       thresholdLineSeriesRefs.current = [];
 
-      const currentTime = Math.floor(new Date().getTime() / 1000);
+      const currentTime = Math.floor(Date.now() / 1000);
       const startTime = currentTime - TWO_HOURS_IN_SECONDS;
       const endTime = currentTime + 60 * 60;
 
@@ -119,6 +128,9 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
         timeVisible: true,
         secondsVisible: true,
         rightOffset: 20,
+        tickMarkFormatter: (timestamp) => {
+          return formatToIST(timestamp * 1000);
+        },
       },
     });
 
@@ -276,14 +288,17 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
   const downloadCSV = () => {
     if (dataWindow.current.length > 0) {
       const csvRows = [];
-      const headers = ["Timestamp", "Value"];
+      const headers = ["Timestamp (IST)", "Value"];
       csvRows.push(headers.join(","));
 
       dataWindow.current.forEach((dataPoint) => {
-        const row = [
-          new Date(dataPoint.time * 1000).toISOString(),
-          dataPoint.value,
-        ];
+        const date = new Date(dataPoint.time * 1000);
+        const formattedDate = new Date(date).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          dateStyle: "short",
+          timeStyle: "medium",
+        });
+        const row = [formattedDate, dataPoint.value];
         csvRows.push(row.join(","));
       });
 

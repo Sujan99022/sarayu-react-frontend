@@ -30,6 +30,7 @@ import DigitalAssignModel from "../admin/components/DashboardComponents/DigitalA
 import SingleDigitalMeterView from "../users/body/components/SingleDigitalMeterView";
 import ConfigDevice from "../admin/components/ConfigDevice";
 import LayoutView from "../users/body/components/LayoutView";
+import LayoutAssign from "../admin/components/DashboardComponents/LayoutAssign";
 
 const RoutersDom = () => {
   return (
@@ -59,6 +60,10 @@ const RoutersDom = () => {
         </Route>
         <Route path="/_dashboard/maptopic/:id/:role" element={<MapTopic />} />
         <Route
+          path="/_dashboard/assignlayout/:id/:role"
+          element={<LayoutAssign />}
+        />
+        <Route
           path="/_dashboard/assignmetertotopic/:paramsTopic/:id/:role"
           element={<DigitalAssignModel />}
         />
@@ -73,7 +78,10 @@ const RoutersDom = () => {
           <Route path="/allusers/users" element={<AllOperators />} />
           <Route path="/allusers/favorites" element={<Favorite />} />
           <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
-          <Route path="/allusers/layoutview/:topic" element={<LayoutView />} />
+          <Route
+            path="/allusers/layoutview/:topic/:layout"
+            element={<LayoutView />}
+          />
           <Route
             path="/allusers/singledigitalmeter/:topic/:role/:id"
             element={<SingleDigitalMeterView />}

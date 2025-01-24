@@ -40,6 +40,7 @@ const SubscritionBtn = ({ topic, storeSubscribedTopic }) => {
       await apiClient.post("/mqtt/unsubscribe", {
         topic: topic,
       });
+      storeSubscribedTopic(topic);
       setSubscribeToggler(!subscribeToggler);
       toast.warning(`${topic} unsubscribed successfully!`);
     } catch (error) {

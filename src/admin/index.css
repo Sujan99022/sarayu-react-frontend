@@ -73,10 +73,26 @@
     background: rgb(10, 7, 71);
     color: white;
     margin: 4px 0;
-    padding: 4px 2px;
+    padding-left: 4px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    user-select: none;
+}
+._admin_dashboard_grid_company_list_container > li > p:first-child {
+    margin: 0;
+    padding: 10px 6px;
+    width: 100%;
+}
+._admin_dashboard_grid_company_list_container > li > p:last-child {
+    margin: 0;
+    height: 100%;
+    padding: 10px 10px;
+    color: white;
+    background: blue;
 }
 ._admin_dashboard_grid_company_list_container > li:hover {
     background: orange;

@@ -806,7 +806,7 @@
     grid-template-columns: 50% 50%;
 }
 .allusers_layoutview_section > div {
-    height: 40dvh;
+    height: 310px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -840,7 +840,7 @@
     font-family: "Courier New", Courier, monospace;
 }
 .allusers_layoutview_live_graph_container {
-    height: 40dvh;
+    height: 310px;
     overflow: hidden;
     margin: 10px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.256);

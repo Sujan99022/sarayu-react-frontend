@@ -5,6 +5,8 @@ import Loader from "../../users/loader/Loader";
 import { useNavigate } from "react-router-dom";
 import MapTopic from "./DashboardComponents/MapTopic";
 import { IoCloseSharp } from "react-icons/io5";
+import { FiLayout } from "react-icons/fi";
+import LayoutAssign from "./DashboardComponents/LayoutAssign";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -32,6 +34,9 @@ const Dashboard = () => {
   });
 
   const [activeCompany, setActiveCompany] = useState("");
+  const [layoutAssignModel, setLayoutAssignModel] = useState(false);
+  const [laoutAssignuserId, setlayoutAssignUserId] = useState("");
+  const [laoutAssignuserRole, setlayoutAssignUserRole] = useState("");
 
   useEffect(() => {
     fetchCompanyList();
@@ -133,132 +138,171 @@ const Dashboard = () => {
     }
   };
 
+  const handleLaoutModel = (id, role) => {
+    setlayoutAssignUserId(id);
+    setlayoutAssignUserRole(role);
+    setLayoutAssignModel(true);
+  };
+
   return (
-    <div className="_admin_dashboard_main_container">
-      <div className="_admin_dashboard_grid_company_container mt-4">
-        <section>
-          <input
-            type="text"
-            placeholder="Search company..."
-            value={queryInput.company}
-            name="company"
-            onChange={handleInputChange}
-          />
-          <div className="_admin_dashboard_grid_company_list_container">
-            {!companyLoading ? (
-              <>
-                {filteredCompanyList?.map((item) => (
-                  <li
-                    key={item?._id}
-                    className={
-                      activeCompany === item?.name &&
-                      "_admin_dashboard_grid_company_list_container_active_li"
-                    }
-                    onClick={() =>
-                      handleSetActiveCompany(item?.name, item?._id)
-                    }
-                  >
-                    {item?.name}
-                  </li>
-                ))}
-              </>
-            ) : (
-              <Loader />
-            )}
-          </div>
-        </section>
-        <section>
-          <input
-            type="text"
-            value={queryInput.manager}
-            name="manager"
-            placeholder="Search manager..."
-            onChange={handleInputChange}
-          />
-          <div className="_admin_dashboard_grid_company_list_container">
-            {!managerLoading ? (
-              <>
-                {filteredManagerList?.map((item) => (
-                  <li
-                    key={item?._id}
-                    onClick={() =>
-                      window.open(
-                        `/_dashboard/maptopic/${item?._id}/${item.role}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    {item?.name}
-                  </li>
-                ))}
-              </>
-            ) : (
-              <Loader />
-            )}
-          </div>
-        </section>
-        <section>
-          <input
-            type="text"
-            value={queryInput.supervisor}
-            name="supervisor"
-            placeholder="Search supervisor..."
-            onChange={handleInputChange}
-          />
-          <div className="_admin_dashboard_grid_company_list_container">
-            {!supervisorLoading ? (
-              <>
-                {filteredSupervisorList?.map((item) => (
-                  <li
-                    key={item?._id}
-                    onClick={() =>
-                      window.open(
-                        `/_dashboard/maptopic/${item?._id}/${item.role}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    {item?.name}
-                  </li>
-                ))}
-              </>
-            ) : (
-              <Loader />
-            )}
-          </div>
-        </section>
-        <section>
-          <input
-            type="text"
-            value={queryInput.employee}
-            name="employee"
-            placeholder="Search employee..."
-            onChange={handleInputChange}
-          />
-          <div className="_admin_dashboard_grid_company_list_container">
-            {!employeeLoading ? (
-              <>
-                {filteredEmployeeList?.map((item) => (
-                  <li
-                    key={item?._id}
-                    onClick={() =>
-                      window.open(
-                        `/_dashboard/maptopic/${item?._id}/${item.role}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    {item?.name}
-                  </li>
-                ))}
-              </>
-            ) : (
-              <Loader />
-            )}
-          </div>
-        </section>
+    <>
+      {layoutAssignModel && (
+        <LayoutAssign
+          id={laoutAssignuserId}
+          role={laoutAssignuserRole}
+          setLayoutAssignModel={setLayoutAssignModel}
+        />
+      )}
+      <div className="_admin_dashboard_main_container">
+        <div className="_admin_dashboard_grid_company_container mt-4">
+          <section>
+            <input
+              type="text"
+              placeholder="Search company..."
+              value={queryInput.company}
+              name="company"
+              onChange={handleInputChange}
+            />
+            <div className="_admin_dashboard_grid_company_list_container">
+              {!companyLoading ? (
+                <>
+                  {filteredCompanyList?.map((item) => (
+                    <li
+                      style={{
+                        padding: "7px 20px",
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%",
+                      }}
+                      key={item?._id}
+                      className={
+                        activeCompany === item?.name &&
+                        "_admin_dashboard_grid_company_list_container_active_li"
+                      }
+                      onClick={() =>
+                        handleSetActiveCompany(item?.name, item?._id)
+                      }
+                    >
+                      {item?.name}
+                    </li>
+                  ))}
+                </>
+              ) : (
+                <Loader />
+              )}
+            </div>
+          </section>
+          <section>
+            <input
+              type="text"
+              value={queryInput.manager}
+              name="manager"
+              placeholder="Search manager..."
+              onChange={handleInputChange}
+            />
+            <div className="_admin_dashboard_grid_company_list_container">
+              {!managerLoading ? (
+                <>
+                  {filteredManagerList?.map((item) => (
+                    <li key={item?._id}>
+                      <p
+                        onClick={() =>
+                          window.open(
+                            `/_dashboard/maptopic/${item?._id}/${item.role}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.name}
+                      </p>
+                      <p
+                        onClick={() => handleLaoutModel(item?._id, item?.role)}
+                      >
+                        <FiLayout />
+                      </p>
+                    </li>
+                  ))}
+                </>
+              ) : (
+                <Loader />
+              )}
+            </div>
+          </section>
+          <section>
+            <input
+              type="text"
+              value={queryInput.supervisor}
+              name="supervisor"
+              placeholder="Search supervisor..."
+              onChange={handleInputChange}
+            />
+            <div className="_admin_dashboard_grid_company_list_container">
+              {!supervisorLoading ? (
+                <>
+                  {filteredSupervisorList?.map((item) => (
+                    <li key={item?._id}>
+                      <p
+                        onClick={() =>
+                          window.open(
+                            `/_dashboard/maptopic/${item?._id}/${item.role}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.name}
+                      </p>
+                      <p
+                        onClick={() => handleLaoutModel(item?._id, item?.role)}
+                      >
+                        <FiLayout />
+                      </p>
+                    </li>
+                  ))}
+                </>
+              ) : (
+                <Loader />
+              )}
+            </div>
+          </section>
+          <section>
+            <input
+              type="text"
+              value={queryInput.employee}
+              name="employee"
+              placeholder="Search employee..."
+              onChange={handleInputChange}
+            />
+            <div className="_admin_dashboard_grid_company_list_container">
+              {!employeeLoading ? (
+                <>
+                  {filteredEmployeeList?.map((item) => (
+                    <li key={item?._id}>
+                      <p
+                        onClick={() =>
+                          window.open(
+                            `/_dashboard/maptopic/${item?._id}/${item.role}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.name}
+                      </p>
+                      <p
+                        onClick={() => handleLaoutModel(item?._id, item?.role)}
+                      >
+                        <FiLayout />
+                      </p>
+                    </li>
+                  ))}
+                </>
+              ) : (
+                <Loader />
+              )}
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

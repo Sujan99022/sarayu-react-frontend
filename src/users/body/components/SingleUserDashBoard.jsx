@@ -15,6 +15,7 @@ import LiveDataTd from "../common/LiveDataTd";
 import { BiSolidReport } from "react-icons/bi";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import { LuLayoutDashboard } from "react-icons/lu";
 
 const SingleUserDashBoard = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -102,6 +103,7 @@ const SingleUserDashBoard = () => {
                   <th className="allusers_dashboard_live_data_th">Live</th>
                   <th>Unit</th>
                   <th>Report</th>
+                  <th>Laout</th>
                   <th>Graph/Digital</th>
                   <th>Watch List</th>
                 </tr>
@@ -126,6 +128,17 @@ const SingleUserDashBoard = () => {
                         size={"20"}
                         style={{ cursor: "pointer" }}
                         color="gray"
+                      />
+                    </td>
+                    <td>
+                      <LuLayoutDashboard
+                        size={"20"}
+                        color="gray"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          const encodedTopic = encodeURIComponent(item);
+                          navigate(`/allusers/layoutview/${encodedTopic}`);
+                        }}
                       />
                     </td>
                     <td className="allusers_dashboard_graph_digital_td">
