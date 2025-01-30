@@ -184,9 +184,9 @@ const ShowNumberOfWorkers = ({
               <option value="">Search by...</option>
               <option value="name">Username</option>
               <option value="email">Email</option>
-              {role === "Supervisor" && (
+              {/* {role === "Supervisor" && (
                 <option value="manager">Manager</option>
-              )}
+              )} */}
               {role === "Employee" && (
                 <option value="supervisor">Supervisor</option>
               )}

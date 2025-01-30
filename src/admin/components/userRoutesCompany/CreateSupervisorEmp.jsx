@@ -386,7 +386,7 @@ const CreateRooms = () => {
         setSearchToggle={setSearchToggle}
         role="Supervisor"
         MdClose={MdClose}
-        includeManager={true}
+        includeManager={false}
         editSingleManagerModel={editSingleManagerModel}
         manager={manager}
         handleDeleteUser={(item) => [
@@ -460,7 +460,6 @@ const CreateRooms = () => {
           showSupervisorDropdown={false}
         />
       )}
-
       {createNavCount === 2 && (
         <CreateMSE
           title="Create Supervisor"
@@ -468,10 +467,6 @@ const CreateRooms = () => {
           userError={supervisorError}
           handleChange={handleSupervisorChange}
           handleSubmit={handleCreateSupervisor}
-          showManagerDropdown={true}
-          Manager={manager}
-          selectedManagerId={selectedManagerId}
-          setSelectedManagerId={setSelectedManagerId}
           showSupervisorDropdown={false}
         />
       )}

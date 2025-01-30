@@ -107,15 +107,19 @@ const Dashboard = () => {
                   <LiveDataTd topic={item} />
                   <td>{item.split("|")[1] ? item.split("|")[1] : "-"}</td>
                   <td>
-                    <BiSolidReport
-                      onClick={() => {
-                        const encodedTopic = encodeURIComponent(item);
-                        navigate(`/allusers/report/${encodedTopic}`);
-                      }}
-                      size={"20"}
-                      style={{ cursor: "pointer" }}
-                      color="gray"
-                    />
+                    {item.split("|")[1] !== "fft" ? (
+                      <BiSolidReport
+                        onClick={() => {
+                          const encodedTopic = encodeURIComponent(item);
+                          navigate(`/allusers/report/${encodedTopic}`);
+                        }}
+                        size={"20"}
+                        style={{ cursor: "pointer" }}
+                        color="gray"
+                      />
+                    ) : (
+                      "N/A"
+                    )}
                   </td>
                   <td>
                     <LuLayoutDashboard
@@ -136,19 +140,24 @@ const Dashboard = () => {
                         const encodedTopic = encodeURIComponent(item);
                         navigate(`/allusers/viewsinglegraph/${encodedTopic}`);
                       }}
+                      style={{
+                        background: item.split("|")[1] === "fft" ? "red" : "",
+                      }}
                     >
                       <VscGraph />
                     </button>
-                    <button
-                      onClick={() => {
-                        const encodedTopic = encodeURIComponent(item);
-                        navigate(
-                          `/allusers/singledigitalmeter/${encodedTopic}/${user.role}/${user.id}`
-                        );
-                      }}
-                    >
-                      <FaDigitalOcean />
-                    </button>
+                    {item.split("|")[1] !== "fft" && (
+                      <button
+                        onClick={() => {
+                          const encodedTopic = encodeURIComponent(item);
+                          navigate(
+                            `/allusers/singledigitalmeter/${encodedTopic}/${user.role}/${user.id}`
+                          );
+                        }}
+                      >
+                        <FaDigitalOcean />
+                      </button>
+                    )}
                   </td>
                   <td>
                     {favoriteList?.includes(item) ? (

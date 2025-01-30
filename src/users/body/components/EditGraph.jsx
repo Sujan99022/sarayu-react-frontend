@@ -33,7 +33,7 @@ const EditGraph = () => {
       const fetchedThresholds = res?.data?.data?.thresholds || [];
       const processedThresholds = fetchedThresholds.map((threshold) => ({
         ...threshold,
-        value: parseInt(threshold.value, 10), 
+        value: parseInt(threshold.value, 10),
       }));
       setThreshold(processedThresholds);
       setThresholdNumber(processedThresholds.length);
@@ -71,7 +71,7 @@ const EditGraph = () => {
       <div className="_editgraph_second_main_container">
         <div className="_editgraph_second_main_left_container">
           <header>
-            <div>Edit {topicparams?.split("/")[2]}</div>
+            <div>Edit {topicparams?.split("|")[0].split("/")[2]}</div>
             <div style={{ cursor: "pointer" }} onClick={() => navigate(-1)}>
               <IoClose />
             </div>
@@ -82,8 +82,8 @@ const EditGraph = () => {
             <SmallGraph topic={topicparams} height={"400"} shadow={true} />
           </div>
           <div className="_editgraph_graph__right">
-            <h5 className="m-0 my-3 text-center">Set threshold</h5>
             <div className="_editgraph_main_input_container">
+              <h4 className="m-0 mt-3 text-center">Set Threshold</h4>
               <div className="_editgraph_main_select_numberof_threshold">
                 <select
                   value={thresholdNumber}
@@ -106,6 +106,7 @@ const EditGraph = () => {
                       }
                     />
                     <select
+                      className="editgraph_color_selector"
                       value={thresholds[index]?.color || ""}
                       onChange={(e) =>
                         handleThresholdChange(index, "color", e.target.value)

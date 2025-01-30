@@ -7,14 +7,10 @@ const CreateMSE = ({
   userError,
   handleChange,
   handleSubmit,
-  Manager,
   showSupervisorDropdown,
-  showManagerDropdown,
   supervisorList,
   selectedSupervisorId,
   setSelectedSupervisorId,
-  selectedManagerId,
-  setSelectedManagerId,
   supervisorError,
 }) => {
   return (
@@ -24,7 +20,6 @@ const CreateMSE = ({
       data-aos-once="true"
       className="admin_create_supervisor_second_container"
     >
-      {/* <h4>{title}</h4> */}
       <div className="admin_create_supervisor_second_container_input_container">
         <InputField
           label="Name"
@@ -45,45 +40,6 @@ const CreateMSE = ({
           placeholder={`Enter ${title.toLowerCase()} email here...`}
           error={userError.email}
         />
-        {showManagerDropdown && (
-          <div className="admin_create_supervior_employee_select_supervisor_container_input_container">
-            <div className="position-relative">
-              <label
-                htmlFor="selectManager"
-                className="mb-0"
-                style={{ marginLeft: "15px" }}
-              >
-                Select Manager
-              </label>
-              <br />
-              <select
-                className={
-                  selectedManagerId && "admin_supervisor_selected_them"
-                }
-                id="selectManager"
-                value={selectedManagerId}
-                onChange={(e) => setSelectedManagerId(e.target.value)}
-              >
-                <option value="">Select...</option>
-                {Manager?.map((item) => (
-                  <option key={item._id} value={item._id}>
-                    {item?.name}
-                  </option>
-                ))}
-                {Manager?.length === 0 && <option>No Managers present!</option>}
-              </select>
-              <br />
-              {supervisorError && (
-                <em
-                  className="error position-absolute ml-3"
-                  style={{ bottom: "-23px" }}
-                >
-                  Select a supervisor
-                </em>
-              )}
-            </div>
-          </div>
-        )}
         {showSupervisorDropdown && (
           <div className="admin_create_supervior_employee_select_supervisor_container_input_container">
             <div className="position-relative">

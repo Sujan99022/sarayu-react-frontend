@@ -8,16 +8,34 @@ const HistoryGraph = ({ topic, height }) => {
   const chartContainerRef = useRef();
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
+  const thresholdLineSeriesRefs = useRef([]);
   const isMounted = useRef(true);
 
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [granularity, setGranularity] = useState("minutes");
   const [graphData, setGraphData] = useState([]);
+  const [thresholds, setThresholds] = useState([]);
 
   const granularityOptions = ["seconds", "minutes", "hours", "days"];
 
   useEffect(() => {
+    // Fetch thresholds when component mounts
+    const fetchThresholds = async () => {
+      try {
+        const response = await apiClient.get(`/mqtt/get?topic=${topic}`);
+        if (response.data?.data?.thresholds) {
+          setThresholds(response.data.data.thresholds);
+        }
+      } catch (error) {
+        console.error("Error fetching thresholds:", error);
+      }
+    };
+    fetchThresholds();
+  }, [topic]);
+
+  useEffect(() => {
+    // Initialize chart
     chartRef.current = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height,
@@ -64,6 +82,59 @@ const HistoryGraph = ({ topic, height }) => {
     };
   }, [height]);
 
+  const createThresholdLines = (startTime, endTime) => {
+    if (!chartRef.current) return;
+
+    // Clear existing threshold lines
+    thresholdLineSeriesRefs.current.forEach((series) => {
+      try {
+        chartRef.current.removeSeries(series);
+      } catch (error) {
+        console.warn("Error removing threshold series:", error);
+      }
+    });
+    thresholdLineSeriesRefs.current = [];
+
+    // Create new threshold lines
+    thresholds.forEach((threshold) => {
+      const lineSeries = chartRef.current.addLineSeries({
+        color: threshold.color,
+        lineWidth: 2,
+        priceLineVisible: false,
+        crosshairMarkerVisible: false,
+      });
+
+      lineSeries.setData([
+        { time: startTime, value: threshold.value },
+        { time: endTime, value: threshold.value },
+      ]);
+      thresholdLineSeriesRefs.current.push(lineSeries);
+    });
+  };
+
+  const updateChartColor = (data) => {
+    if (!data.length) return;
+
+    const latestValue = data[data.length - 1].value;
+    let newColor = "rgba(41, 98, 255, 0.3)"; // Default color
+    const sortedThresholds = [...thresholds].sort((a, b) => a.value - b.value);
+
+    // Find the highest threshold crossed
+    for (let i = sortedThresholds.length - 1; i >= 0; i--) {
+      if (latestValue > sortedThresholds[i].value) {
+        newColor = sortedThresholds[i].color;
+        break;
+      }
+    }
+
+    // Update area series color
+    areaSeriesRef.current.applyOptions({
+      topColor: newColor,
+      bottomColor: "rgba(0, 0, 0, 0)",
+      lineColor: newColor,
+    });
+  };
+
   const fetchGraphData = async () => {
     try {
       const body = {
@@ -77,46 +148,39 @@ const HistoryGraph = ({ topic, height }) => {
         "/mqtt/realtime-data/custom-range",
         body
       );
+
       if (response.data.success) {
         const data = response.data.messages
           .map((msg) => {
             const timestamp = new Date(msg.timestamp);
-            if (isNaN(timestamp.getTime())) {
-              console.error("Invalid timestamp:", msg.timestamp);
-              return null;
-            }
-
+            if (isNaN(timestamp.getTime())) return null;
             return {
               time: Math.floor(timestamp.getTime() / 1000),
               value: parseFloat(msg.message),
             };
           })
-          .filter(Boolean);
+          .filter(Boolean)
+          .sort((a, b) => a.time - b.time);
 
-        // Sort the data by time in ascending order
-        data.sort((a, b) => a.time - b.time);
+        if (data.length > 0) {
+          // Update chart color based on latest value
+          updateChartColor(data);
 
-        console.log("Sorted Graph Data:", data);
+          // Create threshold lines for the entire time range
+          const startTime = data[0].time;
+          const endTime = data[data.length - 1].time;
+          createThresholdLines(startTime, endTime);
+        }
 
-        setGraphData(data);
-
-        // Ensure the graph data is updated on the chart
+        // Update chart data
         areaSeriesRef.current.setData(data);
         chartRef.current.timeScale().fitContent();
-      } else {
-        console.error("Error fetching graph data:", response.data.message);
+        setGraphData(data);
       }
     } catch (error) {
-      console.error("Error fetching graph data:", error.message);
+      console.error("Error fetching graph data:", error);
     }
   };
-
-  useEffect(() => {
-    if (graphData.length > 0) {
-      areaSeriesRef.current.setData(graphData);
-      console.log("Graph Data set on chart:", graphData);
-    }
-  }, [graphData]);
 
   return (
     <div>
@@ -126,44 +190,21 @@ const HistoryGraph = ({ topic, height }) => {
             From : &nbsp;
             <DatePicker
               selected={fromDate}
-              onChange={(date) => setFromDate(date)}
+              onChange={setFromDate}
               dateFormat="yyyy-MM-dd HH:mm:ss"
-              maxDate={toDate} // Restrict "From" date to not exceed "To" date
-              maxTime={
-                fromDate.toDateString() === toDate.toDateString()
-                  ? toDate
-                  : new Date(
-                      fromDate.getFullYear(),
-                      fromDate.getMonth(),
-                      fromDate.getDate(),
-                      23,
-                      59,
-                      59
-                    )
-              } // Restrict time if on the same day as "To" date
+              maxDate={toDate}
+              showTimeSelect
             />
           </label>
           <label>
             To : &nbsp;
             <DatePicker
               selected={toDate}
-              onChange={(date) => setToDate(date)}
+              onChange={setToDate}
               dateFormat="yyyy-MM-dd HH:mm:ss"
               minDate={fromDate}
               maxDate={new Date()}
-              minTime={
-                fromDate.toDateString() === toDate.toDateString()
-                  ? fromDate
-                  : new Date(
-                      toDate.getFullYear(),
-                      toDate.getMonth(),
-                      toDate.getDate(),
-                      0,
-                      0,
-                      0
-                    )
-              }
-              maxTime={new Date()}
+              showTimeSelect
             />
           </label>
         </div>

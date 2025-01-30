@@ -10,6 +10,7 @@ const LiveDataTd = ({ topic }) => {
     });
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
+      console.log(data.message.message);
       setLiveMessages(data?.message?.message?.message);
     });
     socket.on("noData", (data) => {
@@ -26,7 +27,11 @@ const LiveDataTd = ({ topic }) => {
     };
   }, [topic]);
 
-  return <td>{liveMessage ? liveMessage : "-"}</td>;
+  return topic.split("|")[1] === "fft" ? (
+    <td>N/A</td>
+  ) : (
+    <td>{liveMessage ? liveMessage : "-"}</td>
+  );
 };
 
 export default LiveDataTd;

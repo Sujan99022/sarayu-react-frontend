@@ -10,6 +10,7 @@ import { FaRegEye } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import Loader from "../../loader/Loader";
 import { useNavigate } from "react-router-dom";
+import StaticPlotGraph from "../graphs/rechartsgraph/StaticPlotGraph";
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -55,19 +56,30 @@ const Dashboard = () => {
                 >
                   <FaRegEye />
                 </div>
-                <div
-                  onClick={() => {
-                    const encodeParams = encodeURIComponent(item);
-                    navigate(`/allusers/editsinglegraph/${encodeParams}`);
-                  }}
-                >
-                  <FiEdit2 />
-                </div>
+                {item.split("|")[1] !== "fft" && (
+                  <div
+                    onClick={() => {
+                      const encodeParams = encodeURIComponent(item);
+                      navigate(`/allusers/editsinglegraph/${encodeParams}`);
+                    }}
+                  >
+                    <FiEdit2 />
+                  </div>
+                )}
               </div>
               <div className="users_graphs_topic_name">
                 <p>{item.split("|")[0].split("/")[2]}</p>
               </div>
-              <SmallGraph topic={item} height={220} />
+              {item.split("|")[1] === "fft" ? (
+                <StaticPlotGraph
+                  topic={item}
+                  height={"100%"}
+                  dy={70}
+                  hidesteps={true}
+                />
+              ) : (
+                <SmallGraph topic={item} height={220} />
+              )}
             </div>
           );
         })}

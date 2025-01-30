@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SmallGraph from "../graphs/smallgraph/SmallGraph";
 import { IoClose } from "react-icons/io5";
 import HistoryGraph from "../graphs/historygraph/HistoryGraph";
+import StaticPlotGraph from "../graphs/rechartsgraph/StaticPlotGraph";
 
 const ViewGraph = () => {
   const { topicparams } = useParams();
@@ -33,6 +34,7 @@ const ViewGraph = () => {
               activeGraphBtn === "history" &&
               "allusers_favorites_main_active_btn"
             }
+            disabled={topicparams.split("|")[1] === "fft"}
           >
             History
           </button>
@@ -41,13 +43,25 @@ const ViewGraph = () => {
       {activeGraphBtn === "live" && (
         <>
           <header>
-            <div>{topicparams?.split("/")[2]}</div>
+            <div>
+              {topicparams?.split("|")[1] === "fft" && "FFT"} &gt;{" "}
+              {topicparams?.split("|")[0].split("/")[2]}
+            </div>
             <div onClick={() => navigate(-1)}>
               <IoClose />
             </div>
           </header>
           <div>
-            <SmallGraph topic={topicparams} height={"550"} viewgraph={true} />
+            {topicparams.split("|")[1] === "fft" ? (
+              <StaticPlotGraph
+                topic={topicparams}
+                height={"75dvh"}
+                dy={65}
+                hidesteps={false}
+              />
+            ) : (
+              <SmallGraph topic={topicparams} height={"550"} viewgraph={true} />
+            )}
           </div>
         </>
       )}

@@ -83,7 +83,7 @@ const Report = () => {
   return (
     <div className="_allusers_topic_based_report_main_container">
       <div className="_allusers_topic_based_report_title_section">
-        Report TagName : {topicparams.split("/")[2]}
+        Report TagName : {topicparams.split("|")[0].split("/")[2]}
         <span
           className="singleuserdashboard_close_icon"
           onClick={() => navigate(-1)}
@@ -149,7 +149,7 @@ const Report = () => {
                     reportData?.map((data, index) => (
                       <tr key={index}>
                         <td>{data.message}</td>
-                        <td>{data.unit || "N/A"}</td>
+                        <td>{topicparams.split("|")[1] || "N/A"}</td>
                         <td>{new Date(data.timestamp).toLocaleString()}</td>
                       </tr>
                     ))

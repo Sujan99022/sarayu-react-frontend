@@ -410,7 +410,12 @@
     padding: 5px 0;
     border-radius: 5px;
     color: white;
-    background: rgb(7, 10, 40);
+}
+._editgraph_savechanges_button_container > button:first-child {
+    background: red;
+}
+._editgraph_savechanges_button_container > button:last-child {
+    background: black;
 }
 ._editgraph_main_input_container > section {
     display: flex;
@@ -426,8 +431,30 @@
     text-align: center;
     border: none;
     outline: none;
+    padding: 4px 0;
     border: 1px solid rgb(7, 10, 40);
     border-radius: 50px;
+}
+.editgraph_color_selector {
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0px 5px;
+}
+
+@media (width > 1000px) {
+    ._editgraph_second_main_container {
+        height: 700px;
+    }
+    ._editgraph_graph_left {
+        height: 600px;
+        padding-top: 110px;
+    }
+    ._editgraph_main_input_container {
+        display: flex;
+        align-items: center;
+        height: 500px;
+        justify-content: center;
+    }
 }
 /* edit graph ends here */
 /* change password section starts here */

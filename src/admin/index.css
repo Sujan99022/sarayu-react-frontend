@@ -49,6 +49,7 @@
 ._admin_dashboard_grid_company_container > section {
     margin: 0 10px;
     border-radius: 4px;
+    border: 2px solid rgb(15, 26, 85);
 }
 ._admin_dashboard_grid_company_container > section > input {
     width: 100%;
@@ -56,10 +57,12 @@
     outline: none;
     padding: 6px 15px;
     color: black;
+    background: rgb(15, 26, 85);
+    color: white;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.272);
 }
 ._admin_dashboard_grid_company_container > section > input::placeholder {
-    color: gray;
+    color: white;
 }
 ._admin_dashboard_grid_company_list_container {
     height: 80vh;
@@ -70,9 +73,10 @@
 ._admin_dashboard_grid_company_list_container > li {
     list-style: none;
     text-align: center;
-    background: rgb(10, 7, 71);
-    color: white;
-    margin: 4px 0;
+    /* background: rgb(10, 7, 71); */
+    color: gray;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.353);
+    margin: 7px 0;
     padding-left: 4px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
@@ -96,8 +100,10 @@
 }
 ._admin_dashboard_grid_company_list_container > li:hover {
     background: orange;
+    color: black !important;
 }
 ._admin_dashboard_grid_company_list_container_active_li {
+    color: white !important;
     background: red !important;
 }
 /* admin dashboard style ends here */

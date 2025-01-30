@@ -8,7 +8,7 @@ import Loader from "../../loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
-const AllOperators = () => {
+const AllSupervisors = () => {
   const { user } = useSelector((state) => state.userSlice);
   const [loggedInUser, setLoggedInUser] = useState({});
   const [selectedUser, setSelectedUser] = useState({});
@@ -42,7 +42,7 @@ const AllOperators = () => {
     setLocalLoading(true);
     try {
       const res = await apiClient.get(
-        `/auth/${user?.role}/getalloperators/${user?.id}`
+        `/auth/${user?.role}/getallsupervisors/${user?.id}`
       );
       setOperatorsList(res?.data?.data);
       setLocalLoading(false);
@@ -102,4 +102,4 @@ const AllOperators = () => {
   );
 };
 
-export default AllOperators;
+export default AllSupervisors;

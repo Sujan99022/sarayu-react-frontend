@@ -16,6 +16,7 @@ import { BiSolidReport } from "react-icons/bi";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { MdOutlineClose } from "react-icons/md";
 
 const SingleUserDashBoard = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -24,6 +25,7 @@ const SingleUserDashBoard = () => {
   const { id } = useParams();
   const [favoriteList, setFavoriteList] = useState([]);
   const [supervisorId, setSupervisorId] = useState();
+  const [managerId, setManagerId] = useState();
   const navigate = useNavigate();
   useEffect(() => {
     if (id) {
@@ -37,8 +39,14 @@ const SingleUserDashBoard = () => {
       const res = await apiClient.get(`/auth/employee/${id}`);
       const data = res?.data?.data;
       setSingleUserData(data);
-      setFavoriteList(data?.supervisor?.favorites || []);
+      console.log(data.supervisor);
+      setFavoriteList(
+        (data.role === "supervisor"
+          ? data?.manager?.favorites
+          : data?.supervisor?.favorites) || []
+      );
       setSupervisorId(data?.supervisor?._id);
+      setManagerId(data?.manager?._id);
     } catch (error) {
       toast.error(error?.response?.data?.error || "Failed to fetch user data");
     } finally {
@@ -48,7 +56,7 @@ const SingleUserDashBoard = () => {
 
   const handleAddFavorite = async (topic) => {
     try {
-      await apiClient.post(`/auth/${user.role}/${supervisorId}/favorites`, {
+      await apiClient.post(`/auth/${user.role}/${user.id}/favorites`, {
         topic,
       });
       setFavoriteList((prev) => [...prev, topic]);
@@ -62,7 +70,7 @@ const SingleUserDashBoard = () => {
 
   const handleRemoveFavorite = async (topic) => {
     try {
-      await apiClient.delete(`/auth/${user.role}/${supervisorId}/favorites`, {
+      await apiClient.delete(`/auth/${user.role}/${user.id}/favorites`, {
         data: { topic },
       });
       setFavoriteList((prev) => prev.filter((fav) => fav !== topic));
@@ -84,9 +92,9 @@ const SingleUserDashBoard = () => {
         {singleUserData?.name} dashboard{" "}
         <span
           className="singleuserdashboard_close_icon"
-          onClick={() => navigate("/allusers/users")}
+          onClick={() => navigate(-1)}
         >
-          <IoMdArrowBack color="red" size={"25"} />
+          <MdOutlineClose color="red" size={"25"} />
         </span>
       </div>
 
@@ -103,7 +111,7 @@ const SingleUserDashBoard = () => {
                   <th className="allusers_dashboard_live_data_th">Live</th>
                   <th>Unit</th>
                   <th>Report</th>
-                  <th>Laout</th>
+                  <th>LayoutView</th>
                   <th>Graph/Digital</th>
                   <th>Watch List</th>
                 </tr>
@@ -112,13 +120,13 @@ const SingleUserDashBoard = () => {
                 {singleUserData?.topics?.map((item, index) => (
                   <tr key={index}>
                     <td style={{ background: "#34495e", color: "white" }}>
-                      {item?.split("/")[2]}
+                      {item?.split("|")[0].split("/")[2]}
                     </td>
                     <WeekTd topic={item} />
                     <YestardayTd topic={item} />
                     <TodayTd topic={item} />
                     <LiveDataTd topic={item} />
-                    <td>V</td>
+                    <td>{item.split("|")[1] || "N/A"}</td>
                     <td>
                       <BiSolidReport
                         onClick={() => {
@@ -137,7 +145,9 @@ const SingleUserDashBoard = () => {
                         style={{ cursor: "pointer" }}
                         onClick={() => {
                           const encodedTopic = encodeURIComponent(item);
-                          navigate(`/allusers/layoutview/${encodedTopic}`);
+                          navigate(
+                            `/allusers/layoutview/${encodedTopic}/${singleUserData?.layout}`
+                          );
                         }}
                       />
                     </td>

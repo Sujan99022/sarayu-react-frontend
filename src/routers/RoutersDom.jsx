@@ -31,6 +31,7 @@ import SingleDigitalMeterView from "../users/body/components/SingleDigitalMeterV
 import ConfigDevice from "../admin/components/ConfigDevice";
 import LayoutView from "../users/body/components/LayoutView";
 import LayoutAssign from "../admin/components/DashboardComponents/LayoutAssign";
+import AllSupervisors from "../users/body/components/AllSupervisors";
 
 const RoutersDom = () => {
   return (
@@ -76,6 +77,7 @@ const RoutersDom = () => {
           />
           <Route path="/allusers/graphs" element={<Graphs />} />
           <Route path="/allusers/users" element={<AllOperators />} />
+          <Route path="/allusers/supervisors" element={<AllSupervisors />} />
           <Route path="/allusers/favorites" element={<Favorite />} />
           <Route path="/allusers/digitalmeter" element={<DigitalMeter />} />
           <Route

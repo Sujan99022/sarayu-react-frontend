@@ -70,11 +70,22 @@ const Navbar = () => {
           >
             Digital meter
           </NavLink>
-          {user.role === "supervisor" && (
+          {(user.role === "supervisor" || user.role === "manager") && (
             <>
               <div className="users_navbar_link_separator"></div>
               <NavLink className={"users_navbar_link"} to={"/allusers/users"}>
-                Users
+                Operators
+              </NavLink>{" "}
+            </>
+          )}
+          {user.role === "manager" && (
+            <>
+              <div className="users_navbar_link_separator"></div>
+              <NavLink
+                className={"users_navbar_link"}
+                to={"/allusers/supervisors"}
+              >
+                Supervisors
               </NavLink>{" "}
             </>
           )}
@@ -151,7 +162,16 @@ const Navbar = () => {
                 to={"/allusers/users"}
                 onClick={() => dispatch(handlToggleMenu(false))}
               >
-                Users
+                Operators
+              </NavLink>
+            )}
+            {user?.role === "manager" && (
+              <NavLink
+                className={"users_mobile_navbar_show_menu_navlink"}
+                to={"/allusers/supervisors"}
+                onClick={() => dispatch(handlToggleMenu(false))}
+              >
+                Supervisors
               </NavLink>
             )}
             <Link

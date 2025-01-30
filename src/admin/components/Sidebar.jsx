@@ -64,7 +64,7 @@ const Sidebar = () => {
         >
           Users
         </p>
-        <p
+        {/* <p
           className={
             activeNavBtn === "config_device" &&
             "admin_sidebar_container_nav_buttons_active"
@@ -75,7 +75,7 @@ const Sidebar = () => {
           ]}
         >
           Config-Device
-        </p>
+        </p> */}
       </div>
       <div>
         <button className="admin_navbar_logout_btn" onClick={handleLogout}>

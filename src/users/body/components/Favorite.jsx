@@ -14,6 +14,7 @@ import TodayTd from "../common/TodayTd";
 import { VscGraph } from "react-icons/vsc";
 import { FaDigitalOcean } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { LuLayoutDashboard } from "react-icons/lu";
 
 const Dashboard = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -110,6 +111,7 @@ const Dashboard = () => {
                 <th className="allusers_dashboard_live_data_th">Live</th>
                 <th>Unit</th>
                 <th>Report</th>
+                <th>Layout View</th>
                 <th>Graph/Digital</th>
                 <th>Remove</th>
               </tr>
@@ -118,13 +120,13 @@ const Dashboard = () => {
               {loggedInUser?.favorites?.map((item, index) => (
                 <tr key={index}>
                   <td style={{ background: "#34495e", color: "white" }}>
-                    {item?.split("/")[2]}
+                    {item?.split("|")[0].split("/")[2]}
                   </td>
                   <WeekTd topic={item} />
                   <YestardayTd topic={item} />
                   <TodayTd topic={item} />
                   <LiveDataTd topic={item} />
-                  <td>V</td>
+                  <td>{item.split("|")[1]}</td>
                   <td>
                     <BiSolidReport
                       onClick={() => {
@@ -134,6 +136,19 @@ const Dashboard = () => {
                       size={"20"}
                       style={{ cursor: "pointer" }}
                       color="gray"
+                    />
+                  </td>
+                  <td>
+                    <LuLayoutDashboard
+                      size={"20"}
+                      color="gray"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        const encodedTopic = encodeURIComponent(item);
+                        navigate(
+                          `/allusers/layoutview/${encodedTopic}/${loggedInUser?.layout}`
+                        );
+                      }}
                     />
                   </td>
                   <td className="allusers_dashboard_graph_digital_td">
