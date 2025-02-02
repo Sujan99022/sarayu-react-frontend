@@ -26,6 +26,7 @@
     "react-app": "file:",
     "react-canvas-gauge": "^1.0.2",
     "react-chartjs-2": "^5.3.0",
+    "react-color": "^2.19.3",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.3.1",
     "react-gauge-chart": "^0.5.1",

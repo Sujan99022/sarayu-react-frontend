@@ -16,6 +16,7 @@ import { VscGraph } from "react-icons/vsc";
 import { FaDigitalOcean } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LuLayoutDashboard } from "react-icons/lu";
+import DualGraphPlot from "../graphs/dualgraph/DualGraphPlot";
 
 const Dashboard = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -182,6 +183,11 @@ const Dashboard = () => {
           </table>
         </div>
       </div>
+      {/* <DualGraphPlot
+        topic1={"sarayu/device1/random|n"}
+        topic2={"sarayu/device1/decrement|v"}
+        height={500}
+      /> */}
     </div>
   );
 };
