@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// Dashboard.jsx
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import "../../style.css";
 import { useSelector, useDispatch } from "react-redux";
 import apiClient from "../../../api/apiClient";
@@ -16,7 +17,6 @@ import { VscGraph } from "react-icons/vsc";
 import { FaDigitalOcean } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LuLayoutDashboard } from "react-icons/lu";
-import DualGraphPlot from "../graphs/dualgraph/DualGraphPlot";
 
 const Dashboard = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -26,25 +26,26 @@ const Dashboard = () => {
   const [favoriteList, setFavoriteList] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user.id) {
-      fetchUserDetails();
-    }
-  }, [user.id]);
-
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = useCallback(async () => {
     setLocalLoading(true);
     try {
       const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
-      setLoggedInUser(res?.data?.data);
-      dispatch(setUserDetails(res?.data?.data));
-      setFavoriteList(res?.data?.data?.favorites);
-      setLocalLoading(false);
+      const userData = res?.data?.data;
+      setLoggedInUser(userData);
+      dispatch(setUserDetails(userData));
+      setFavoriteList(userData?.favorites || []);
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      toast.error(
+        error?.response?.data?.error || "Failed to fetch user details"
+      );
+    } finally {
       setLocalLoading(false);
     }
-  };
+  }, [dispatch, user.id, user.role]);
+
+  useEffect(() => {
+    if (user.id) fetchUserDetails();
+  }, [user.id, fetchUserDetails]);
 
   const handleAddFavorite = async (topic) => {
     try {
@@ -74,9 +75,18 @@ const Dashboard = () => {
     }
   };
 
-  if (localLoading) {
-    return <Loader />;
-  }
+  const parsedTopics = useMemo(
+    () =>
+      loggedInUser?.topics?.map((topic) => {
+        const [path, unit] = topic.split("|");
+        const tagName = path.split("/")[2];
+        return { topic, tagName, unit: unit || "-", isFFT: unit === "fft" };
+      }) || [],
+    [loggedInUser?.topics]
+  );
+
+  if (localLoading) return <Loader />;
+
   return (
     <div className="allusers_dashboard_main_container">
       <div className="alluser_alloperators_container">
@@ -97,24 +107,25 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {loggedInUser?.topics?.map((item, index) => (
-                <tr key={index}>
+              {parsedTopics.map(({ topic, tagName, unit, isFFT }, index) => (
+                <tr key={`${topic}-${index}`}>
                   <td style={{ background: "#34495e", color: "white" }}>
-                    {item.split("|")[0].split("/")[2]}
+                    {tagName}
                   </td>
-                  <WeekTd topic={item} />
-                  <YestardayTd topic={item} />
-                  <TodayTd topic={item} />
-                  <LiveDataTd topic={item} />
-                  <td>{item.split("|")[1] ? item.split("|")[1] : "-"}</td>
+                  <WeekTd topic={topic} />
+                  <YestardayTd topic={topic} />
+                  <TodayTd topic={topic} />
+                  <LiveDataTd topic={topic} />
+                  <td>{unit}</td>
                   <td>
-                    {item.split("|")[1] !== "fft" ? (
+                    {!isFFT ? (
                       <BiSolidReport
-                        onClick={() => {
-                          const encodedTopic = encodeURIComponent(item);
-                          navigate(`/allusers/report/${encodedTopic}`);
-                        }}
-                        size={"20"}
+                        onClick={() =>
+                          navigate(
+                            `/allusers/report/${encodeURIComponent(topic)}`
+                          )
+                        }
+                        size={20}
                         style={{ cursor: "pointer" }}
                         color="gray"
                       />
@@ -124,56 +135,59 @@ const Dashboard = () => {
                   </td>
                   <td>
                     <LuLayoutDashboard
-                      size={"20"}
+                      size={20}
                       color="gray"
                       style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        const encodedTopic = encodeURIComponent(item);
+                      onClick={() =>
                         navigate(
-                          `/allusers/layoutview/${encodedTopic}/${loggedInUser?.layout}`
-                        );
-                      }}
+                          `/allusers/layoutview/${encodeURIComponent(topic)}/${
+                            loggedInUser?.layout
+                          }`
+                        )
+                      }
                     />
                   </td>
                   <td className="allusers_dashboard_graph_digital_td">
                     <button
-                      onClick={() => {
-                        const encodedTopic = encodeURIComponent(item);
-                        navigate(`/allusers/viewsinglegraph/${encodedTopic}`);
-                      }}
-                      style={{
-                        background: item.split("|")[1] === "fft" ? "red" : "",
-                      }}
+                      onClick={() =>
+                        navigate(
+                          `/allusers/viewsinglegraph/${encodeURIComponent(
+                            topic
+                          )}`
+                        )
+                      }
+                      style={{ background: isFFT ? "red" : "" }}
                     >
                       <VscGraph />
                     </button>
-                    {item.split("|")[1] !== "fft" && (
+                    {!isFFT && (
                       <button
-                        onClick={() => {
-                          const encodedTopic = encodeURIComponent(item);
+                        onClick={() =>
                           navigate(
-                            `/allusers/singledigitalmeter/${encodedTopic}/${user.role}/${user.id}`
-                          );
-                        }}
+                            `/allusers/singledigitalmeter/${encodeURIComponent(
+                              topic
+                            )}/${user.role}/${user.id}`
+                          )
+                        }
                       >
                         <FaDigitalOcean />
                       </button>
                     )}
                   </td>
                   <td>
-                    {favoriteList?.includes(item) ? (
+                    {favoriteList.includes(topic) ? (
                       <BsBookmarkStarFill
                         color="green"
-                        size={"20"}
+                        size={20}
                         style={{ cursor: "pointer" }}
-                        onClick={() => handleRemoveFavorite(item)}
+                        onClick={() => handleRemoveFavorite(topic)}
                       />
                     ) : (
                       <FaRegBookmark
                         color="green"
-                        size={"18"}
+                        size={18}
                         style={{ cursor: "pointer" }}
-                        onClick={() => handleAddFavorite(item)}
+                        onClick={() => handleAddFavorite(topic)}
                       />
                     )}
                   </td>
@@ -183,13 +197,8 @@ const Dashboard = () => {
           </table>
         </div>
       </div>
-      {/* <DualGraphPlot
-        topic1={"sarayu/device1/random|n"}
-        topic2={"sarayu/device1/decrement|v"}
-        height={500}
-      /> */}
     </div>
   );
 };
 
-export default Dashboard;
+export default React.memo(Dashboard);
