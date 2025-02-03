@@ -60,6 +60,13 @@ const Navbar = () => {
             Graphs
           </NavLink>
           <div className="users_navbar_link_separator"></div>
+          <NavLink
+            className={"users_navbar_link"}
+            to={"/allusers/dualtopicdashboard"}
+          >
+            DualGraph
+          </NavLink>
+          <div className="users_navbar_link_separator"></div>
           <NavLink className={"users_navbar_link"} to={"/allusers/favorites"}>
             Watch list
           </NavLink>
@@ -141,6 +148,13 @@ const Navbar = () => {
               onClick={() => dispatch(handlToggleMenu(false))}
             >
               Graphs
+            </NavLink>
+            <NavLink
+              className={"users_mobile_navbar_show_menu_navlink"}
+              to={"/allusers/dualtopicdashboard"}
+              onClick={() => dispatch(handlToggleMenu(false))}
+            >
+              DualGraph
             </NavLink>
             <NavLink
               className={"users_mobile_navbar_show_menu_navlink"}

@@ -281,8 +281,8 @@ const DualGraphPlot = ({ topic1, topic2, height, viewgraph }) => {
   };
 
   // Extract labels for topics
-  const topic1Label = topic1.split("|")[0].split("/")[2];
-  const topic2Label = topic2.split("|")[0].split("/")[2];
+  const topic1Label = topic1?.split("|")[0]?.split("/")[2];
+  const topic2Label = topic2?.split("|")[0]?.split("/")[2];
 
   return (
     <div style={{ position: "relative" }}>

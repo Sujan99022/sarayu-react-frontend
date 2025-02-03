@@ -32,6 +32,7 @@ import ConfigDevice from "../admin/components/ConfigDevice";
 import LayoutView from "../users/body/components/LayoutView";
 import LayoutAssign from "../admin/components/DashboardComponents/LayoutAssign";
 import AllSupervisors from "../users/body/components/AllSupervisors";
+import DualTopicDashboard from "../users/body/components/DualTopicDashboard";
 
 const RoutersDom = () => {
   return (
@@ -83,6 +84,10 @@ const RoutersDom = () => {
           <Route
             path="/allusers/layoutview/:topic/:layout"
             element={<LayoutView />}
+          />
+          <Route
+            path="/allusers/dualtopicdashboard"
+            element={<DualTopicDashboard />}
           />
           <Route
             path="/allusers/singledigitalmeter/:topic/:role/:id"
