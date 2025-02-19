@@ -112,7 +112,10 @@ const DualGraphPlot = ({ topic1, topic2, topic3, topic4, topic5, height, width }
 
   const setupSocket = (topic, index) => {
     if (!topic) return;
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io("http://13.203.22.181", {
+      path: "/socket.io/",  
+      transports: ["websocket", "polling"],
+    });
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
       if (data.success) {

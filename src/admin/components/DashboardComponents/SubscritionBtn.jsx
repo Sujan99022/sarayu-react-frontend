@@ -5,18 +5,15 @@ import { toast } from "react-toastify";
 
 const SubscritionBtn = ({ topic, storeSubscribedTopic }) => {
   const [subscribed, setSubscribed] = useState(false);
-  let encodedTopic = encodeURIComponent(topic);
-  const [subscribeToggler, setSubscribeToggler] = useState(false);
-  useEffect(() => {
-    fetchSubscriptionApi();
-  }, [topic, subscribeToggler]);
 
-  const fetchSubscriptionApi = async () => {
+  useEffect(() => {
+    fetchSubscriptionStatus();
+  }, [topic]);
+
+  const fetchSubscriptionStatus = async () => {
     try {
-      const res = await apiClient.get(
-        `/mqtt/is-subscribed?topic=${encodedTopic}`
-      );
-      setSubscribed(res?.data?.isSubscribed);
+      const res = await apiClient.get("/mqtt/get-all-subscribedtopics");
+      setSubscribed(res.data.data.includes(topic));
     } catch (error) {
       console.error("Error fetching subscription status:", error.message);
     }
@@ -24,11 +21,9 @@ const SubscritionBtn = ({ topic, storeSubscribedTopic }) => {
 
   const handleSubscribe = async () => {
     try {
-      await apiClient.post("/mqtt/subscribe", {
-        topic: topic,
-      });
+      await apiClient.post("/mqtt/subscribe", { topic });
       storeSubscribedTopic(topic);
-      setSubscribeToggler(!subscribeToggler);
+      setSubscribed(true); // immediately update UI to "Unsubscribe"
       toast.success(`${topic} subscribed successfully!`);
     } catch (error) {
       toast.error(error.message);
@@ -37,11 +32,9 @@ const SubscritionBtn = ({ topic, storeSubscribedTopic }) => {
 
   const handleUnsubscribe = async () => {
     try {
-      await apiClient.post("/mqtt/unsubscribe", {
-        topic: topic,
-      });
+      await apiClient.post("/mqtt/unsubscribe", { topic });
       storeSubscribedTopic(topic);
-      setSubscribeToggler(!subscribeToggler);
+      setSubscribed(false); // immediately update UI to "Subscribe"
       toast.warning(`${topic} unsubscribed successfully!`);
     } catch (error) {
       toast.error(error.message);

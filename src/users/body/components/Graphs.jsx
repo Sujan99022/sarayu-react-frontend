@@ -78,7 +78,7 @@ const Dashboard = () => {
                   hidesteps={true}
                 />
               ) : (
-                <SmallGraph topic={item} height={220} />
+                <SmallGraph topic={item} height={290} />
               )}
             </div>
           );

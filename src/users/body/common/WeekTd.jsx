@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from "react";
-import apiClient from "../../../api/apiClient";
+import { fetchData } from "../../../utils/apiHelper";
 
-const WeekTd = ({ topic }) => {
+const WeekTd = ({ topic , setLoadingWYTMaxData }) => {
   const [data, setData] = useState("");
-  let encodedTopic = encodeURIComponent(topic);
+
   useEffect(() => {
-    fetchWeeksHighest();
+    fetchData(`/mqtt/last-7-days-highest?topic=${encodeURIComponent(topic)}`, setData);
   }, [topic]);
 
-  const fetchWeeksHighest = async () => {
-    try {
-      const res = await apiClient.get(
-        `/mqtt/last-7-days-highest?topic=${encodedTopic}`
-      );
-      setData(res?.data?.message);
-    } catch (error) {
-      console.log(error?.message);
-    }
-  };
-  return <td>{data ? data : "-"}</td>;
+  return <td>{data || "-"}</td>;
 };
 
-export default WeekTd;
+export default React.memo(WeekTd);

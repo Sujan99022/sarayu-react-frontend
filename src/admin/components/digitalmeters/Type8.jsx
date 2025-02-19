@@ -1,127 +1,234 @@
-import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+import React from 'react';
 
-const VibrationMeter = ({
-  topic,
-  minValue = -50,
-  maxValue = 50,
-  unit = "Hz",
-}) => {
-  const [value, setValue] = useState(0);
-
-  // Calculate the rotation angle for the needle based on the current value
-  const calculateNeedleRotation = () => {
-    const range = maxValue - minValue;
-    const normalizedValue = value - minValue; // Normalize value to start from 0
-    const angle = (normalizedValue / range) * 180; // Map to 0 (min) to 180 (max)
-    return Math.max(0, Math.min(180, angle)); // Clamp between 0 and 180
-  };
-
-  useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
-    socket.emit("subscribeToTopic", topic);
-    socket.on("liveMessage", (data) => {
-      const newValue = Math.min(
-        Math.max(data.message.message.message, minValue),
-        maxValue
-      );
-      setValue(newValue);
-    });
-    return () => socket.disconnect();
-  }, [topic, minValue, maxValue]);
+const Type8 = ({ speed = 40 }) => {
+  const minSpeed = 20;
+  const maxSpeed = 220;
+  const rotation = ((speed - minSpeed) / (maxSpeed - minSpeed)) * 240 - 120;
 
   return (
-    <div
-      style={{
-        background: "#2d2d2d",
-        padding: "2rem",
-        borderRadius: "15px",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-        width: "100%",
-        maxWidth: "350px",
-        margin: "auto",
-        textAlign: "center",
-        fontFamily: "'Segoe UI', sans-serif",
-        color: "#fff",
-      }}
-    >
-      {/* Title */}
-      <h3 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>
-        VIBRATION METER
-      </h3>
-
-      {/* Meter Container */}
-      <div
+    <div style={{
+      backgroundColor: '#000',
+      padding: '20px',
+      borderRadius: '20px',
+      fontFamily: 'Arial, sans-serif',
+      display: 'inline-block'
+    }}>
+      <svg 
+        viewBox="0 0 320 320" 
         style={{
-          position: "relative",
-          width: "100%",
-          aspectRatio: "1/1",
-          backgroundColor: "#333",
-          borderRadius: "50%",
-          border: "5px solid #444",
-          overflow: "hidden",
+          width: '400px',
+          height: '400px'
         }}
       >
-        {/* Background Arc */}
-        <svg
-          viewBox="0 0 100 100"
+        {/* Speed numbers placed around the circle */}
+        <text 
+          x="160" 
+          y="60" 
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
+            fill: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
           }}
         >
-          <path
-            d="M 50 50 m -45 0 a 45 45 0 1 1 90 0 a 45 45 0 1 1 -90 0"
-            fill="none"
-            stroke="#ffffff30"
-            strokeWidth="10"
-          />
-        </svg>
+          100
+        </text>
+        <text 
+          x="240" 
+          y="90" 
+          style={{
+            fill: 'white',
+            fontSize: '14px',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          120
+        </text>
+        <text 
+          x="80" 
+          y="90" 
+          style={{
+            fill: 'white',
+            fontSize: '14px',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          80
+        </text>
+        <text 
+          x="270" 
+          y="160" 
+          style={{
+            fill: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          140
+        </text>
+        <text 
+          x="50" 
+          y="160" 
+          style={{
+            fill: 'white',
+            fontSize: '14px',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          60
+        </text>
+        <text 
+          x="270" 
+          y="230" 
+          style={{
+            fill: 'white',
+            fontSize: '14px',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          160
+        </text>
+        <text 
+          x="50" 
+          y="230" 
+          style={{
+            fill: 'white',
+            fontSize: '14px',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          40
+        </text>
+        <text 
+          x="240" 
+          y="270" 
+          style={{
+            fill: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          180
+        </text>
+        <text 
+          x="80" 
+          y="270" 
+          style={{
+            fill: 'white',
+            fontSize: '14px',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          20
+        </text>
+        <text 
+          x="160" 
+          y="300" 
+          style={{
+            fill: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          200
+        </text>
+        <text 
+          x="160" 
+          y="300" 
+          style={{
+            fill: 'white',
+            fontSize: '16px',
+            fontWeight: 'bold',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle',
+            filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.5))'
+          }}
+        >
+          220
+        </text>
+
+        {/* Center circle */}
+        <circle 
+          cx="160" 
+          cy="160" 
+          r="70" 
+          fill="#111" 
+        />
+
+        {/* Speed display */}
+        <text 
+          x="160" 
+          y="160" 
+          style={{
+            fill: '#fff',
+            fontSize: '40px',
+            fontWeight: 'bold',
+            textAnchor: 'middle',
+            alignmentBaseline: 'middle'
+          }}
+        >
+          <tspan x="160" dy="0">{speed}</tspan>
+          <tspan 
+            x="160" 
+            dy="25" 
+            style={{
+              fontSize: '20px',
+              fill: '#888'
+            }}
+          >
+            km/h
+          </tspan>
+        </text>
 
         {/* Needle */}
-        <div
+        <line 
+          x1="160" 
+          y1="160" 
+          x2="160" 
+          y2="80" 
           style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: "45%",
-            height: "4px",
-            backgroundColor: "#ff4d4d",
-            transformOrigin: "left center",
-            transform: `rotate(${calculateNeedleRotation() - 90}deg)`, // Offset by -90 to align with SVG arc
+            stroke: '#ff4444',
+            strokeWidth: '3',
+            strokeLinecap: 'round',
+            transition: 'transform 0.5s ease-out',
+            transform: `rotate(${rotation}deg)`,
+            transformOrigin: '160px 160px'
           }}
-        ></div>
-
-        {/* Center Dot */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            width: "12px",
-            height: "12px",
-            backgroundColor: "#ff4d4d",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        ></div>
-      </div>
-
-      {/* Value Display */}
-      <div
-        style={{
-          marginTop: "1rem",
-          fontSize: "1.5rem",
-          fontWeight: "bold",
-        }}
-      >
-        {`${value.toFixed(1)} ${unit}`}
-      </div>
+        />
+        
+        {/* Center dot */}
+        <circle 
+          cx="160" 
+          cy="160" 
+          r="5" 
+          fill="#ff4444" 
+        />
+      </svg>
     </div>
   );
 };
 
-export default VibrationMeter;
+export default Type8;

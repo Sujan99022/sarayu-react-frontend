@@ -14,7 +14,9 @@ const Type1 = ({
   const [emoji, setEmoji] = useState("❄️");
 
   useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io("http://13.203.22.181", {
+      path: "/socket.io/",  
+      transports: ["websocket", "polling"]});
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
       const newValue = Math.min(

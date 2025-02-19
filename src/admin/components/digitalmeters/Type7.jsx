@@ -10,7 +10,9 @@ const Type7 = ({ topic, minValue = -20, maxValue = 100 ,unit="c",label="n/a"}) =
   const [value, setValue] = useState(20);
 
   useEffect(() => {
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io("http://13.203.22.181", {
+      path: "/socket.io/",  
+      transports: ["websocket", "polling"]});
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {
       const rawValue = data?.message?.message?.message ?? 0;
