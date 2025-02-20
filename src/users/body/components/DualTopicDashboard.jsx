@@ -146,7 +146,7 @@ const DualTopicDashboard = () => {
           position: "fixed",
           left: showSlider ? 0 : -420,
           top: 0,
-          height: "100vh",
+          height: "100dvh",
           width: isMobile ? "85vw" : 420,
           bgcolor: "background.paper",
           boxShadow: 24,
@@ -244,8 +244,7 @@ const DualTopicDashboard = () => {
       {/* DualGraphPlot Container */}
       <Box
         sx={{
-          width: "100vw",
-          height: "100vh",
+          // Removed full viewport width/height
           zIndex: 1200,
         }}
       >
