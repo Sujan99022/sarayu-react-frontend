@@ -15,7 +15,7 @@ const getCachedSocket = (topic) => {
     //   reconnectionAttempts: 5,
     //   reconnectionDelay: 5000,
     // });
-    const newSocket = io("http://13.203.22.181", {
+    const newSocket = io("http://65.1.185.30", {
       path: "/socket.io/",  
       transports: ["websocket", "polling"],
       autoConnect: true,
@@ -23,7 +23,6 @@ const getCachedSocket = (topic) => {
       reconnectionAttempts: 5,
       reconnectionDelay: 5000,
     });
-    
 
     socketCache.set(topic, {
       socket: newSocket,
@@ -70,7 +69,7 @@ const LiveDataTd = ({ topic }) => {
     };
   }, [topic, isFFT]);
 
-  return isFFT ? <td>N/A</td> : <td>{liveMessage || "-"}</td>;
+  return isFFT ? <td style={{fontWeight:"bolder"}}>N/A</td> : <td style={{fontWeight:"bolder",background:"#34495e",color:"rgb(255, 255, 255)"}}>{liveMessage || "-"}</td>;
 };
 
 export default React.memo(LiveDataTd);

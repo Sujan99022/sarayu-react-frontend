@@ -117,7 +117,7 @@ const BarChart = ({ topic }) => {
   };
 
   return (
-    <div style={{ width: "600px", margin: "0 auto" }}>
+    <div style={{ width: "100%",height:"100%", margin: "0 auto", padding:"20px",display:"flex",justifyContent:"center",alignItems:"center" }}>
       <Bar data={data} options={options} />
     </div>
   );

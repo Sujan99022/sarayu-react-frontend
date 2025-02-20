@@ -5,9 +5,8 @@ import { IoMdArrowBack } from "react-icons/io";
 import apiClient from "../../../api/apiClient";
 import { toast } from "react-toastify";
 import Loader from "../../loader/Loader";
-import { FaRegBookmark } from "react-icons/fa";
+import { FaRegBookmark, FaDigitalOcean } from "react-icons/fa";
 import { VscGraph } from "react-icons/vsc";
-import { FaDigitalOcean } from "react-icons/fa";
 import WeekTd from "../common/WeekTd";
 import YestardayTd from "../common/YestardayTd";
 import TodayTd from "../common/TodayTd";
@@ -17,6 +16,8 @@ import { BsBookmarkStarFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdOutlineClose } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
+import ReactPaginate from "react-paginate";
 
 const SingleUserDashBoard = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -26,7 +27,10 @@ const SingleUserDashBoard = () => {
   const [favoriteList, setFavoriteList] = useState([]);
   const [supervisorId, setSupervisorId] = useState();
   const [managerId, setManagerId] = useState();
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 20;
   const navigate = useNavigate();
+
   useEffect(() => {
     if (id) {
       fetchSingleUser();
@@ -56,11 +60,9 @@ const SingleUserDashBoard = () => {
 
   const handleAddFavorite = async (topic) => {
     try {
-      await apiClient.post(`/auth/${user.role}/${user.id}/favorites`, {
-        topic,
-      });
+      await apiClient.post(`/auth/${user.role}/${user.id}/favorites`, { topic });
       setFavoriteList((prev) => [...prev, topic]);
-      toast.success("Tagname to watchlist");
+      toast.success("Tagname added to watchlist");
     } catch (error) {
       toast.error(
         error?.response?.data?.error || "Failed to add topic to watchlist"
@@ -81,6 +83,16 @@ const SingleUserDashBoard = () => {
       );
     }
   };
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  // Pagination logic for topics
+  const topics = singleUserData?.topics || [];
+  const pageCount = Math.ceil(topics.length / itemsPerPage);
+  const offset = currentPage * itemsPerPage;
+  const currentItems = topics.slice(offset, offset + itemsPerPage);
 
   if (localLoading) {
     return <Loader />;
@@ -105,28 +117,35 @@ const SingleUserDashBoard = () => {
               <thead>
                 <tr>
                   <th style={{ background: "red" }}>Tag name</th>
-                  <th>Week's max</th>
-                  <th>Yesterday's max</th>
-                  <th>Today's max</th>
-                  <th className="allusers_dashboard_live_data_th">Live</th>
+                  <th
+                    className="allusers_dashboard_live_data_th"
+                    style={{ background: "rgb(150, 2, 208)" }}
+                  >
+                    Live
+                  </th>
                   <th>Unit</th>
+                  <th>WeekMax</th>
+                  <th>YesterdayMax</th>
+                  <th>TodayMax</th>
                   <th>Report</th>
                   <th>LayoutView</th>
                   <th>Graph/Digital</th>
-                  <th>Watch List</th>
+                  <th>WatchList</th>
                 </tr>
               </thead>
               <tbody>
-                {singleUserData?.topics?.map((item, index) => (
+                {currentItems.map((item, index) => (
                   <tr key={index}>
                     <td style={{ background: "#34495e", color: "white" }}>
                       {item?.split("|")[0].split("/")[2]}
                     </td>
+                    <LiveDataTd topic={item} />
+                    <td style={{ background: "#34495e", color: "white" }}>
+                      {item.split("|")[1] || "N/A"}
+                    </td>
                     <WeekTd topic={item} />
                     <YestardayTd topic={item} />
                     <TodayTd topic={item} />
-                    <LiveDataTd topic={item} />
-                    <td>{item.split("|")[1] || "N/A"}</td>
                     <td>
                       <BiSolidReport
                         onClick={() => {
@@ -152,6 +171,16 @@ const SingleUserDashBoard = () => {
                       />
                     </td>
                     <td className="allusers_dashboard_graph_digital_td">
+                      <button>
+                        <MdEdit
+                          size={18}
+                          style={{ cursor: "pointer" }}
+                          className="icon"
+                          onClick={() =>
+                            navigate(`/allusers/editsinglegraph/${encodeURIComponent(item)}`)
+                          }
+                        />
+                      </button>
                       <button
                         onClick={() => {
                           const encodedTopic = encodeURIComponent(item);
@@ -160,8 +189,16 @@ const SingleUserDashBoard = () => {
                       >
                         <VscGraph />
                       </button>
-                      <button>
-                        <FaDigitalOcean />
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/allusers/singledigitalmeter/${encodeURIComponent(
+                              item
+                            )}/${user.role}/${user.id}`
+                          )
+                        }
+                      >
+                        <FaDigitalOcean style={{ cursor: "pointer" }} />
                       </button>
                     </td>
                     <td>
@@ -185,6 +222,30 @@ const SingleUserDashBoard = () => {
                 ))}
               </tbody>
             </table>
+
+            <div className="d-flex justify-content-center mt-4 mb-4">
+              <ReactPaginate
+                previousLabel="Previous"
+                nextLabel="Next"
+                breakLabel="..."
+                pageCount={pageCount}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={2}
+                onPageChange={handlePageClick}
+                containerClassName="pagination"
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                activeClassName="active"
+                disabledClassName="disabled"
+                forcePage={currentPage}
+              />
+            </div>
           </div>
         </div>
       </div>

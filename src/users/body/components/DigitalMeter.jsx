@@ -49,104 +49,67 @@ const DigitalMeter = () => {
     }
   };
 
+  
+
   if (localLoading) {
     return <Loader />;
   }
 
+  if(topicBasedDigitalMeter?.length === 0){
+    return <div style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20px",color:"gray"}}> <h3>No Digital Meters Available!</h3> </div>
+  }
+
   const getMeterDetails = (topic) => {
     const meter = topicBasedDigitalMeter.find((meter) => meter.topic === topic);
-    if (meter) {
-      return (
-        <div className="meter-details" style={{display:"flex",height:"100%",alignItems:"center",justifyContent:"center"}}>
-           {meter.meterType === "Type1" && (
-            <Type1
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-          {meter.meterType === "Type2" && (
-            <Type2
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-          {meter.meterType === "Type3" && (
-            <Type3
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-          {meter.meterType === "Type4" && (
-            <Type4
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-          {meter.meterType === "Type5" && (
-            <Type5
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-          {meter.meterType === "Type6" && (
-            <Type6
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-          {meter.meterType === "Type7" && (
-            <Type7
-              {...meter}
-              unit={topic.includes("|") ? topic.split("|")[1] : ""}
-            />
-          )}
-        </div>
-      );
-    } else {
-      return (
-        <div
-          style={{
-            height: "80%",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <p style={{ margin: "0", fontSize: "20px", color: "gray" }}>
-            No meter assigned...
-          </p>
-        </div>
-      );
-    }
+    if (!meter) return null; // Don't render anything if no meter is assigned
+
+    return (
+      <div className="meter-details" style={{ display: "flex", height: "100%", alignItems: "center", justifyContent: "center" }}>
+        {meter.meterType === "Type1" && (
+          <Type1 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+        {meter.meterType === "Type2" && (
+          <Type2 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+        {meter.meterType === "Type3" && (
+          <Type3 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+        {meter.meterType === "Type4" && (
+          <Type4 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+        {meter.meterType === "Type5" && (
+          <Type5 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+        {meter.meterType === "Type6" && (
+          <Type6 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+        {meter.meterType === "Type7" && (
+          <Type7 {...meter} unit={topic.includes("|") ? topic.split("|")[1] : ""} />
+        )}
+      </div>
+    );
   };
 
   return (
     <div className="allusers_digitalview_main_container">
-      {assignedTopicList?.map((topic, index) => (
-        <div key={index} className="topic-container">
-          <div className="allusers_digitalview_main_container_header_container">
-            <p>{topic.split("|")[0].split("/")[2]}</p>
-            <div>
-              <div
-                onClick={() => {
-                  const encodedTopic = encodeURIComponent(topic);
-                  navigate(`/allusers/viewsinglegraph/${encodedTopic}`);
-                }}
-              >
-                <VscGraph />
-              </div>
-              <div
-                onClick={() => {
-                  const encodedTopic = encodeURIComponent(topic);
-                  navigate(`/allusers/report/${encodedTopic}`);
-                }}
-              >
-                <BiSolidReport />
+      {assignedTopicList
+        ?.filter((topic) => topicBasedDigitalMeter.some((meter) => meter.topic === topic)) 
+        .map((topic, index) => (
+          <div key={index} className="topic-container">
+            <div className="allusers_digitalview_main_container_header_container">
+              <p>{topic.split("|")[0].split("/")[2]}</p>
+              <div>
+                <div onClick={() => navigate(`/allusers/viewsinglegraph/${encodeURIComponent(topic)}`)}>
+                  <VscGraph />
+                </div>
+                <div onClick={() => navigate(`/allusers/report/${encodeURIComponent(topic)}`)}>
+                  <BiSolidReport />
+                </div>
               </div>
             </div>
+            {getMeterDetails(topic)}
           </div>
-          {getMeterDetails(topic)}
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

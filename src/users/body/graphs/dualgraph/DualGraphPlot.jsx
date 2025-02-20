@@ -112,7 +112,7 @@ const DualGraphPlot = ({ topic1, topic2, topic3, topic4, topic5, height, width }
 
   const setupSocket = (topic, index) => {
     if (!topic) return;
-    const socket = io("http://13.203.22.181", {
+    const socket = io("http://65.1.185.30", {
       path: "/socket.io/",  
       transports: ["websocket", "polling"],
     });

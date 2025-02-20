@@ -11,7 +11,7 @@ const Type5 = ({
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    const socket = io("http://13.203.22.181", {
+    const socket = io("http://65.1.185.30", {
       path: "/socket.io/",  
       transports: ["websocket", "polling"]});
     socket.emit("subscribeToTopic", topic);

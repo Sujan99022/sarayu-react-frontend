@@ -18,10 +18,7 @@ import { MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { IoMdArrowDropup } from "react-icons/io";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { IoMdArrowDropleft } from "react-icons/io";
-import { IoMdArrowDropright } from "react-icons/io";
+import { IoMdArrowDropup, IoMdArrowDropdown } from "react-icons/io";
 
 const Dashboard = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -36,6 +33,7 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 20;
 
+  // Fetch user details and update local state
   const fetchUserDetails = useCallback(async () => {
     setLocalLoading(true);
     try {
@@ -56,12 +54,13 @@ const Dashboard = () => {
     if (user.id) fetchUserDetails();
   }, [user.id, fetchUserDetails]);
 
+  // Reset current page when search query changes
   useEffect(() => {
     setCurrentPage(0);
   }, [searchQuery]);
 
-  // Handle adding a topic to favorites
-  const handleAddFavorite = async (topic) => {
+  // Favorite and graph watchlist handlers (wrapped in useCallback)
+  const handleAddFavorite = useCallback(async (topic) => {
     try {
       await apiClient.post(`/auth/${user.role}/${user.id}/favorites`, { topic });
       setFavoriteList((prev) => [...prev, topic]);
@@ -69,10 +68,9 @@ const Dashboard = () => {
     } catch (error) {
       toast.error(error?.response?.data?.error || "Failed to add topic to favorites");
     }
-  };
+  }, [user.role, user.id]);
 
-  // Handle removing a topic from favorites
-  const handleRemoveFavorite = async (topic) => {
+  const handleRemoveFavorite = useCallback(async (topic) => {
     try {
       await apiClient.delete(`/auth/${user.role}/${user.id}/favorites`, { data: { topic } });
       setFavoriteList((prev) => prev.filter((fav) => fav !== topic));
@@ -80,10 +78,9 @@ const Dashboard = () => {
     } catch (error) {
       toast.error(error?.response?.data?.error || "Failed to remove topic from watchlist");
     }
-  };
+  }, [user.role, user.id]);
 
-  // Handle adding a topic to graph watchlist
-  const handleAddGraphwl = async (topic) => {
+  const handleAddGraphwl = useCallback(async (topic) => {
     try {
       await apiClient.post(`/auth/${user.role}/${user.id}/graphwl`, { topic });
       setGraphwlList((prev) => [...prev, topic]);
@@ -91,10 +88,9 @@ const Dashboard = () => {
     } catch (error) {
       toast.error(error?.response?.data?.error || "Failed to add topic to graph watchlist");
     }
-  };
+  }, [user.role, user.id]);
 
-  // Handle removing a topic from graph watchlist
-  const handleRemoveGraphwl = async (topic) => {
+  const handleRemoveGraphwl = useCallback(async (topic) => {
     try {
       await apiClient.delete(`/auth/${user.role}/${user.id}/graphwl`, { data: { topic } });
       setGraphwlList((prev) => prev.filter((fav) => fav !== topic));
@@ -102,35 +98,34 @@ const Dashboard = () => {
     } catch (error) {
       toast.error(error?.response?.data?.error || "Failed to remove topic from graph watchlist");
     }
-  };
+  }, [user.role, user.id]);
 
-  // Handle pagination click
-  const handlePageClick = ({ selected }) => {
+  // Pagination handler wrapped in useCallback
+  const handlePageClick = useCallback(({ selected }) => {
     setCurrentPage(selected);
-  };
+  }, []);
 
-  // Sorting functionality
-  const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key) {
-      if (sortConfig.direction === "asc") {
-        direction = "desc";
-      } else if (sortConfig.direction === "desc") {
-        direction = "none";
-      } else {
-        direction = "asc";
+  // Sorting functionality using useCallback to update sort configuration
+  const handleSort = useCallback((key) => {
+    setSortConfig((prevSortConfig) => {
+      let direction = "asc";
+      if (prevSortConfig.key === key) {
+        if (prevSortConfig.direction === "asc") {
+          direction = "desc";
+        } else if (prevSortConfig.direction === "desc") {
+          direction = "none";
+        }
       }
-    }
-    setSortConfig(direction === "none" ? { key: null, direction: "none" } : { key, direction });
-  };
+      return direction === "none" ? { key: null, direction: "none" } : { key, direction };
+    });
+  }, []);
 
-  // Get sorting symbol (↑, ↓, ↔)
-  const getSortSymbol = (key) => {
+  const getSortSymbol = useCallback((key) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === "asc" ? <IoMdArrowDropup /> : sortConfig.direction === "desc" ? <IoMdArrowDropdown /> : "↔";
     }
     return "↔";
-  };
+  }, [sortConfig]);
 
   // Parse topics and add dummy data for sorting
   const parsedTopics = useMemo(() => {
@@ -149,7 +144,7 @@ const Dashboard = () => {
     }) || [];
   }, [loggedInUser?.topics]);
 
-  // Filter parsed topics based on search query
+  // Filter topics based on search query
   const filteredParsedTopics = useMemo(() => {
     if (!searchQuery.trim()) return parsedTopics;
     const query = searchQuery.trim().toLowerCase();
@@ -158,7 +153,7 @@ const Dashboard = () => {
     );
   }, [parsedTopics, searchQuery]);
 
-  // Sort parsed topics based on sortConfig
+  // Sort topics based on sort configuration
   const sortedParsedTopics = useMemo(() => {
     let sortableItems = [...filteredParsedTopics];
     if (sortConfig.key && sortConfig.direction !== "none") {
@@ -175,10 +170,14 @@ const Dashboard = () => {
     return sortableItems;
   }, [filteredParsedTopics, sortConfig]);
 
-  // Pagination logic
-  const pageCount = Math.ceil(sortedParsedTopics.length / itemsPerPage);
-  const offset = currentPage * itemsPerPage;
-  const currentItems = sortedParsedTopics.slice(offset, offset + itemsPerPage);
+  // Memoize the current page's items
+  const currentItems = useMemo(() => {
+    const offset = currentPage * itemsPerPage;
+    return sortedParsedTopics.slice(offset, offset + itemsPerPage);
+  }, [sortedParsedTopics, currentPage, itemsPerPage]);
+
+  // Memoize page count calculation
+  const pageCount = useMemo(() => Math.ceil(sortedParsedTopics.length / itemsPerPage), [sortedParsedTopics, itemsPerPage]);
 
   if (localLoading) return <Loader />;
 
@@ -207,40 +206,41 @@ const Dashboard = () => {
           <table className="alluser_alloperators_table">
             <thead>
               <tr>
-                <th>Tag name</th>
-                <th onClick={() => handleSort("weekMax")} style={{ cursor: "pointer" }}>
-                  Week's max {getSortSymbol("weekMax")}
+                <th style={{ background: "red" }}>TagName</th>
+                <th className="allusers_dashboard_live_data_th" style={{ background: "rgb(150, 2, 208)" }}>
+                  Live
                 </th>
-                <th onClick={() => handleSort("yesterdayMax")} style={{ cursor: "pointer" }}>
-                  Yesterday's max {getSortSymbol("yesterdayMax")}
-                </th>
-                <th onClick={() => handleSort("todayMax")} style={{ cursor: "pointer" }}>
-                  Today's max {getSortSymbol("todayMax")}
-                </th>
-                <th className="allusers_dashboard_live_data_th">Live</th>
                 <th>Unit</th>
+                <th>
+                  TodayMax
+                </th>
+                <th>
+                  YesterdayMax
+                </th>
+                <th>
+                  WeekMax
+                </th>
                 <th>Report</th>
-                <th>Layout View</th>
-                <th>Edit Threshold</th>
-                <th>Graph/Digital</th>
+                <th>LayoutView</th>
+                <th>Edit/Graph/Digital</th>
                 <th>Graph[WL]</th>
-                <th>Watch List</th>
+                <th>WatchList</th>
               </tr>
             </thead>
             <tbody>
               {currentItems.map(({ topic, tagName, unit, isFFT }, index) => (
                 <tr key={`${topic}-${index}`}>
-                  <td>{tagName}</td>
-                  <WeekTd topic={topic} />
-                  <YestardayTd topic={topic} />
-                  <TodayTd topic={topic} />
+                  <td style={{ background: "#34495e", color: "white" }}>{tagName}</td>
                   <LiveDataTd topic={topic} />
-                  <td>{unit}</td>
+                  <td style={{ background: "#34495e", color: "white" }}>{unit}</td>
+                  <TodayTd topic={topic} />
+                  <YestardayTd topic={topic} />
+                  <WeekTd topic={topic} />
                   <td>
                     {!isFFT && (
                       <BiSolidReport
                         size={20}
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: "pointer", color: "gray" }}
                         className="icon"
                         onClick={() => navigate(`/allusers/report/${encodeURIComponent(topic)}`)}
                       />
@@ -249,32 +249,27 @@ const Dashboard = () => {
                   <td>
                     <LuLayoutDashboard
                       size={20}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", color: "gray" }}
                       className="icon"
                       onClick={() => navigate(`/allusers/layoutview/${encodeURIComponent(topic)}/${loggedInUser?.layout}`)}
                     />
                   </td>
-                  <td>
-                    {!isFFT && (
-                      <MdEdit
-                        size={20}
-                        style={{ cursor: "pointer" }}
-                        className="icon"
-                        onClick={() => navigate(`/allusers/editsinglegraph/${encodeURIComponent(topic)}`)}
-                      />
-                    )}
-                  </td>
                   <td className="allusers_dashboard_graph_digital_td">
-                    <button
-                      onClick={() => navigate(`/allusers/viewsinglegraph/${encodeURIComponent(topic)}`)}
-                      style={{ background: isFFT ? "red" : "", cursor: "pointer" }}
-                    >
+                    <button>
+                      {!isFFT && (
+                        <MdEdit
+                          size={18}
+                          style={{ cursor: "pointer" }}
+                          className="icon"
+                          onClick={() => navigate(`/allusers/editsinglegraph/${encodeURIComponent(topic)}`)}
+                        />
+                      )}
+                    </button>
+                    <button onClick={() => navigate(`/allusers/viewsinglegraph/${encodeURIComponent(topic)}`)}>
                       <VscGraph />
                     </button>
                     {!isFFT && (
-                      <button
-                        onClick={() => navigate(`/allusers/singledigitalmeter/${encodeURIComponent(topic)}/${user.role}/${user.id}`)}
-                      >
+                      <button onClick={() => navigate(`/allusers/singledigitalmeter/${encodeURIComponent(topic)}/${user.role}/${user.id}`)}>
                         <FaDigitalOcean style={{ cursor: "pointer" }} />
                       </button>
                     )}

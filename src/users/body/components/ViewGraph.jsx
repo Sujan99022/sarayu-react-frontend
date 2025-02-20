@@ -44,7 +44,7 @@ const ViewGraph = () => {
         <>
           <header>
             <div>
-              {topicparams?.split("|")[1] === "fft" && "FFT"} &gt;{" "}
+              {topicparams?.split("|")[1] === "fft" && "FFT"} 
               {topicparams?.split("|")[0].split("/")[2]}
             </div>
             <div onClick={() => navigate(-1)}>
@@ -60,14 +60,14 @@ const ViewGraph = () => {
                 hidesteps={false}
               />
             ) : (
-              <SmallGraph topic={topicparams} height={"550"} viewgraph={true} />
+              <SmallGraph topic={topicparams} height={"610"} viewgraph={true} />
             )}
           </div>
         </>
       )}
       {activeGraphBtn === "history" && (
         <section className="_viewgraph_history_main_container">
-          <HistoryGraph topic={topicparams} height={"500"} />
+          <HistoryGraph topic={topicparams} height={"470"} />
         </section>
       )}
     </div>

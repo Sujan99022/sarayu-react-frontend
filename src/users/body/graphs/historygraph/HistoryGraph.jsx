@@ -9,18 +9,15 @@ const HistoryGraph = ({ topic, height }) => {
   const chartRef = useRef(null);
   const areaSeriesRef = useRef(null);
   const thresholdLineSeriesRefs = useRef([]);
-  const isMounted = useRef(true);
 
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [granularity, setGranularity] = useState("minutes");
-  const [graphData, setGraphData] = useState([]);
   const [thresholds, setThresholds] = useState([]);
 
   const granularityOptions = ["seconds", "minutes", "hours", "days"];
 
   useEffect(() => {
-    // Fetch thresholds when component mounts
     const fetchThresholds = async () => {
       try {
         const response = await apiClient.get(`/mqtt/get?topic=${topic}`);
@@ -35,31 +32,13 @@ const HistoryGraph = ({ topic, height }) => {
   }, [topic]);
 
   useEffect(() => {
-    // Initialize chart
     chartRef.current = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height,
-      layout: {
-        backgroundColor: "#ffffff",
-        textColor: "#000000",
-      },
-      grid: {
-        vertLines: { color: "#eeeeee" },
-        horzLines: { color: "#eeeeee" },
-      },
-      priceScale: {
-        borderColor: "#cccccc",
-        scaleMargins: {
-          top: 0.1,
-          bottom: 0.1,
-        },
-      },
-      timeScale: {
-        borderColor: "#cccccc",
-        timeVisible: true,
-        secondsVisible: true,
-        rightOffset: 20,
-      },
+      layout: { backgroundColor: "#ffffff", textColor: "#000000" },
+      grid: { vertLines: { color: "#eeeeee" }, horzLines: { color: "#eeeeee" } },
+      priceScale: { borderColor: "#cccccc", scaleMargins: { top: 0.1, bottom: 0.1 } },
+      timeScale: { borderColor: "#cccccc", timeVisible: true, secondsVisible: true, rightOffset: 20 },
     });
 
     areaSeriesRef.current = chartRef.current.addAreaSeries({
@@ -70,9 +49,7 @@ const HistoryGraph = ({ topic, height }) => {
     });
 
     const handleResize = () => {
-      chartRef.current.applyOptions({
-        width: chartContainerRef.current.clientWidth,
-      });
+      chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
     };
     window.addEventListener("resize", handleResize);
 
@@ -82,100 +59,25 @@ const HistoryGraph = ({ topic, height }) => {
     };
   }, [height]);
 
-  const createThresholdLines = (startTime, endTime) => {
-    if (!chartRef.current) return;
-
-    // Clear existing threshold lines
-    thresholdLineSeriesRefs.current.forEach((series) => {
-      try {
-        chartRef.current.removeSeries(series);
-      } catch (error) {
-        console.warn("Error removing threshold series:", error);
-      }
-    });
-    thresholdLineSeriesRefs.current = [];
-
-    // Create new threshold lines
-    thresholds.forEach((threshold) => {
-      const lineSeries = chartRef.current.addLineSeries({
-        color: threshold.color,
-        lineWidth: 2,
-        priceLineVisible: false,
-        crosshairMarkerVisible: false,
-      });
-
-      lineSeries.setData([
-        { time: startTime, value: threshold.value },
-        { time: endTime, value: threshold.value },
-      ]);
-      thresholdLineSeriesRefs.current.push(lineSeries);
-    });
-  };
-
-  const updateChartColor = (data) => {
-    if (!data.length) return;
-
-    const latestValue = data[data.length - 1].value;
-    let newColor = "rgba(41, 98, 255, 0.3)"; // Default color
-    const sortedThresholds = [...thresholds].sort((a, b) => a.value - b.value);
-
-    // Find the highest threshold crossed
-    for (let i = sortedThresholds.length - 1; i >= 0; i--) {
-      if (latestValue > sortedThresholds[i].value) {
-        newColor = sortedThresholds[i].color;
-        break;
-      }
-    }
-
-    // Update area series color
-    areaSeriesRef.current.applyOptions({
-      topColor: newColor,
-      bottomColor: "rgba(0, 0, 0, 0)",
-      lineColor: newColor,
-    });
-  };
-
   const fetchGraphData = async () => {
     try {
-      const body = {
-        topic,
-        from: fromDate.toISOString(),
-        to: toDate.toISOString(),
-        granularity,
-      };
-
-      const response = await apiClient.post(
-        "/mqtt/realtime-data/custom-range",
-        body
-      );
+      const body = { topic, from: fromDate.toISOString(), to: toDate.toISOString(), granularity };
+      const response = await apiClient.post("/mqtt/realtime-data/custom-range", body);
 
       if (response.data.success) {
         const data = response.data.messages
           .map((msg) => {
             const timestamp = new Date(msg.timestamp);
             if (isNaN(timestamp.getTime())) return null;
-            return {
-              time: Math.floor(timestamp.getTime() / 1000),
-              value: parseFloat(msg.message),
-            };
+            return { time: Math.floor(timestamp.getTime() / 1000), value: parseFloat(msg.message) };
           })
           .filter(Boolean)
           .sort((a, b) => a.time - b.time);
 
         if (data.length > 0) {
-          // Update chart color based on latest value
-          updateChartColor(data);
-
-          // Create threshold lines for the entire time range
-          const startTime = data[0].time;
-          const endTime = data[data.length - 1].time;
-          createThresholdLines(startTime, endTime);
+          areaSeriesRef.current.setData(data);
+          chartRef.current.timeScale().fitContent();
         }
-
-        // Update chart data
-        areaSeriesRef.current.setData(data);
-        chartRef.current.timeScale().fitContent();
-        setGraphData(data);
       }
     } catch (error) {
       console.error("Error fetching graph data:", error);
@@ -184,20 +86,60 @@ const HistoryGraph = ({ topic, height }) => {
 
   return (
     <div>
+      <style>
+        {`
+          ._historygraph_controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            max-width: 100%;
+          }
+          ._historygraph_date-pickers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+          ._historygraph_date-pickers label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+          }
+          ._historygraph_date-pickers input {
+            width: 140px;
+          }
+          @media (max-width: 800px) {
+            ._historygraph_controls {
+              flex-direction: column;
+              align-items: center;
+            }
+            ._historygraph_date-pickers {
+              flex-direction: column;
+              width: 100%;
+              align-items: center;
+            }
+            ._historygraph_date-pickers input {
+              width: 100%;
+            }
+          }
+        `}
+      </style>
+
       <div className="_historygraph_controls">
         <div className="_historygraph_date-pickers">
           <label>
-            From : &nbsp;
+            From: &nbsp;
             <DatePicker
               selected={fromDate}
               onChange={setFromDate}
               dateFormat="yyyy-MM-dd HH:mm:ss"
               maxDate={toDate}
               showTimeSelect
+              style={{ width: "100%" }}
             />
           </label>
           <label>
-            To : &nbsp;
+            To: &nbsp;
             <DatePicker
               selected={toDate}
               onChange={setToDate}
@@ -205,16 +147,18 @@ const HistoryGraph = ({ topic, height }) => {
               minDate={fromDate}
               maxDate={new Date()}
               showTimeSelect
+              style={{ width: "100%" }}
             />
           </label>
         </div>
 
         <div className="_historygraph_dropdown">
           <label>
-            Granularity : &nbsp;
+            Granularity: &nbsp;
             <select
               value={granularity}
               onChange={(e) => setGranularity(e.target.value)}
+              style={{ padding: "5px", fontSize: "14px" }}
             >
               {granularityOptions.map((option) => (
                 <option key={option} value={option}>
@@ -223,10 +167,10 @@ const HistoryGraph = ({ topic, height }) => {
               ))}
             </select>
           </label>
-        </div>
-        <button className="_historygraph_apply-btn" onClick={fetchGraphData}>
+        <button className="_historygraph_apply-btn" onClick={fetchGraphData} style={{ padding: "6px 12px",margin:"0 15px", fontSize: "14px" }}>
           Apply
         </button>
+        </div>
       </div>
 
       <div style={{ marginTop: "50px" }} ref={chartContainerRef}></div>

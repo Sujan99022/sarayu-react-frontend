@@ -296,8 +296,8 @@
 ._viewgraph_main_container {
     width: 96vw;
     height: 100%;
-    padding: 5px;
-    padding-top: 20px;
+    padding: 0 5px;
+    padding-top: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -634,6 +634,7 @@
 .alluser_alloperators_table > thead > tr > th {
     padding: 12px 15px;
     text-align: center;
+    text-wrap: no-wrap;
 }
 .alluser_alloperators_table > tbody > tr:nth-child(odd) {
     background: #f9fafd;
@@ -660,22 +661,24 @@
     border-radius: 50%;
     right: 45%;
     bottom: 12%;
-    background-color: rgb(0, 255, 0);
-    animation: liveDot 1.5s infinite 0s forwards normal running;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.289);
+    animation: liveDot 1s infinite 0s forwards normal running;
 }
 @keyframes liveDot {
     0% {
-        opacity: 1;
+        background-color: rgb(255, 238, 0);
     }
     50% {
-        opacity: 0;
+        background-color: rgba(0, 0, 0, 0);
     }
     100% {
-        opacity: 1;
+        background-color: rgb(255, 238, 0);
     }
 }
 .allusers_dashboard_graph_digital_td {
     padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
 }
 .allusers_dashboard_graph_digital_td > button {
     width: 45%;
@@ -685,11 +688,15 @@
     background: white;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.278);
 }
-.allusers_dashboard_graph_digital_td > button:first-child {
+.allusers_dashboard_graph_digital_td > button:nth-child(1) {
+    background: #34495e;
+    color: white;
+}
+.allusers_dashboard_graph_digital_td > button:nth-child(2) {
     background: red;
     color: white;
 }
-.allusers_dashboard_graph_digital_td > button:last-child {
+.allusers_dashboard_graph_digital_td > button:nth-child(3) {
     background: #34495e;
     color: white;
 }
@@ -792,21 +799,24 @@
     }
     .alluser_alloperators_table > thead > tr > th {
         font-size: 16px;
-        padding: 12px 6px;
+        padding: 12px 16px;
         font-weight: 400;
     }
     .alluser_alloperators_table > tbody > tr > td {
         font-size: 15px;
-        padding: 12px 6px;
+        padding: 12px 8px;
     }
     .singleuserdashboard_main_container > div:first-child {
         width: 97vw;
+    }
+    .allusers_layoutview_section{
+        grid-template-columns: 100% !important;
     }
 }
 
 /* LayoutView style starts here */
 .allusers_layoutview_header {
-    width: 99dvw;
+    width: 97dvw;
     background: rgb(25, 30, 49);
     color: white;
     margin: 8px 0;

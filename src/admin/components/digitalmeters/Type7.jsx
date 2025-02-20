@@ -10,7 +10,7 @@ const Type7 = ({ topic, minValue = -20, maxValue = 100 ,unit="c",label="n/a"}) =
   const [value, setValue] = useState(20);
 
   useEffect(() => {
-    const socket = io("http://13.203.22.181", {
+    const socket = io("http://65.1.185.30", {
       path: "/socket.io/",  
       transports: ["websocket", "polling"]});
     socket.emit("subscribeToTopic", topic);

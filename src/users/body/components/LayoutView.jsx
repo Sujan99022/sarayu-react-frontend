@@ -18,8 +18,9 @@ const LayoutView = () => {
   const [liveMessage, setLiveMessages] = useState();
 
   useEffect(() => {
-    const socket = io("http://localhost:4000", {
-      transports: ["websocket",'polling'],
+    const socket = io("http://65.1.185.30", {
+      path: "/socket.io/",  
+      transports: ["websocket", "polling"],
     });
     socket.emit("subscribeToTopic", topic);
     socket.on("liveMessage", (data) => {

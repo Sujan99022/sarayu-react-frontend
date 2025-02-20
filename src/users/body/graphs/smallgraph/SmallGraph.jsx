@@ -268,7 +268,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
   // Handle socket connection and live data
   useEffect(() => {
-    socket.current = io("http://13.203.22.181", {
+    socket.current = io("http://65.1.185.30", {
       path: "/socket.io/",  
       transports: ["websocket", "polling"],
     });

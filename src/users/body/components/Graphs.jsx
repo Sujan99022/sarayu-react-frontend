@@ -41,6 +41,10 @@ const Dashboard = () => {
     return <Loader />;
   }
 
+  if(loggedInUser?.graphwl?.length === 0){
+    return <div style={{display:"flex",justifyContent:"center",alignItems:"center",marginTop:"20px",color:"gray"}}> <h3>No Graphs Available!</h3> </div>
+  }
+
   return (
     <div>
       <div className="users_small_graphs_primary_container">

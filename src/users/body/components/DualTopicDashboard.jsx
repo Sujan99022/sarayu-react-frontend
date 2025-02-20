@@ -39,17 +39,6 @@ const DualTopicDashboard = () => {
     }
   }, [user.id]);
 
-  useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  const handleBeforeUnload = () => {
-    localStorage.setItem("appliedTags", JSON.stringify(appliedTags));
-  };
-
   const getDisplayName = (tag) => tag.split("|")[0].split("/")[2] || tag;
 
   const fetchUserDetails = async () => {
@@ -57,7 +46,9 @@ const DualTopicDashboard = () => {
       const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
       setAllTags(res?.data?.data?.topics || []);
     } catch (error) {
-      toast.error(error?.response?.data?.error || "Failed to fetch user details");
+      toast.error(
+        error?.response?.data?.error || "Failed to fetch user details"
+      );
     }
   };
 
@@ -75,7 +66,7 @@ const DualTopicDashboard = () => {
       setSelectedTags([...selectedTags, null]);
     }
   };
-  console.log(appliedTags);
+
   const handleApply = () => {
     const filteredTags = selectedTags.filter((tag) => tag);
     setAppliedTags(filteredTags);
@@ -90,7 +81,9 @@ const DualTopicDashboard = () => {
   };
 
   const handleRemoveDropdown = (indexToRemove) => {
-    setSelectedTags(selectedTags.filter((_, index) => index !== indexToRemove));
+    setSelectedTags(
+      selectedTags.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   const getAvailableTagsForDropdown = (index) => {
@@ -124,72 +117,59 @@ const DualTopicDashboard = () => {
     <div>
       {/* Right Arrow Button */}
       {!showSlider && (
-        <div onClick={() => setShowSlider(true)} style={{
-          position:"fixed",
-          top:"50%",
-          left:"-80px",
-          cursor:"pointer",
-          zIndex:"1300",
-          background:"red",
-          backgroundColor:"rgb(255, 0, 0)",
-          color:"white",
-          padding:"5px 10px",
-          transform: 'translateY(-50%) rotate(270deg)',
-          boxShadow:"0 2px 2px rgba(0, 0, 0, 0.19)",
-          textShadow:"0 2px 2px rgba(0, 0, 0, 0.3)",
-          // borderRight:"6px solid rgba(0, 0, 0, 0.28)",
-          // borderBottom:"6px solid rgba(0, 0, 0, 0.28)",
-          // borderLeft:"6px solid rgba(0, 0, 0, 0.28)",
-        }}>
-          <p style={{margin:"0"}}>CONFIGURE TOPICS <IoIosArrowDown size={"20"} /> </p>
-          
-          {/* <MdKeyboardArrowRight size={26} /> */}
+        <div
+          onClick={() => setShowSlider(true)}
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "-80px",
+            cursor: "pointer",
+            zIndex: "1300",
+            background: "red",
+            backgroundColor: "rgb(255, 0, 0)",
+            color: "white",
+            padding: "5px 10px",
+            transform: "translateY(-50%) rotate(270deg)",
+            boxShadow: "0 2px 2px rgba(0, 0, 0, 0.19)",
+            textShadow: "0 2px 2px rgba(0, 0, 0, 0.3)",
+          }}
+        >
+          <p style={{ margin: "0" }}>
+            CONFIGURE TOPICS <IoIosArrowDown size={"20"} />
+          </p>
         </div>
-        // <IconButton
-        //   variant="contained"
-        //   onClick={() => setShowSlider(true)}
-        //   sx={{
-        //     position: 'fixed',
-        //     left: 0,
-        //     top: '50%',
-
-        //     zIndex: 1300,
-        //     boxShadow: 3,
-        //     borderRadius: '50%',
-        //     bgcolor: 'primary.main',
-        //     color: 'white',
-        //   }}
-        // >
-        // </IconButton>
       )}
 
       {/* Slider Panel */}
       <Box
         sx={{
-          position: 'fixed',
+          position: "fixed",
           left: showSlider ? 0 : -420,
           top: 0,
-          height: '100vh',
-          width: isMobile ? '85vw' : 420,
-          bgcolor: 'background.paper',
+          height: "100vh",
+          width: isMobile ? "85vw" : 420,
+          bgcolor: "background.paper",
           boxShadow: 24,
           p: 2,
-          transition: 'left 0.3s ease-in-out',
+          transition: "left 0.3s ease-in-out",
           zIndex: 1300,
-          overflowY: 'auto',
+          overflowY: "auto",
         }}
       >
         <IconButton
           onClick={() => setShowSlider(false)}
-          style={{color:"red"}}
-          sx={{ position: 'absolute', left: 8, top: 14 }}
+          style={{ color: "red" }}
+          sx={{ position: "absolute", left: 8, top: 14 }}
         >
           <IoIosArrowBack size={24} />
         </IconButton>
 
-        <Box sx={{ mt: 6, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Box sx={{ mt: 6, display: "flex", flexDirection: "column", gap: 2 }}>
           {selectedTags.map((selectedTag, index) => (
-            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              key={index}
+              sx={{ display: "flex", alignItems: "center", gap: 1 }}
+            >
               <MdTopic size={24} color={theme.palette.primary.main} />
               <Autocomplete
                 sx={{ flex: 1 }}
@@ -226,13 +206,13 @@ const DualTopicDashboard = () => {
             </Box>
           ))}
 
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
             {selectedTags.length < 5 && selectedTags.every((t) => t) && (
               <Button
                 variant="outlined"
                 onClick={handleAddDropdown}
                 fullWidth
-                sx={{ borderRadius: '8px' }}
+                sx={{ borderRadius: "8px" }}
               >
                 Add Tag +
               </Button>
@@ -264,8 +244,8 @@ const DualTopicDashboard = () => {
       {/* DualGraphPlot Container */}
       <Box
         sx={{
-          width: '100vw',
-          height: '100vh',
+          width: "100vw",
+          height: "100vh",
           zIndex: 1200,
         }}
       >
@@ -275,7 +255,7 @@ const DualTopicDashboard = () => {
           topic3={appliedTags[2]}
           topic4={appliedTags[3]}
           topic5={appliedTags[4]}
-          height={window.innerHeight - (isMobile ? 150 : 60)}
+          height={window.innerHeight - (isMobile ? 110 : 60)}
           width={window.innerWidth - (isMobile ? 30 : 10)}
         />
       </Box>
