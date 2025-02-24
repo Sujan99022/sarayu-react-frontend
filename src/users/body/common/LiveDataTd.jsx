@@ -8,21 +8,21 @@ const socketCache = new Map();
 
 const getCachedSocket = (topic) => {
   if (!socketCache.has(topic)) {
-    // const newSocket = io("http://localhost:4000", {
-    //   transports: ["websocket", "polling"],
-    //   autoConnect: true,
-    //   reconnection: true,
-    //   reconnectionAttempts: 5,
-    //   reconnectionDelay: 5000,
-    // });
-    const newSocket = io("http://65.1.185.30", {
-      path: "/socket.io/",  
+    const newSocket = io("http://localhost:4000", {
       transports: ["websocket", "polling"],
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 5000,
     });
+    // const newSocket = io("http://65.1.185.30", {
+    //   path: "/socket.io/",  
+    //   transports: ["websocket", "polling"],
+    //   autoConnect: true,
+    //   reconnection: true,
+    //   reconnectionAttempts: 5,
+    //   reconnectionDelay: 5000,
+    // });
 
     socketCache.set(topic, {
       socket: newSocket,
