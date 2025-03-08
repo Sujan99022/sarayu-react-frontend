@@ -7,13 +7,15 @@ import { IoSearch } from "react-icons/io5";
 import { FaUserCheck } from "react-icons/fa";
 import { IoMdMenu } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
-import { IoClose } from "react-icons/io5";
+import { IoClose } from "react-icons/io5"; 
 import { handlToggleMenu } from "../../redux/slices/NavbarSlice";
 import apiClient from "../../api/apiClient";
 import { toast } from "react-toastify";
 import { PiBuildingOfficeBold } from "react-icons/pi";
 import ChangePassword from "./../body/components/ChangePassword";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { HiMiniBuildingOffice } from "react-icons/hi2";
+import { FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const { user } = useSelector((state) => state.userSlice);
@@ -24,12 +26,34 @@ const Navbar = () => {
   const [loggedInUser, setLoggedInUser] = useState({});
   const [localLoading, setLocalLoading] = useState(false);
   const [changePasswordModel, setChangePasswordModel] = useState(false);
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
     if (user.id) {
       fetchUserDetails();
     }
   }, [user.id]);
+
+  // Add useEffect for updating date and time
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000); // Update every second
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedDate = currentDateTime.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).replace(/ /g, '-');
+
+  const formattedTime = currentDateTime.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 
   const fetchUserDetails = async () => {
     setLocalLoading(true);
@@ -45,12 +69,26 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="users_navbar_container">
-        <div className="users_navbar_user_details">
-          <p>
-            <PiBuildingOfficeBold /> {loggedInUser?.company?.name}
-          </p>
+    <div className="users_navbar_separate_container">
+      <div className="users_navbar_separate_first_div">
+        <div>
+        <img src="https://sarayuinfotech.in/images/sarayu/Logo/sarayu-comp-icon.png" alt="company logo" />
         </div>
+        <div>
+          <p>Sarayu IOT</p>
+        </div>
+      </div>
+      <div className="users_navbar_separate_second_div">
+        <p>Sarayu Infotech Solutions Pvt. Ltd.</p>
+        <p>177 12th A Cross, Mahalakshmipuram, 2nd Stage, Bengaluru, Karnataka 560086</p>
+        <p><span>{formattedDate}</span><span>{formattedTime}</span></p>
+      </div>
+      <div className="users_navbar_separate_thrid_div">
+        <p><HiMiniBuildingOffice style={{color:"red"}}/> Company       : {loggedInUser?.company?.name}</p>
+        <p><FaUser style={{color:"red"}} /> Logged in as : {loggedInUser?.name}</p>
+      </div>
+    </div>
+      <div className="users_navbar_container">
         <div>
           <NavLink className={"users_navbar_link"} to={"/allusers/dashboard"}>
             Dashboard
@@ -106,16 +144,11 @@ const Navbar = () => {
           <div className="users_navbar_link_separator"></div>
           <Link
             className="users_navbar_link"
+            style={{background:"red"}}
             onClick={() => dispatch(handleWarningModel())}
           >
             Logout
           </Link>
-        </div>
-
-        <div className="users_navbar_user_details">
-          <p>
-            <FaUserCheck /> {user.name}
-          </p>
         </div>
       </div>
       <div className="users_mobile_navbar_container">

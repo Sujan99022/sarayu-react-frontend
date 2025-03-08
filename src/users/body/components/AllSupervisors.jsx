@@ -26,28 +26,26 @@ const AllSupervisors = () => {
       const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
       setLoggedInUser(res?.data?.data);
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      // toast.error(error?.response?.data?.error);
     }
   };
 
   useEffect(() => {
-    if (user.id) {
+    if (loggedInUser) {
       fetchAllEmployees();
     }
-  }, [user.id]);
-
-  console.log(user);
+  }, [loggedInUser]);
 
   const fetchAllEmployees = async () => {
     setLocalLoading(true);
     try {
       const res = await apiClient.get(
-        `/auth/${user?.role}/getallsupervisors/${user?.id}`
+        `/auth/supervisor/getAllSupervisorOfSameCompany/${loggedInUser?.company?._id}`
       );
       setOperatorsList(res?.data?.data);
       setLocalLoading(false);
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      // toast.error(error?.response?.data?.error);
       setLocalLoading(false);
     }
   };

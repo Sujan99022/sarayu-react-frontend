@@ -26,28 +26,26 @@ const AllOperators = () => {
       const res = await apiClient.get(`/auth/${user.role}/${user.id}`);
       setLoggedInUser(res?.data?.data);
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      // toast.error(error?.response?.data?.error);
     }
   };
 
-  useEffect(() => {
-    if (user.id) {
-      fetchAllEmployees();
-    }
-  }, [user.id]);
-
-  console.log(user);
+    useEffect(() => {
+      if (loggedInUser) {
+        fetchAllEmployees();
+      }
+    }, [loggedInUser]);
 
   const fetchAllEmployees = async () => {
     setLocalLoading(true);
     try {
       const res = await apiClient.get(
-        `/auth/${user?.role}/getalloperators/${user?.id}`
+        `/auth/employee/getAllEmployeesOfSameCompany/${loggedInUser?.company?._id}`
       );
       setOperatorsList(res?.data?.data);
       setLocalLoading(false);
     } catch (error) {
-      toast.error(error?.response?.data?.error);
+      // toast.error(error?.response?.data?.error);
       setLocalLoading(false);
     }
   };

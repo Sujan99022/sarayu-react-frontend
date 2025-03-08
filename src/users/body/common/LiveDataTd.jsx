@@ -15,14 +15,6 @@ const getCachedSocket = (topic) => {
       reconnectionAttempts: 5,
       reconnectionDelay: 5000,
     });
-    // const newSocket = io("http://65.1.185.30", {
-    //   path: "/socket.io/",  
-    //   transports: ["websocket", "polling"],
-    //   autoConnect: true,
-    //   reconnection: true,
-    //   reconnectionAttempts: 5,
-    //   reconnectionDelay: 5000,
-    // });
 
     socketCache.set(topic, {
       socket: newSocket,
@@ -33,8 +25,8 @@ const getCachedSocket = (topic) => {
   return socketCache.get(topic);
 };
 
-const LiveDataTd = ({ topic }) => {
-  const [liveMessage, setLiveMessage] = useState();
+const LiveDataTd = ({ topic, onTimestampUpdate }) => {
+  const [liveMessage, setLiveMessage] = useState(null); // Changed to null for clearer initial state
   const isFFT = useMemo(() => topic.split("|")[1] === "fft", [topic]);
 
   useEffect(() => {
@@ -44,32 +36,40 @@ const LiveDataTd = ({ topic }) => {
     const { socket } = topicEntry;
 
     const handleMessage = (data) => {
-      setLiveMessage(data?.message?.message?.message);
+      const messageData = data?.message?.message?.message;
+      const timestamp = data?.message?.timestamp;
+      setLiveMessage(messageData);
+      if (timestamp && onTimestampUpdate) {
+        onTimestampUpdate(topic, timestamp); // Pass topic to identify which row
+      }
     };
 
-    // First subscriber for this topic
     if (topicEntry.subscribers === 0) {
       socket.emit("subscribeToTopic", topic);
       socket.on("liveMessage", handleMessage);
+      topicEntry.messageHandler = handleMessage;
     }
 
     topicEntry.subscribers++;
-    topicEntry.messageHandler = handleMessage;
 
     return () => {
       topicEntry.subscribers--;
-
-      // Last subscriber for this topic
       if (topicEntry.subscribers === 0) {
-        socket.off("liveMessage", handleMessage);
+        socket.off("liveMessage", topicEntry.messageHandler);
         socket.emit("unsubscribeFromTopic", topic);
         socket.disconnect();
         socketCache.delete(topic);
       }
     };
-  }, [topic, isFFT]);
+  }, [topic, isFFT, onTimestampUpdate]);
 
-  return isFFT ? <td style={{fontWeight:"bolder"}}>N/A</td> : <td style={{fontWeight:"bolder",background:"#34495e",color:"rgb(255, 255, 255)"}}>{liveMessage || "-"}</td>;
+  return isFFT ? (
+    <td style={{ fontWeight: "bolder" }}>N/A</td>
+  ) : (
+    <td style={{ fontWeight: "bolder", background: "#34495e", color: "rgb(255, 255, 255)" }}>
+      {liveMessage !== null ? liveMessage : "-"}
+    </td>
+  );
 };
 
 export default React.memo(LiveDataTd);

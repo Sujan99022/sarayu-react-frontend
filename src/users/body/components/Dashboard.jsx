@@ -31,7 +31,44 @@ const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "none" });
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [timestamps, setTimestamps] = useState({});
   const itemsPerPage = 20;
+
+  // Update current time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Function to calculate relative time in IST
+  const getRelativeTime = (topic) => {
+    const timestamp = timestamps[topic];
+    if (!timestamp) return "-";
+
+    // Assuming timestamp is in UTC, convert to IST (UTC+5:30)
+    const lastUpdateUTC = new Date(timestamp);
+    const istOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
+    const lastUpdateIST = new Date(lastUpdateUTC.getTime() + istOffset);
+    const currentTimeIST = new Date(currentTime.getTime() + istOffset);
+
+    const diffSeconds = Math.floor((currentTimeIST - lastUpdateIST) / 1000);
+
+    if (diffSeconds < 0) return "Just now"; // Handle future timestamps
+    if (diffSeconds < 60) return `${diffSeconds}s ago`;
+    const minutes = Math.floor(diffSeconds / 60);
+    return `${minutes}m ago`;
+  };
+
+  // Handle timestamp updates from LiveDataTd
+  const handleTimestampUpdate = useCallback((topic, timestamp) => {
+    setTimestamps((prev) => ({
+      ...prev,
+      [topic]: timestamp,
+    }));
+  }, []);
 
   // Fetch user details and update local state
   const fetchUserDetails = useCallback(async () => {
@@ -137,9 +174,9 @@ const Dashboard = () => {
         tagName,
         unit: unit || "-",
         isFFT: unit === "fft",
-        weekMax: Math.random() * 100, // Replace with actual data
-        yesterdayMax: Math.random() * 100, // Replace with actual data
-        todayMax: Math.random() * 100, // Replace with actual data
+        weekMax: Math.random() * 100,
+        yesterdayMax: Math.random() * 100,
+        todayMax: Math.random() * 100,
       };
     }) || [];
   }, [loggedInUser?.topics]);
@@ -211,15 +248,10 @@ const Dashboard = () => {
                   Live
                 </th>
                 <th>Unit</th>
-                <th>
-                  TodayMax
-                </th>
-                <th>
-                  YesterdayMax
-                </th>
-                <th>
-                  WeekMax
-                </th>
+                <th>Relative</th>
+                <th>TodayMax</th>
+                <th>YesterdayMax</th>
+                <th>WeekMax</th>
                 <th>Report</th>
                 <th>LayoutView</th>
                 <th>Edit/Graph/Digital</th>
@@ -231,8 +263,12 @@ const Dashboard = () => {
               {currentItems.map(({ topic, tagName, unit, isFFT }, index) => (
                 <tr key={`${topic}-${index}`}>
                   <td style={{ background: "#34495e", color: "white" }}>{tagName}</td>
-                  <LiveDataTd topic={topic} />
+                  <LiveDataTd 
+                    topic={topic} 
+                    onTimestampUpdate={handleTimestampUpdate}
+                  />
                   <td style={{ background: "#34495e", color: "white" }}>{unit}</td>
+                  <td style={{ background: "#34495e", color: "white" }}>{getRelativeTime(topic)}</td>
                   <TodayTd topic={topic} />
                   <YestardayTd topic={topic} />
                   <WeekTd topic={topic} />

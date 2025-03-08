@@ -43,7 +43,6 @@ const SingleUserDashBoard = () => {
       const res = await apiClient.get(`/auth/employee/${id}`);
       const data = res?.data?.data;
       setSingleUserData(data);
-      console.log(data.supervisor);
       setFavoriteList(
         (data.role === "supervisor"
           ? data?.manager?.favorites
@@ -52,7 +51,11 @@ const SingleUserDashBoard = () => {
       setSupervisorId(data?.supervisor?._id);
       setManagerId(data?.manager?._id);
     } catch (error) {
-      toast.error(error?.response?.data?.error || "Failed to fetch user data");
+      if(error?.response.status === 404){
+        const res = await apiClient.get(`/auth/supervisor/${id}`);
+        const data = res?.data?.data;
+        setSingleUserData(data);
+      }
     } finally {
       setLocalLoading(false);
     }
